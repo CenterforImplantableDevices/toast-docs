@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.bread.label.importData &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../../static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../static/documentation_options.js"></script>
+        <script src="../../../../static/jquery.js"></script>
+        <script src="../../../../static/underscore.js"></script>
+        <script src="../../../../static/doctools.js"></script>
+    <script src="../../../../static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>toast.bread.label.importData</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.bread.label.importData</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">toast.bread.load</span> <span class="kn">import</span> <span class="n">wav</span>
+<span class="kn">from</span> <span class="nn">toast.misc</span> <span class="kn">import</span> <span class="n">tlog</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">divide</span><span class="p">,</span> <span class="n">add</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="import_subject"><a class="viewcode-back" href="../../../../toast.bread.label.importData.html#toast.bread.label.importData.import_subject">[docs]</a><span class="k">def</span> <span class="nf">import_subject</span><span class="p">(</span> <span class="n">subject_path</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename_include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Imports all of the raw data available for a subject into a single dataframe.</span>
+
+<span class="sd">    Tip:</span>
+<span class="sd">        If no flename is provided, every file in the directory is imported. Make sure you have enough memory to do this.</span>
+
+<span class="sd">    Args:  </span>
+<span class="sd">        subject_path (str):               Path to the folder where the data exists</span>
+<span class="sd">        dataset (str, optional):          Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        filename_include (str, optional): The specific filename of the file to process.  Do not include extensions or the &quot;_data&quot; / &quot;_label&quot; / &quot;_metadata&quot; suffix</span>
+<span class="sd">        get_datetime(bool, optional):     Whether to generate datetime objects for each extracted timestamp. Execution may take a long time.</span>
+<span class="sd">        path_log (str, optional):         Path to the file for outputing logs during execution.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Pandas dataframe containing all the data that was imported.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">all_labels_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">sessions_imported</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span> <span class="n">subject_path</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span> <span class="s1">&#39;.wav&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">filename_include</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">filename_include</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
+                    <span class="n">filename_to_open</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">filename</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">filename_to_open</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">filename</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">filename_to_open</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sessions_imported</span><span class="p">:</span>
+                <span class="n">sessions_imported</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename_to_open</span><span class="p">)</span>
+
+                <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Importing &#39;</span><span class="o">+</span><span class="n">filename_to_open</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">label</span><span class="p">,</span> <span class="n">nch_label</span> <span class="o">=</span> <span class="n">wav</span><span class="o">.</span><span class="n">import_label</span><span class="p">(</span> <span class="n">subject_path</span><span class="p">,</span> <span class="n">filename_to_open</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;WARNING: COULD NOT IMPORT LABEL FOR &#39;</span><span class="o">+</span><span class="n">filename_to_open</span><span class="o">+</span><span class="s1">&#39; - &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1">...Trying default dataset&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+                    <span class="n">label</span><span class="p">,</span> <span class="n">nch_label</span> <span class="o">=</span> <span class="n">wav</span><span class="o">.</span><span class="n">import_label</span><span class="p">(</span> <span class="n">subject_path</span><span class="p">,</span> <span class="n">filename_to_open</span><span class="p">)</span>
+                    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">...SUCCESS&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">metadata</span><span class="p">,</span> <span class="n">nch_meta</span> <span class="o">=</span> <span class="n">wav</span><span class="o">.</span><span class="n">import_metadata</span><span class="p">(</span> <span class="n">subject_path</span><span class="p">,</span> <span class="n">filename_to_open</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;WARNING: COULD NOT IMPORT METADATA FOR &#39;</span><span class="o">+</span><span class="n">filename_to_open</span><span class="o">+</span><span class="s1">&#39; - &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1">...Trying default dataset&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+                    <span class="n">metadata</span><span class="p">,</span> <span class="n">nch_meta</span> <span class="o">=</span> <span class="n">wav</span><span class="o">.</span><span class="n">import_metadata</span><span class="p">(</span> <span class="n">subject_path</span><span class="p">,</span> <span class="n">filename_to_open</span><span class="p">)</span>
+                    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">...SUCCESS&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+
+                <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Constructing dataframe&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+                <span class="n">session_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1">Adding label, &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="n">nch_label</span><span class="p">]</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;datetime_ts, &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="c1"># session_df[&#39;datetime_ts&#39;] = [ float(sec + nanosec/(10**9)) for sec, nanosec in zip(metadata[1::nch_meta], metadata[2::nch_meta])]</span>
+                <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span> <span class="n">metadata</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="n">nch_meta</span><span class="p">],</span> <span class="n">divide</span><span class="p">(</span> <span class="n">metadata</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="n">nch_meta</span><span class="p">],</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">get_datetime</span><span class="p">:</span>
+                    <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span> <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">])</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;subject, &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;session, &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;session&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">filename_to_open</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;filename, &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename_to_open</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;file_frame, &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">session_df</span><span class="p">[</span><span class="s1">&#39;file_frame&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_df</span><span class="o">.</span><span class="n">index</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">all_labels_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span> <span class="n">all_labels_dataframe</span><span class="p">,</span> <span class="n">session_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">all_labels_dataframe</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

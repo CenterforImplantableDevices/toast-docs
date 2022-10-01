@@ -5,17 +5,17 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>toast.heat.timescaleF &mdash; toast 1.3.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
+    <script src="static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    <script src="static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="toast.heat.timescaleL" href="toast.heat.timescaleL.html" />
@@ -80,7 +80,7 @@
           <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
       <li>toast.heat.timescaleF</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/toast.heat.timescaleF.rst.txt" rel="nofollow"> View page source</a>
+            <a href="sources/toast.heat.timescaleF.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -93,12 +93,12 @@
 <p>A Class that contains the low-level operations performed by a TiSc Input Layer.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="toast.heat.timescaleF.TiScFunction_input">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleF.</span></span><span class="sig-name descname"><span class="pre">TiScFunction_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScFunction_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleF.</span></span><span class="sig-name descname"><span class="pre">TiScFunction_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/timescaleF.html#TiScFunction_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
 <p>Class defining static forward() and backward() methods for use by <a class="reference internal" href="toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input" title="toast.heat.timescaleL.TSC_input"><code class="xref py py-class docutils literal notranslate"><span class="pre">TSC_input</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.heat.timescaleF.TiScFunction_input.forward">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScFunction_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input.forward" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/timescaleF.html#TiScFunction_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>forward method defining the forward pass operations.</p>
 <p>Bias must be included, but its value may be <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 <div class="admonition important">
@@ -129,7 +129,7 @@ Invalid dimension errors during windowing/reshaping commands will be raised if t
 
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.heat.timescaleF.TiScFunction_input.backward">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">backward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScFunction_input.backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input.backward" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">backward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/timescaleF.html#TiScFunction_input.backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input.backward" title="Permalink to this definition">¶</a></dt>
 <dd><p>backward method defining the backward pass operations. Relates the gradient values to each of the input parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -153,12 +153,12 @@ None:                 Placeholder return value, represting the “gradient” of
 
 <dl class="py class">
 <dt class="sig sig-object py" id="toast.heat.timescaleF.TiScTransposeFunction_input">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleF.</span></span><span class="sig-name descname"><span class="pre">TiScTransposeFunction_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScTransposeFunction_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleF.</span></span><span class="sig-name descname"><span class="pre">TiScTransposeFunction_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/timescaleF.html#TiScTransposeFunction_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
 <p>Class defining static forward() and backward() methods for use by <a class="reference internal" href="toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input" title="toast.heat.timescaleL.TSCTranspose_input"><code class="xref py py-class docutils literal notranslate"><span class="pre">TSCTranspose_input</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.heat.timescaleF.TiScTransposeFunction_input.forward">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScTransposeFunction_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input.forward" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/timescaleF.html#TiScTransposeFunction_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>forward method defining the forward pass operations.
 Bias must be included, but its value may be <code class="docutils literal notranslate"><span class="pre">None</span></code>
 Assumes that passed data is trimmed so that the output of min_window kernels is in the last half of values (no trailing zeros).
@@ -187,7 +187,7 @@ Invalid dimension errors during windowing/reshaping commands will be raised if t
 
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.heat.timescaleF.TiScTransposeFunction_input.backward">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">backward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScTransposeFunction_input.backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input.backward" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">backward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/timescaleF.html#TiScTransposeFunction_input.backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input.backward" title="Permalink to this definition">¶</a></dt>
 <dd><p>backward method defining the backward pass operations. Relates the gradient values to each of the input parameters.
 :param grad_output: 1D Tensor holding the input data representing the gradient of this functions output.
 :type grad_output: Tensor</p>

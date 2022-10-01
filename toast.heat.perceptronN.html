@@ -5,17 +5,17 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>toast.heat.perceptronN &mdash; toast 1.3.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
+    <script src="static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    <script src="static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="toast.heat.timescaleF" href="toast.heat.timescaleF.html" />
@@ -80,7 +80,7 @@
           <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
       <li>toast.heat.perceptronN</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/toast.heat.perceptronN.rst.txt" rel="nofollow"> View page source</a>
+            <a href="sources/toast.heat.perceptronN.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -93,11 +93,11 @@
 <p>A Class that contains all the functionality and tracking necessary to train and debug Deep Neural Networks.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="toast.heat.perceptronN.PerceptronN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.perceptronN.</span></span><span class="sig-name descname"><span class="pre">PerceptronN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/perceptronN.html#PerceptronN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.perceptronN.</span></span><span class="sig-name descname"><span class="pre">PerceptronN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/perceptronN.html#PerceptronN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="toast.heat.network.html#toast.heat.network.Network" title="toast.heat.network.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">toast.heat.network.Network</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.heat.perceptronN.PerceptronN.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/perceptronN.html#PerceptronN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/perceptronN.html#PerceptronN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a multilayer perceptron network object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -120,7 +120,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.heat.perceptronN.PerceptronN.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/perceptronN.html#PerceptronN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN.forward" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/perceptronN.html#PerceptronN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overwrites the forward method of the Network class to process data based on our network structure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -134,7 +134,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.heat.perceptronN.PerceptronN.convert_to_decision">
-<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/perceptronN.html#PerceptronN.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/perceptronN.html#PerceptronN.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.PerceptronN.convert_to_decision" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method overwrites the forward method of the Network class, in case special behavior is desired
 Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
 <dl class="field-list simple">
@@ -156,7 +156,7 @@ Convertrs a network output to a definite decision based on thresholds highest li
 
 <dl class="py function">
 <dt class="sig sig-object py" id="toast.heat.perceptronN.define_sequential_linear_layers">
-<span class="sig-prename descclassname"><span class="pre">toast.heat.perceptronN.</span></span><span class="sig-name descname"><span class="pre">define_sequential_linear_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/perceptronN.html#define_sequential_linear_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.define_sequential_linear_layers" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">toast.heat.perceptronN.</span></span><span class="sig-name descname"><span class="pre">define_sequential_linear_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/heat/perceptronN.html#define_sequential_linear_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.perceptronN.define_sequential_linear_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Streamlined function to generate sequential object containting standard layers in an order commonly seen in perceptron architectures.</p>
 <p>It is expected for most users to use the more comprehensive <a class="reference internal" href="#toast.heat.perceptronN.PerceptronN" title="toast.heat.perceptronN.PerceptronN"><code class="xref py py-class docutils literal notranslate"><span class="pre">PerceptronN</span></code></a> class when defining perceptron networks, however
 this function is spearated out for integration with other class definitions to maintain consistency within the toast framework.</p>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.encoderDecisionN &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../static/documentation_options.js"></script>
+        <script src="../../../static/jquery.js"></script>
+        <script src="../../../static/underscore.js"></script>
+        <script src="../../../static/doctools.js"></script>
+    <script src="../../../static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>toast.heat.encoderDecisionN</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.heat.encoderDecisionN</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A Class containing all the functionality and tracking necessary to train and debug Deep Neural Networks.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">toast.heat</span> <span class="kn">import</span> <span class="n">network</span> <span class="k">as</span> <span class="n">toast_network</span>
+<span class="kn">from</span> <span class="nn">toast.heat</span> <span class="kn">import</span> <span class="n">perceptronN</span><span class="p">,</span> <span class="n">timescaleL</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+
+
+<div class="viewcode-block" id="EncodeMlpN"><a class="viewcode-back" href="../../../toast.heat.encoderDecisionN.html#toast.heat.encoderDecisionN.EncodeMlpN">[docs]</a><span class="k">class</span> <span class="nc">EncodeMlpN</span><span class="p">(</span><span class="n">toast_network</span><span class="o">.</span><span class="n">Network</span><span class="p">):</span>
+<div class="viewcode-block" id="EncodeMlpN.__init__"><a class="viewcode-back" href="../../../toast.heat.encoderDecisionN.html#toast.heat.encoderDecisionN.EncodeMlpN.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoder_layers</span><span class="p">,</span> <span class="n">encoded_shape</span><span class="p">,</span> <span class="n">layer_desc</span><span class="p">,</span> <span class="n">independent_encode_channels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">freeze_encoder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">insert_dropout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="p">[],</span> <span class="n">dropout_perc</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span> <span class="n">nonlinearity_final</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">,</span> <span class="n">path_save_progress</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Wrapper network object to allow the use of existing and/or pretrained encoder layers as an encoder</span>
+<span class="sd">            with a mutlilayer perceptron `~toast.heat.perceptronN.PerceptronN` decision/classifier component.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            encoder_layers (pytorch network)     Network object (often a nn.Sequential wrapper) defining encoder layers.</span>
+<span class="sd">            encoded_shape (1D iterable):         Defines the dimensions output by the encoder layer.</span>
+<span class="sd">            layer_desc (2D iterable):            2D Iterable: sequential list contianing elemnt lists that describe each layers architecture. Specific indes values are defined in detail above.</span>
+<span class="sd">            independent_encode_channels (bool, optional): Whether the encoder contains multiple independent channels, which must be fed the data separately and have their output concatonated.</span>
+<span class="sd">            freeze_encoder (bool, optional):     Whether to freeze the weights of the encoder during training</span>
+<span class="sd">            insert_dropout (bool, optional):     Whether to insert a dropout layer between the encoder and decoder layers.</span>
+<span class="sd">            dropout (1D iterable, optional):     1D Iterable of Boolean Values: Sequentially decide if the correlating layer in layer_size iterable should be followed by a dropout layer. If value(s) don&#39;t exist they will be set to False.</span>
+<span class="sd">            dropout_perc(float, optional):       The percentage dropout to implement in the dropotu layers.</span>
+<span class="sd">            nonlinearity (pyTorch Module, optional):       A pyTorch Module that representes the desired nonlinearity class for the entire network.</span>
+<span class="sd">            nonlinearity_final (pyTorch Module, optional): A pyTorch Module that representes the desired nonlinearity class for the final output node.</span>
+<span class="sd">            path_save_progress (str, optional):  Path to the parent directory where progress and tracking data should be saved.</span>
+<span class="sd">            description (str, optional):         A description describing the contents/structure of the network for easy reference.</span>
+<span class="sd">            comment (str, optional):             A comment about what this network is being used to do/test/investigate for later identification of tests run.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the AutoEncoderN class representing a deep neural network.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># IMPORTANT: Make sure input_shape includes a channels dimension, likely a [1, ...] or [3, ...] dimension before data/image size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decision_threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_output</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">layer_desc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>  <span class="c1"># TODO FIX THIS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">independent_encode_channels</span> <span class="o">=</span> <span class="n">independent_encode_channels</span>
+
+        <span class="c1"># Define the expected layer types, used for organizing potential debugging output.</span>
+        <span class="n">layer_type_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LinrLayer&#39;</span>   <span class="p">:</span> <span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">],</span>
+                           <span class="s1">&#39;NonlinLayer&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">nonlinearity</span><span class="p">,</span> <span class="n">nonlinearity_final</span><span class="p">]</span>
+                           <span class="p">}</span>  <span class="c1"># Dropout layer type not identified, will be categorized as &quot;Other&quot;</span>
+        <span class="c1"># Call Network __init__() to initialize standard network variables and functions</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EncodeMlpN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">layer_type_dict</span><span class="o">=</span><span class="n">layer_type_dict</span><span class="p">,</span> <span class="n">path_save_progress</span><span class="o">=</span><span class="n">path_save_progress</span><span class="p">,</span>
+                                             <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">)</span>
+
+        <span class="n">shape_mlpInput</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">encoded_shape</span><span class="p">:</span>
+            <span class="n">shape_mlpInput</span> <span class="o">*=</span> <span class="n">axis</span>
+        <span class="n">mlp_layerSize</span> <span class="o">=</span> <span class="p">[</span><span class="n">shape_mlpInput</span><span class="p">]</span> <span class="o">+</span> <span class="n">layer_desc</span>
+        <span class="n">mlp_layers</span> <span class="o">=</span> <span class="n">perceptronN</span><span class="o">.</span><span class="n">define_sequential_linear_layers</span><span class="p">(</span> <span class="n">mlp_layerSize</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">dropout_perc</span><span class="o">=</span><span class="n">dropout_perc</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="n">nonlinearity</span><span class="p">,</span> <span class="n">nonlinearity_final</span><span class="o">=</span><span class="n">nonlinearity_final</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">insert_dropout</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span> <span class="n">encoder_layers</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout_perc</span><span class="p">),</span> <span class="n">mlp_layers</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span> <span class="n">encoder_layers</span><span class="p">,</span> <span class="n">mlp_layers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_layers_added</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">freeze_encoderLayers</span><span class="p">(</span> <span class="n">freeze_encoder</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EncodeMlpN.forward"><a class="viewcode-back" href="../../../toast.heat.encoderDecisionN.html#toast.heat.encoderDecisionN.EncodeMlpN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Overwrites the forward method of the Network class to process data based on our network structure.</span>
+
+<span class="sd">        Args:  </span>
+<span class="sd">            data: Data to be processed by the network.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The output of the network</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">independent_encode_channels</span><span class="p">:</span>
+            <span class="n">output_channels</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">output_channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">channel</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">data_encoded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span> <span class="n">output_channels</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_encoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">:](</span> <span class="n">data_encoded</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="EncodeMlpN.convert_to_decision"><a class="viewcode-back" href="../../../toast.heat.encoderDecisionN.html#toast.heat.encoderDecisionN.EncodeMlpN.convert_to_decision">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_decision</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This method overwrites the forward method of the Network class, in case special behavior is desired</span>
+<span class="sd">        Convertrs a network output to a definite decision based on thresholds highest likelihood values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output:                 Value output by network</span>
+<span class="sd">            one_hot_encode (bool):  Whether the data is one_hot_encoded</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Float Tensor representing the final decision of the network.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_output</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span> <span class="n">output</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">output</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_threshold</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="EncodeMlpN.freeze_encoderLayers"><a class="viewcode-back" href="../../../toast.heat.encoderDecisionN.html#toast.heat.encoderDecisionN.EncodeMlpN.freeze_encoderLayers">[docs]</a>    <span class="k">def</span> <span class="nf">freeze_encoderLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freeze</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; This method will freeze or unfreeze the weights of the encoder layers.</span>
+
+<span class="sd">        Frozen weights are locked, and will not change during training.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            freeze (bool): Whether to freeze the encoder layers.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Nothing. The `requires_grad` attribute of the encoder layers will be set based on user input.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="ow">not</span><span class="p">(</span> <span class="n">freeze</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">testNet</span> <span class="o">=</span> <span class="n">EncodeMlpN</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">1280</span><span class="p">],</span>
+                             <span class="p">[[</span><span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+                              <span class="p">[</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                              <span class="p">[</span><span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+                              <span class="p">[</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                              <span class="p">[</span><span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+                              <span class="p">[</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                              <span class="p">[</span><span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+                              <span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Network:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">testNet</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">testNet</span><span class="o">.</span><span class="n">layer_dims</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fin.&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

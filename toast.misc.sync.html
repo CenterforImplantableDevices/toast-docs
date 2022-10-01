@@ -5,17 +5,17 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>toast.misc.sync &mdash; toast 1.3.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
+    <script src="static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    <script src="static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="toast.misc.tlog" href="toast.misc.tlog.html" />
@@ -76,7 +76,7 @@
           <li><a href="toast.misc.html">toast.misc</a> &raquo;</li>
       <li>toast.misc.sync</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/toast.misc.sync.rst.txt" rel="nofollow"> View page source</a>
+            <a href="sources/toast.misc.sync.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -90,14 +90,14 @@
 in real time onto the CID synology drive.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="toast.misc.sync.Sync_Folder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">Sync_Folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/misc/sync.html#Sync_Folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">Sync_Folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/misc/sync.html#Sync_Folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class housing watchdogs to monitor file change events.</p>
 <p>Will monitor a target path, and add any detected new files to a
 <code class="docutils literal notranslate"><span class="pre">new_files</span></code> instance variable.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.misc.sync.Sync_Folder.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/misc/sync.html#Sync_Folder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/misc/sync.html#Sync_Folder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes an observer thread and new_file instance variable to act as a buffer
 which holds any new files detected, so that they may be synced by another process.</p>
 <dl class="field-list simple">
@@ -112,7 +112,7 @@ which holds any new files detected, so that they may be synced by another proces
 
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.misc.sync.Sync_Folder.add_file">
-<span class="sig-name descname"><span class="pre">add_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/misc/sync.html#Sync_Folder.add_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder.add_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/misc/sync.html#Sync_Folder.add_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder.add_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target function to run after a creation or modification event occurs in the target path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -126,7 +126,7 @@ which holds any new files detected, so that they may be synced by another proces
 
 <dl class="py method">
 <dt class="sig sig-object py" id="toast.misc.sync.Sync_Folder.stop">
-<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/misc/sync.html#Sync_Folder.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder.stop" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/misc/sync.html#Sync_Folder.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.Sync_Folder.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to gracefully terminate the observer thread.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -142,7 +142,7 @@ which holds any new files detected, so that they may be synced by another proces
 
 <dl class="py function">
 <dt class="sig sig-object py" id="toast.misc.sync._sync">
-<span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/misc/sync.html#_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync._sync" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/misc/sync.html#_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync._sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target function run to watch a target path and periodically sync any changes to a
 destination path within the synology drive.</p>
 <p>This syncronization is implemented using rsync with arguments <code class="docutils literal notranslate"><span class="pre">rltvze</span></code>.</p>
@@ -166,7 +166,7 @@ destination path within the synology drive.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="toast.misc.sync.start_sync">
-<span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">start_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/misc/sync.html#start_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.start_sync" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">start_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/misc/sync.html#start_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.start_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Streamlined function to start a continuously running thread to manage the real-time
 syncronization of files from a target path to a destination folder synology drive.</p>
 <p>Destination path will be placed within the Synology &gt; ML Datasets location.</p>
@@ -188,7 +188,7 @@ Default is to placed the syncronized folder directly into the ML Datasets locati
 
 <dl class="py function">
 <dt class="sig sig-object py" id="toast.misc.sync.sync_now">
-<span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">sync_now</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/misc/sync.html#sync_now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.sync_now" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">toast.misc.sync.</span></span><span class="sig-name descname"><span class="pre">sync_now</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/misc/sync.html#sync_now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.misc.sync.sync_now" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience function used to immediately syncronize a target path/file into the synology drive.
 A message will also be printed to stdout to inform the user of the syncronization action.</p>
 <p>Destination path will be placed within the Synology &gt; ML Datasets location.</p>

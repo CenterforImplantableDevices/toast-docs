@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.bread.format.chbmit &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../../static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../static/documentation_options.js"></script>
+        <script src="../../../../static/jquery.js"></script>
+        <script src="../../../../static/underscore.js"></script>
+        <script src="../../../../static/doctools.js"></script>
+    <script src="../../../../static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>toast.bread.format.chbmit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.bread.format.chbmit</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Methods that help with formatting data from the CHB-MIT dataset.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">toast.bread.format</span> <span class="kn">import</span> <span class="n">saveData</span>
+<span class="kn">from</span> <span class="nn">toast.misc</span> <span class="kn">import</span> <span class="n">tlog</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyedflib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+
+<div class="viewcode-block" id="format_and_save"><a class="viewcode-back" href="../../../../toast.bread.format.chbmit.html#toast.bread.format.chbmit.format_and_save">[docs]</a><span class="k">def</span> <span class="nf">format_and_save</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;wav&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">add_datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rename_firstRepeatedCh</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;High level function that allows data formatting and saving to all happen with one function</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        Much of the functionality of this function is determined by other functions. Check :py:func:`~format_data` and :py:func:`~toast.bread.format.save_data.save_to_some_file` for full functionality description.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        folder_path (str):               Path to the folder where the data exists</span>
+<span class="sd">        filename (str):                  The specific filename of the file to process.  Do not include extensions.</span>
+<span class="sd">        save_path (str):                 File path of where to save the data</span>
+<span class="sd">        out (str, optional):             Output format to use.  Default is .wav format.</span>
+<span class="sd">        source (str, optional):          Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</span>
+<span class="sd">        add_datetime (bool, optional):   Whether to save the datetime information. Note this adds a lot of processing time and file size</span>
+<span class="sd">        label_group (list, optional):    Specific labels to save (ordered)</span>
+<span class="sd">        data_group (list, optional):     Specific data channels to save (ordered)</span>
+<span class="sd">        metadata_group (list, optional): Specific Metadata channels to save (ordered)</span>
+<span class="sd">        dataset_suffix (str, optional):  Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        rename_firstRepeatedCh (bool, optional): If a channel is repeated, whether to rename the FIRST channel to add an index value 0. Indexes 1+ will automatically be added to subsequent channels regardless to avoid name conflicts.</span>
+<span class="sd">        path_log (str, optional):        Path to the file for outputing logs during execution.</span>
+
+<span class="sd">    Returns:  </span>
+<span class="sd">        True if successful, False if unsuccessful. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path location.</span>
+<span class="sd">        </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="k">if</span> <span class="n">label_group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">label_group</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;seizure&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">data_group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data_group</span>  <span class="o">=</span> <span class="n">get_eeg_channels</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">rename_firstRepeatedCh</span><span class="o">=</span><span class="n">rename_firstRepeatedCh</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">metadata_group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">metadata_group</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">format_data</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">add_datetime</span><span class="o">=</span><span class="n">add_datetime</span><span class="p">,</span> <span class="n">rename_firstRepeatedCh</span><span class="o">=</span><span class="n">rename_firstRepeatedCh</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">add_datetime</span><span class="p">:</span>
+        <span class="n">metadata_group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;datetime_seconds&#39;</span><span class="p">)</span>
+        <span class="n">metadata_group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;datetime_nanosec&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">saveData</span><span class="o">.</span><span class="n">save_to_some_file</span><span class="p">(</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="format_data"><a class="viewcode-back" href="../../../../toast.bread.format.chbmit.html#toast.bread.format.chbmit.format_data">[docs]</a><span class="k">def</span> <span class="nf">format_data</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">add_datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rename_firstRepeatedCh</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Imports the raw data from the passed filename into a usable dictionary format</span>
+
+<span class="sd">    Currently supports the following sources:</span>
+<span class="sd">    </span>
+<span class="sd">    * &#39;test&#39; - Does not alter filepath other than adding extensions. For testing.</span>
+
+<span class="sd">    Attention:</span>
+<span class="sd">        Filenames should be passed without the extension</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        folder_path (str):             Path to the folder where the data exists</span>
+<span class="sd">        filename (str):                The specific filename of the file to process.  Do not include extensions.</span>
+<span class="sd">        source (str, optional):        Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</span>
+<span class="sd">        add_datetime (bool, optional): Whether to save the datetime information. Note this adds a lot of processing time and file size</span>
+<span class="sd">        rename_firstRepeatedCh (bool, optional): If a channel is repeated, whether to rename the FIRST channel to add an index value 0. Indexes 1+ will automatically be added to subsequent channels regardless to avoid name conflicts.</span>
+<span class="sd">        path_log (str, optional):      Path to the file for outputing logs during execution.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary of numpy arrays.  Each element is one channel of data.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span>
+        <span class="n">file_path_edf</span>     <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.edf&quot;</span><span class="p">)</span>
+        <span class="n">file_path_summary</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-summary.txt&quot;</span><span class="p">)</span>
+        <span class="c1"># file_bath_bin   = os.path.join( folder_path, filename + &quot;.bin&quot;)</span>
+
+    <span class="c1"># Import the raw data.</span>
+    <span class="n">data_channels</span>     <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">repeated_channels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">expected_channels</span> <span class="o">=</span> <span class="n">get_eeg_channels</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">rename_firstRepeatedCh</span><span class="o">=</span><span class="n">rename_firstRepeatedCh</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Reading EDF File&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pyedflib</span><span class="o">.</span><span class="n">EdfReader</span><span class="p">(</span><span class="n">file_path_edf</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getSampleFrequency</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">indx</span><span class="p">,</span> <span class="n">signal_header</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">getSignalHeaders</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">signal_header</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_channels</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">data_channels</span><span class="p">[</span><span class="n">signal_header</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readSignal</span><span class="p">(</span><span class="n">indx</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;DUPLICATE CHANNEL &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">signal_header</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39; FOUND IN FILE. ADDING NUMBERING TO REPEATED CHANNEL NAMES TO AVOID NAME CONFLICTS.&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">new_channel_name</span> <span class="o">=</span> <span class="n">signal_header</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">new_channel_name</span> <span class="ow">in</span> <span class="n">repeated_channels</span><span class="p">):</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">new_channel_name</span> <span class="o">=</span> <span class="n">signal_header</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+                <span class="n">data_channels</span><span class="p">[</span><span class="n">new_channel_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readSignal</span><span class="p">(</span><span class="n">indx</span><span class="p">)</span>
+                <span class="n">repeated_channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">new_channel_name</span><span class="p">)</span>
+                
+    <span class="k">if</span> <span class="n">rename_firstRepeatedCh</span><span class="p">:</span>
+        <span class="c1"># For any repeated channels, update the first channel name to include a 0-index suffix</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">repeated_channels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                <span class="n">channel_name</span> <span class="o">=</span> <span class="n">ch</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">data_channels</span><span class="p">[</span><span class="n">channel_name</span><span class="o">+</span><span class="s1">&#39;_0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_channels</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">channel_name</span><span class="p">)</span>
+
+    <span class="c1"># Fill in any missing channels with zeros</span>
+    <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">expected_channels</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">channel</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_channels</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1">&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; not in &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;. Replacing with All ZEROS&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+            <span class="n">data_channels</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_channels</span><span class="p">[</span> <span class="nb">list</span><span class="p">(</span> <span class="n">data_channels</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]])))</span>
+
+    <span class="c1"># Define a time variavle in seconds</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_channels</span><span class="p">[</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_channels</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]])</span><span class="o">/</span><span class="n">sample_rate</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_channels</span><span class="p">[</span> <span class="nb">list</span><span class="p">(</span> <span class="n">data_channels</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]])))</span>
+    <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span>
+    <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;seizure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Generating Annotations&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">file_path_summary</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span> <span class="c1"># File end time, not used</span>
+            <span class="n">num_seizures</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">while</span> <span class="n">num_seizures</span><span class="p">:</span>
+                <span class="n">start_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span>  <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">)</span>
+                <span class="n">end_index</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">sample_rate</span><span class="p">)</span>
+                <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;seizure&#39;</span><span class="p">][</span><span class="n">start_index</span> <span class="p">:</span> <span class="n">end_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">num_seizures</span> <span class="o">-=</span>  <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Filename &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; not found in summary file.  Skipping file.&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+
+    <span class="c1"># Manipulate Data into expected format.</span>
+    <span class="c1"># Optimize for saving by reducing file size</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Casting channels to appropriate types&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">expected_channels</span><span class="p">:</span>
+        <span class="n">data_channels</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_channels</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+    
+    <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;seizure&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;seizure&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+    <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="p">(</span><span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="c1"># Optionally add a datetime variable, using filename date/time information as starting value</span>
+    <span class="k">if</span> <span class="n">add_datetime</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">datetime</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Creating datetime values&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">file_path_summary</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">last_file_start</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># time_elapsed = datetime.timedelta()</span>
+            <span class="n">days_elapsed</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">while</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;File Start Time: &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">ts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+                    <span class="n">file_start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span> <span class="n">year</span><span class="o">=</span><span class="mi">1970</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">minute</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">second</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">last_file_start</span><span class="p">:</span> <span class="c1"># If this is the first file to add.</span>
+                        <span class="n">last_file_start</span> <span class="o">=</span> <span class="n">file_start</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">last_file_start</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;</span> <span class="n">file_start</span><span class="o">.</span><span class="n">hour</span><span class="p">:</span>
+                            <span class="n">days_elapsed</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="c1">#     time_elapsed += (file_start + datetime.timedelta(days=1)) - last_file_start</span>
+                        <span class="c1"># else:</span>
+                        <span class="c1">#     time_elapsed += file_start - last_file_start</span>
+
+                        <span class="n">last_file_start</span> <span class="o">=</span> <span class="n">file_start</span>
+
+            <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># start_time imported above when reading seizure labels</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">start_time</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">last_file_start</span> <span class="ow">and</span> <span class="n">last_file_start</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;</span> <span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">days_elapsed</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">start_time_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span> <span class="n">year</span><span class="o">=</span><span class="mi">1970</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="o">+</span><span class="n">days_elapsed</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">minute</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">second</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">datetime_array</span> <span class="o">=</span> <span class="n">start_time_datetime</span> <span class="o">+</span> <span class="n">time</span> <span class="o">*</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Must convert to numeric timestamp values for storage</span>
+        <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;datetime_seconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span> <span class="n">d</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datetime_array</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">data_channels</span><span class="p">[</span><span class="s1">&#39;datetime_nanosec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">))</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datetime_array</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data_channels</span></div>
+
+
+<div class="viewcode-block" id="get_eeg_channels"><a class="viewcode-back" href="../../../../toast.bread.format.chbmit.html#toast.bread.format.chbmit.get_eeg_channels">[docs]</a><span class="k">def</span> <span class="nf">get_eeg_channels</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">rename_firstRepeatedCh</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Housekeeping function to get the EEG channel information from the summary.txt file.</span>
+
+<span class="sd">    This is used when extracting metadata information (channel ID) about recording files in the CHB-MIT dataset.</span>
+
+<span class="sd">    Currently supports the following sources:</span>
+<span class="sd">    </span>
+<span class="sd">    * &#39;test&#39; - Does not alter filepath other than adding extensions. For testing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        folder_path (str):      Path to the folder where the data exists</span>
+<span class="sd">        filename (str):         The specific filename of the file to process.  Do not include extensions.</span>
+<span class="sd">        source (str, optional): Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</span>
+<span class="sd">        rename_firstRepeatedCh (bool, optional): If a channel is repeated, whether to rename the FIRST channel to add an index value 0. Indexes 1+ will automatically be added to subsequent channels regardless to avoid name conflicts.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of extracted channel labels.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span>
+        <span class="n">file_path_summary</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-summary.txt&quot;</span><span class="p">)</span>
+        <span class="c1"># file_bath_bin   = os.path.join( folder_path, filename + &quot;.bin&quot;)</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">file_path_summary</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">found_channelList</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">channel_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">repeated_channels</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">found_channelList</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;Channel&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                <span class="n">channel_name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">channel_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">channel_list</span><span class="p">:</span>
+                    <span class="n">channel_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">channel_name</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">new_channel_name</span> <span class="o">=</span> <span class="n">channel_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+                    <span class="k">while</span> <span class="p">(</span><span class="n">new_channel_name</span> <span class="ow">in</span> <span class="n">repeated_channels</span><span class="p">):</span>
+                        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">new_channel_name</span> <span class="o">=</span> <span class="n">channel_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+                    <span class="n">channel_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>      <span class="n">new_channel_name</span><span class="p">)</span>
+                    <span class="n">repeated_channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">new_channel_name</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">found_channelList</span> <span class="o">=</span> <span class="kc">False</span>
+            
+            <span class="k">if</span> <span class="s1">&#39;Channels&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span> <span class="c1"># Keyword for header to channels section</span>
+                <span class="n">found_channelList</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span> <span class="c1"># Skip line of asterisks</span>
+                <span class="k">continue</span>
+        
+        <span class="k">if</span> <span class="n">rename_firstRepeatedCh</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">repeated_channels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ch</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                    <span class="n">channel_name</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">ch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">i_replace</span> <span class="o">=</span> <span class="n">channel_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">channel_name</span><span class="p">)</span>
+                    <span class="n">channel_list</span><span class="p">[</span><span class="n">i_replace</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel_name</span><span class="o">+</span><span class="s1">&#39;_0&#39;</span>
+    
+    <span class="k">return</span> <span class="n">channel_list</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">data_path</span> <span class="o">=</span> <span class="s1">&#39;/Users/trevor/Dropbox/Mac (2)/Downloads/&#39;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;chb12&#39;</span>
+
+    <span class="n">ch</span> <span class="o">=</span> <span class="n">get_eeg_channels</span><span class="p">(</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ch</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

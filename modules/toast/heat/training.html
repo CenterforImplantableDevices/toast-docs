@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.training &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../static/documentation_options.js"></script>
+        <script src="../../../static/jquery.js"></script>
+        <script src="../../../static/underscore.js"></script>
+        <script src="../../../static/doctools.js"></script>
+    <script src="../../../static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>toast.heat.training</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.heat.training</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Helper functions that perform many testing and visualization actions necessary when training a network</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">unique</span><span class="p">,</span> <span class="n">where</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">empty</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">MSELoss</span>
+<span class="kn">from</span> <span class="nn">toast.plate</span> <span class="kn">import</span> <span class="n">heat_plot</span>
+<span class="kn">from</span> <span class="nn">toast.misc</span> <span class="kn">import</span> <span class="n">tlog</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+
+<div class="viewcode-block" id="plot_training_loss"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_training_loss">[docs]</a><span class="k">def</span> <span class="nf">plot_training_loss</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_folder_name&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to generate the standard training/testing loss plot.</span>
+
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.train_test_loss`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_txt (bool, optional):          Whether to save a text file summary of the Train/Test/Accuracy values.</span>
+<span class="sd">            save_path (str, optional):          Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):            Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generates and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">x_axis</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">loss_train_history</span><span class="p">)))[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">training_curve</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">loss_train_history</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">testing_curve</span>  <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">loss_test_history</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">loss_test_history</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">accuracy_test_history</span><span class="p">):</span>
+        <span class="n">accuracy_data</span>  <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">accuracy_test_history</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">accuracy_data</span>  <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">save_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">save_path</span><span class="p">)</span>
+    <span class="n">heat_plot</span><span class="o">.</span><span class="n">train_test_loss</span><span class="p">(</span> <span class="n">x_axis</span><span class="p">,</span> <span class="n">training_curve</span><span class="p">,</span> <span class="n">testing_curve</span><span class="p">,</span> <span class="n">accuracy_data</span><span class="o">=</span><span class="n">accuracy_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;Epochs&#39;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="s1">&#39;Loss&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="n">save_txt</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_trainingCurve&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_training_accuracy"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_training_accuracy">[docs]</a><span class="k">def</span> <span class="nf">plot_training_accuracy</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_folder_name&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to generate the standard accuracy plot.</span>
+
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.loss_accuracy`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (bool, optional):         Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):            Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generates and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">x_axis</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">loss_train_history</span><span class="p">)))[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">testing_curve</span>  <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">loss_test_history</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">loss_test_history</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">accuracy_test_history</span><span class="p">):</span>
+        <span class="n">accuracy_data</span>           <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">accuracy_test_history</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">accuracy_falsepos_data</span>  <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">accuracy_test_falsepos_history</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">accuracy_falseneg_data</span>  <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">accuracy_test_falseneg_history</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy data not present. Skipping accuracy plot for  &#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_accuracyCurve&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">save_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">save_path</span><span class="p">)</span>
+    <span class="n">heat_plot</span><span class="o">.</span><span class="n">loss_accuracy</span><span class="p">(</span> <span class="n">x_axis</span><span class="p">,</span> <span class="n">testing_curve</span><span class="p">,</span> <span class="n">accuracy_data</span><span class="p">,</span> <span class="n">false_pos</span><span class="o">=</span><span class="n">accuracy_falsepos_data</span><span class="p">,</span> <span class="n">false_neg</span><span class="o">=</span><span class="n">accuracy_falseneg_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;Epochs&#39;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Loss&#39;</span><span class="p">,</span> <span class="s1">&#39;Accuracy&#39;</span><span class="p">],</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_accuracyCurve&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_distribution_weights"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_distribution_weights">[docs]</a><span class="k">def</span> <span class="nf">plot_distribution_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_folder_name&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to generate distribution plot of the weights of each layer from the last training iteration</span>
+
+<span class="sd">        This will make separate plots for different layer types, so that similar layer types can be easily compared.</span>
+<span class="sd">        </span>
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.layer_distributions`</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            **Linear Layers** contain a weights parameter module and a bias parameter module. (1 layer, 2 parameter modules)</span>
+<span class="sd">            </span>
+<span class="sd">            **Non-linearity Layers** do not contain parameters as they only perform a fixed operation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            save_txt (bool, optional):          Whether to save a .txt summary of the final state of the varaibles for each layer</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (str, optional):          Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):        Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generates and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>    
+    <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+    <span class="c1"># Define a dictionary to hold and organize the layer types</span>
+    <span class="n">data_layers</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;OtherLayers&#39;</span><span class="p">:</span> <span class="p">[]</span> <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span> <span class="p">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">]):</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Bias&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Wght&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Unkn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Iterate through the layers with recorded activation values and organize them by layer type.</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>
+        <span class="n">type_found</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Iterate through all the expected layer types to see which type they match</span>
+        <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">layer_types</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">get_parammodules</span><span class="p">()[</span><span class="n">index</span><span class="p">],</span> <span class="n">l_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">l_type</span> <span class="ow">in</span> <span class="n">layer_types</span><span class="p">]):</span>
+                <span class="c1"># We found an expected layer type</span>
+                <span class="n">type_found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Note that Linear layers contain two parameter types, 2D weights parameter and 1D bias parameter.</span>
+                <span class="c1"># These layers must be handled specially</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">get_parammodules</span><span class="p">()[</span><span class="n">index</span><span class="p">],</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+                        <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="o">+</span><span class="s1">&#39;Wght&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">param</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)))</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="o">+</span><span class="s1">&#39;Bias&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>  <span class="n">param</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">WARNING: UNEXPECTED PARAMETER OF STRANGE DIMENSION ATTATCHED TO LINEAR LAYER</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="o">+</span><span class="s1">&#39;Unkn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>  <span class="n">param</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)))</span>
+                    <span class="k">break</span>
+                <span class="c1"># All other layers get added normally</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">param</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)))</span>
+                <span class="k">break</span>
+        <span class="c1"># If an expected layer type is not found, add it to OtherLayers</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">type_found</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">ALERT: FOUND PARAMETER ATTACHED TO UNEXPECTEC MODULE: &#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">get_parammodules</span><span class="p">()[</span><span class="n">index</span><span class="p">]),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="s1">&#39;OtherLayers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>  <span class="n">param</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">save_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">save_path</span><span class="p">)</span>
+    <span class="c1"># Plot the data included in each list sorted above, organized by layer type.</span>
+    <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_layers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">num_bins</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">num_bins</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">data_desc</span> <span class="o">=</span> <span class="s1">&#39;layerDistWgt-&#39;</span> <span class="o">+</span> <span class="n">layer_name</span> <span class="c1"># WT for Weights</span>
+            <span class="n">heat_plot</span><span class="o">.</span><span class="n">layer_distributions</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">num_bins</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="n">save_txt</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;Parameter Distribution&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_distribution_activations"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_distribution_activations">[docs]</a><span class="k">def</span> <span class="nf">plot_distribution_activations</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_folder_name&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to generate distribution plot of the activations of each layer from the last training iteration</span>
+<span class="sd">        </span>
+<span class="sd">        This will make separate plots for different layer types, so that similar layer types can be easily compared.</span>
+
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.layer_distributions`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            save_txt (bool, optional):          Whether to save a .txt summary of the final state of the varaibles for each layer</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (bool, optional):         Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):        Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generate and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">network</span><span class="o">.</span><span class="n">track_activation_setup</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Activation tracking was not setup. Skipping activation distribution plot for  &#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="s1">&#39;layerDistAct&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+    <span class="n">expected_OtherLayers</span> <span class="o">=</span> <span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">]</span>
+
+    <span class="c1"># Define a dictionary to hold and organize the layer types</span>
+    <span class="n">data_layers</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;OtherLayers&#39;</span><span class="p">:</span> <span class="p">[]</span> <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="p">:</span>
+        <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Iterate through the layers with recorded activation values and organize them by layer type.</span>
+    <span class="k">for</span> <span class="n">layer_module</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activations_keys_ordered</span><span class="p">:</span>
+        <span class="n">type_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Iterate through all the signified layer types to see which type they match</span>
+        <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">layer_types</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">layer_module</span><span class="p">,</span> <span class="n">l_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">l_type</span> <span class="ow">in</span> <span class="n">layer_types</span><span class="p">]):</span>
+                <span class="n">type_found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activations</span><span class="p">[</span><span class="n">layer_module</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+                <span class="k">break</span>
+        <span class="c1"># If the proper layer type is not found, add it to OtherLayers</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">type_found</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">layer_module</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span> <span class="k">for</span> <span class="n">expected</span> <span class="ow">in</span> <span class="n">expected_OtherLayers</span><span class="p">]):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">ALERT: FOUND UNEXPECTED MODULE TYPE: &#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span> <span class="n">layer_module</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="s1">&#39;OtherLayers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>  <span class="n">network</span><span class="o">.</span><span class="n">layer_activations</span><span class="p">[</span><span class="n">layer_module</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">save_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">save_path</span><span class="p">)</span>
+    <span class="c1"># Plot the data included in each list sorted above, organized by layer type.</span>
+    <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_layers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">num_bins</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">num_bins</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">data_desc</span> <span class="o">=</span> <span class="s1">&#39;layerDistAct-&#39;</span> <span class="o">+</span> <span class="n">layer_name</span> <span class="c1"># AC for Activations</span>
+            <span class="n">heat_plot</span><span class="o">.</span><span class="n">layer_distributions</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">num_bins</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="n">save_txt</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;Parameter Distribution&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_distribution_outputs"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_distribution_outputs">[docs]</a><span class="k">def</span> <span class="nf">plot_distribution_outputs</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_folder_name&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to generate distribution plot of the outputs produced from a dataset, organized by true label and combined to show full combined output spread</span>
+
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.layer_distributions`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            dataloader ( toast dataloader):     Dataloader object that can load the labels and samples to produce the distribution of outputs</span>
+<span class="sd">            save_txt (bool, optional):          Whether to save a .txt summary of the final state of the varaibles for each layer</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (str, optional):          Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):            Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generate and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">labels</span><span class="p">,</span> <span class="n">outputs</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">get_labeled_outputs_from</span><span class="p">(</span> <span class="n">dataloader</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">is_regenerator</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output Distribution plots for regenerator networks is not yet supported. Skipping plotting&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="n">output_distribution</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">output_labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Get all the unique labels. Sort them if possible</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">unique_labels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">unique</span><span class="p">(</span> <span class="n">labels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">unique_labels</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span> <span class="n">labels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Organize the outputs based on what unique label they are associated with, creating 2 matching lists</span>
+    <span class="k">for</span> <span class="n">unique_label</span> <span class="ow">in</span> <span class="n">unique_labels</span><span class="p">:</span>
+        <span class="n">indicies</span> <span class="o">=</span> <span class="n">where</span><span class="p">((</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">unique_label</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">output_distribution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">outputs</span><span class="p">[</span><span class="n">indicies</span><span class="p">])</span>
+        <span class="n">output_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">unique_label</span><span class="p">)</span>
+    <span class="c1"># Also combine all the outputs to create a cumulative distribution as an additional &quot;output&quot;</span>
+    <span class="n">output_distribution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">outputs</span><span class="p">)</span>
+    <span class="n">output_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;All Labels&#39;</span><span class="p">)</span>
+
+    <span class="n">heat_plot</span><span class="o">.</span><span class="n">layer_distributions</span><span class="p">(</span> <span class="n">output_distribution</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="n">save_txt</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;Output Distribution&#39;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="n">output_labels</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_outputDist&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_training_weights"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_training_weights">[docs]</a><span class="k">def</span> <span class="nf">plot_training_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to visualize the distribution of the weights of each layer throughout training</span>
+<span class="sd">        </span>
+<span class="sd">        This will make separate plots for different layer types, so that similar layer types can be easily compared.</span>
+<span class="sd">                </span>
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.layer_training`</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            **Linear Layers** contain a weights parameter module and a bias parameter module. (1 layer, 2 parameter modules)</span>
+<span class="sd">            </span>
+<span class="sd">            **Non-linearity Layers** do not contain parameters as they only perform a fixed operation.</span>
+
+<span class="sd">        Args:  </span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (str, optional):          Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):        Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">            No return value. Generate and display/save a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span> <span class="nb">any</span><span class="p">([</span> <span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">weights_test_avg_history</span><span class="p">[</span><span class="n">l</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">loss_test_history</span><span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="p">])):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No parameters with weight history are present. Skipping training activation plot for  &#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_layerLrnAct&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+    <span class="n">template_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;avg_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;std_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;q1_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;q3_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;min_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;max_data&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="c1"># Declare dict of descriptive statistics for all the layer weigths, organized based on layer type</span>
+    <span class="n">data_layers</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;OtherLayers&#39;</span><span class="p">:</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span> <span class="p">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">]):</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Bias&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Wght&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Unkn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+            
+    <span class="c1"># Iterate through the layers with recorded activation values and organize them by layer type.</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>
+        <span class="n">type_found</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Iterate through all the expected layer types to see which type they match</span>
+        <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">layer_types</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">get_parammodules</span><span class="p">()[</span><span class="n">index</span><span class="p">],</span> <span class="n">l_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">l_type</span> <span class="ow">in</span> <span class="n">layer_types</span><span class="p">]):</span>
+                <span class="c1"># We found an expected layer type</span>
+                <span class="n">type_found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Note that Linear layers contain two parameter types, 2D weights parameter and 1D bias parameter.</span>
+                <span class="c1"># These layers must be handled specially</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">get_parammodules</span><span class="p">()[</span><span class="n">index</span><span class="p">],</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+                        <span class="n">_add_data_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="o">+</span><span class="s1">&#39;Wght&#39;</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">_add_data_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="o">+</span><span class="s1">&#39;Bias&#39;</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">WARNING: UNEXPECTED PARAMETER OF STRANGE DIMENSION ATTATCHED TO LINEAR LAYER</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">_add_data_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="o">+</span><span class="s1">&#39;Unkn&#39;</span><span class="p">])</span>
+                    <span class="k">break</span>
+                <span class="c1"># All other layers get added normally</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_add_data_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">])</span>
+                <span class="k">break</span>
+        <span class="c1"># If an expected layer type is not found, add it to OtherLayers</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">type_found</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">ALERT: FOUND PARAMETER ATTACHED TO UNEXPECTEC MODULE: &#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">get_parammodules</span><span class="p">()[</span><span class="n">index</span><span class="p">]),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">_add_data_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">data_layers</span><span class="p">[</span><span class="s1">&#39;OtherLayers&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">save_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">save_path</span><span class="p">)</span>
+    <span class="c1"># Plot the data included in each list sorted above, organized by layer type.</span>
+    <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_layers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">x_axis</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_axis</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">data_desc</span> <span class="o">=</span> <span class="s1">&#39;layerLrnWgt-&#39;</span> <span class="o">+</span> <span class="n">layer_name</span> <span class="c1"># WT for Weights</span>
+                <span class="n">heat_plot</span><span class="o">.</span><span class="n">layer_training</span><span class="p">(</span> <span class="n">x_axis</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;std_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;q1_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;q3_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;min_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;max_data&#39;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;Epochs&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+       
+
+<div class="viewcode-block" id="plot_training_activations"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_training_activations">[docs]</a><span class="k">def</span> <span class="nf">plot_training_activations</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to visualize the distribution of the activations of each layer throughout training</span>
+<span class="sd">        </span>
+<span class="sd">        This will make separate plots for different layer types, so that similar layer types can be easily compared.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (str, optional):          Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):        Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generate and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span> <span class="nb">any</span><span class="p">([</span> <span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">activations_test_avg_history</span><span class="p">[</span><span class="n">l</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">loss_test_history</span><span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">get_list_of_layers</span><span class="p">()</span> <span class="p">])):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No layers with activation history are present. Skipping training activation plot for  &#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_layerLrnAct&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+    <span class="n">expected_OtherLayers</span> <span class="o">=</span> <span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">]</span>
+
+    <span class="n">template_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;avg_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;std_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;q1_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;q3_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;min_data&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;max_data&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="c1"># Declare dict of descriptive statistics for all the layer weigths, organized based on layer type</span>
+    <span class="n">data_layers</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;OtherLayers&#39;</span><span class="p">:</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span> <span class="p">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">]):</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Bias&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Wght&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+            <span class="n">data_layers</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="s1">&#39;Unkn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span> <span class="n">template_dict</span><span class="p">)</span>
+
+    <span class="c1"># Iterate through the layers with recorded activation values and organize them by layer type.</span>
+    <span class="k">for</span> <span class="n">layer_module</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activations_keys_ordered</span><span class="p">:</span>
+        <span class="n">type_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Iterate through all the signified layer types to see which type they match</span>
+        <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">layer_types</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_type_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">layer_module</span><span class="p">,</span> <span class="n">l_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">l_type</span> <span class="ow">in</span> <span class="n">layer_types</span><span class="p">]):</span>
+                <span class="n">type_found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">_add_data_activations</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">layer_module</span><span class="p">,</span> <span class="n">data_layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">])</span>
+                <span class="k">break</span>
+        <span class="c1"># If the proper layer type is not found, add it to OtherLayers</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">type_found</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">layer_module</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span> <span class="k">for</span> <span class="n">expected</span> <span class="ow">in</span> <span class="n">expected_OtherLayers</span><span class="p">]):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">ALERT: FOUND UNEXPECTED MODULE TYPE: &#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span> <span class="n">layer_module</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">_add_data_activations</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">layer_module</span><span class="p">,</span> <span class="n">data_layers</span><span class="p">[</span><span class="s1">&#39;OtherLayers&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">save_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">save_path</span><span class="p">)</span>
+    <span class="c1"># Plot the data included in each list sorted above, organized by layer type.</span>
+    <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_layers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">x_axis</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_axis</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">data_desc</span> <span class="o">=</span> <span class="s1">&#39;layerLrnAct-&#39;</span> <span class="o">+</span> <span class="n">layer_name</span> <span class="c1"># AC for Activations</span>
+            <span class="n">heat_plot</span><span class="o">.</span><span class="n">layer_training</span><span class="p">(</span> <span class="n">x_axis</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;std_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;q1_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;q3_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;min_data&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;max_data&#39;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;Epochs&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">data_desc</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_output_correlation"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_output_correlation">[docs]</a><span class="k">def</span> <span class="nf">plot_output_correlation</span><span class="p">(</span> <span class="n">sample_attribute</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to generate correlation plot of the outputs produced from a dataset, separated by a given data attribute for comparison of different types of data.</span>
+
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.output_correlation`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sample_attribute (str):             Sample Attribute to stratify the data from the dataset by. Each unique attribute will be plotted separately for analysis.</span>
+<span class="sd">            network (toast network):            `toast.heat` generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            dataloader (toast dataloader):      Dataloader object that can load the labels and samples to produce the distribution of outputs</span>
+<span class="sd">            show_plot (bool, optional):         Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):         Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (str, optional):          Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional): Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):           Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):        Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generate and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">is_regenerator</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output correlation of regenerator output is not meaningful. Skipping plotting for &#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_outputCorr&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">full_dataset</span> <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">dataset</span>
+    <span class="n">data_size</span>    <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_dataset</span><span class="p">)</span>
+    <span class="n">batch_size</span>   <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">batch_size</span>
+
+    <span class="c1"># Set network to eval mode, which will turn off dropout layers, stop tracking the gradients/computation graphs, etc for faster performance</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="c1"># Get sample values to calculate dimensions for array pre-allocation</span>
+        <span class="n">temp_attrib</span> <span class="o">=</span> <span class="n">full_dataset</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">sample_attribute</span><span class="p">]</span>
+        <span class="n">temp_sample</span><span class="p">,</span> <span class="n">temp_label</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span> <span class="nb">iter</span><span class="p">(</span> <span class="n">dataloader</span><span class="p">))</span>
+        <span class="n">temp_sample</span> <span class="o">=</span> <span class="n">temp_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Separate the first sample from the batch</span>
+        <span class="n">temp_label</span>  <span class="o">=</span> <span class="n">temp_label</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Find component lengths</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">temp_attrib</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
+            <span class="n">attrib_length</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">attrib_length</span>  <span class="o">=</span> <span class="n">temp_attrib</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">attrib_length</span>  <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_attrib</span><span class="p">)</span>
+        <span class="n">samples_size</span>   <span class="o">=</span> <span class="p">[</span><span class="n">data_size</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">dim</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">temp_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">]</span>
+        <span class="n">label_length</span>   <span class="o">=</span> <span class="n">temp_label</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">temp_sample</span>    <span class="o">=</span> <span class="n">temp_sample</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">output_length</span>  <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">temp_sample</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">attrib_length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Label/Attribute/Output shapes &gt;1 are not yet supported. Skipping plotting for &#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_outputCorr&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Save information about all of the provided dataset</span>
+        <span class="n">samples_to_run</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="o">*</span><span class="n">samples_size</span><span class="p">)</span>
+        <span class="n">attributes</span>     <span class="o">=</span> <span class="n">empty</span><span class="p">((</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">label_length</span> <span class="o">+</span> <span class="n">attrib_length</span> <span class="o">+</span> <span class="n">output_length</span><span class="p">))</span>
+        <span class="n">i_attrib</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">i_label</span>  <span class="o">=</span> <span class="n">attrib_length</span>
+        <span class="n">i_output</span> <span class="o">=</span> <span class="n">attrib_length</span> <span class="o">+</span> <span class="n">label_length</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">data_size</span><span class="p">):</span>
+            <span class="n">attrib</span>        <span class="o">=</span> <span class="n">full_dataset</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">sample_attribute</span><span class="p">]</span>
+            <span class="n">sample</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">full_dataset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">attributes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i_attrib</span><span class="p">:</span><span class="n">i_label</span><span class="p">]</span> <span class="o">=</span> <span class="n">attrib</span>
+            <span class="n">attributes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i_label</span><span class="p">:</span><span class="n">i_output</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+            <span class="n">samples_to_run</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample</span>
+        
+        <span class="c1"># Test one full iteration of the samples provided</span>
+        <span class="n">start_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">end_index</span>   <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">data_size</span><span class="o">//</span><span class="n">batch_size</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">samples_to_run</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">])</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">output</span>  <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+            
+            <span class="n">attributes</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">,</span> <span class="n">i_output</span><span class="p">:]</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+            <span class="n">start_index</span> <span class="o">=</span> <span class="n">end_index</span>
+            <span class="n">end_index</span>   <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="n">end_index</span><span class="o">+</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">data_size</span><span class="p">)</span>
+
+    <span class="n">heat_plot</span><span class="o">.</span><span class="n">output_correlation</span><span class="p">(</span> <span class="n">attributes</span><span class="p">[:,</span><span class="n">i_label</span><span class="p">:</span><span class="n">i_output</span><span class="p">],</span> <span class="n">attributes</span><span class="p">[:,</span><span class="n">i_attrib</span><span class="p">:</span><span class="n">i_label</span><span class="p">],</span> <span class="n">attributes</span><span class="p">[:,</span><span class="n">i_output</span><span class="p">:],</span> <span class="n">title</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_label</span><span class="o">=</span><span class="n">sample_attribute</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_outputCorr&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_output_regenerator"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.plot_output_regenerator">[docs]</a><span class="k">def</span> <span class="nf">plot_output_regenerator</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">loss_fn</span><span class="o">=</span><span class="n">MSELoss</span><span class="p">(),</span> <span class="n">percentile_show</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.9</span><span class="p">],</span> <span class="n">separate_channels</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to generate plots comparing the input waveform to the output waveform. Used with regeneration networks to visualize their encoding/decoding accuracy.</span>
+
+<span class="sd">        Different examples from different percentiles in the range of observed loss are generated, based on user inputs.</span>
+
+<span class="sd">        This is primarily a helper function to allow a single function call with a network object as the argument.</span>
+<span class="sd">        For further plotting functionality description, the plotting specific actions are implemented by :py:func:`~toast.plate.heat_plot.input_output_compare`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network (toast network):               `toast.heat` generated network that has been trained so that it can regenerate an input</span>
+<span class="sd">            dataloader (toast dataloader):         Dataloader object that can load the labels and samples to produce the distribution of outputs</span>
+<span class="sd">            loss_fn (torch.nn loss fcn, optional): Torch.nn derived loss function to use when calculating loss</span>
+<span class="sd">            percentile_show (list, optional):      A list of which percentiles of loss to generate an example for.</span>
+<span class="sd">            show_plot (bool, optional):            Whether to show the plot after generation</span>
+<span class="sd">            save_plot (bool, optional):            Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">            save_path (str, optional):             Path to the parent directory where output plots should be saved.</span>
+<span class="sd">            output_folder_name (str, optional):    Child directory to save the plots to.</span>
+<span class="sd">            path_log (str, optional):              Path to the log file for logging activity.</span>
+<span class="sd">            close_plot (bool, optional):           Whether to close the figure when finished. THis helps minimize memory usage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generate and displays/saves a plot</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">network</span><span class="o">.</span><span class="n">is_regenerator</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cannot plot regenerator output for non-regenerator networks. Skipping plotting for &#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_inputOutputComp&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">data_shape</span>  <span class="o">=</span> <span class="nb">next</span><span class="p">(</span> <span class="nb">iter</span><span class="p">(</span> <span class="n">dataloader</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">num_batches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+    <span class="n">samples_eachBatch</span> <span class="o">=</span> <span class="n">empty</span><span class="p">((</span> <span class="nb">len</span><span class="p">(</span><span class="n">percentile_show</span><span class="p">),</span> <span class="n">num_batches</span><span class="p">,</span> <span class="o">*</span><span class="n">data_shape</span><span class="p">))</span>
+    <span class="n">outputs_eachBatch</span> <span class="o">=</span> <span class="n">empty</span><span class="p">((</span> <span class="nb">len</span><span class="p">(</span><span class="n">percentile_show</span><span class="p">),</span> <span class="n">num_batches</span><span class="p">,</span> <span class="o">*</span><span class="n">data_shape</span><span class="p">))</span>
+    <span class="n">losses_eachBatch</span>  <span class="o">=</span> <span class="n">empty</span><span class="p">((</span> <span class="nb">len</span><span class="p">(</span><span class="n">percentile_show</span><span class="p">),</span> <span class="n">num_batches</span><span class="p">))</span>
+
+    <span class="c1"># Set network to eval mode, which will turn off dropout layers, stop tracking the gradients/computation graphs, etc for faster performance</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">loss_fn</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="c1"># Test one full iteration of the samples provided</span>
+        <span class="k">for</span> <span class="n">index_batch</span><span class="p">,</span> <span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">dataloader</span><span class="p">):</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span> <span class="n">samples</span><span class="p">)</span>
+            <span class="n">loss</span>    <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Get index of the sample closest to the selected percentile</span>
+            <span class="n">index_sorted</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">loss</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loss</span><span class="p">))))]</span>
+
+            <span class="n">index_select</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">int</span><span class="p">(</span><span class="n">p_show</span> <span class="o">*</span> <span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">p_show</span> <span class="ow">in</span> <span class="n">percentile_show</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">select</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">index_select</span><span class="p">):</span>
+                <span class="n">desired_sample</span> <span class="o">=</span> <span class="n">index_sorted</span><span class="p">[</span><span class="n">select</span><span class="p">]</span>
+                <span class="n">samples_eachBatch</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">index_batch</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span> <span class="n">desired_sample</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">outputs_eachBatch</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">index_batch</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span> <span class="n">desired_sample</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">losses_eachBatch</span><span class="p">[</span> <span class="n">j</span><span class="p">,</span> <span class="n">index_batch</span><span class="p">]</span>    <span class="o">=</span> <span class="n">loss</span><span class="p">[</span><span class="n">desired_sample</span><span class="p">]</span>
+
+    <span class="n">samples_final</span> <span class="o">=</span> <span class="n">empty</span><span class="p">((</span> <span class="nb">len</span><span class="p">(</span><span class="n">percentile_show</span><span class="p">),</span> <span class="o">*</span><span class="n">data_shape</span><span class="p">))</span>
+    <span class="n">outputs_final</span> <span class="o">=</span> <span class="n">empty</span><span class="p">((</span> <span class="nb">len</span><span class="p">(</span><span class="n">percentile_show</span><span class="p">),</span> <span class="o">*</span><span class="n">data_shape</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">select</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">index_select</span><span class="p">):</span>
+        <span class="n">index_sorted</span>   <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">losses_eachBatch</span><span class="p">[</span><span class="n">j</span><span class="p">,:],</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_batches</span><span class="p">)))]</span>
+        <span class="n">desired_sample</span> <span class="o">=</span> <span class="n">index_sorted</span><span class="p">[</span> <span class="n">num_batches</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">]</span>
+        <span class="n">samples_final</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">samples_eachBatch</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">desired_sample</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">outputs_final</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">outputs_eachBatch</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">desired_sample</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Percentile &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">percentile_show</span><span class="p">]</span>
+    <span class="n">heat_plot</span><span class="o">.</span><span class="n">input_output_compare</span><span class="p">(</span> <span class="n">samples_final</span><span class="p">,</span> <span class="n">outputs_final</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">titles</span><span class="p">,</span> <span class="n">separate_channels</span><span class="o">=</span><span class="n">separate_channels</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_inputOutputComp&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;antiquewhite&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="n">close_plot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_add_data_weights"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training._add_data_weights">[docs]</a><span class="k">def</span> <span class="nf">_add_data_weights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dict_to_add</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Internal function used to add weight distribution data to a dictionary, if it exists</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">weights_test_avg_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="n">desired_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">weights_test_std_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;std_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">weights_test_std_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;std_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">weights_test_q1_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>  <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q1_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">weights_test_q1_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q1_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">weights_test_q3_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>  <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q3_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">weights_test_q3_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q3_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">weights_test_min_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;min_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">weights_test_min_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;min_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">weights_test_max_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;max_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">weights_test_max_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;max_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_add_data_activations"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training._add_data_activations">[docs]</a><span class="k">def</span> <span class="nf">_add_data_activations</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dict_to_add</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Internal function used to add activation distribution data to a dictionary, if it exists</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">activations_test_avg_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="n">desired_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;avg_data&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">activations_test_std_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;std_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">activations_test_std_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;std_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">activations_test_q1_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>  <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q1_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">activations_test_q1_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q1_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">activations_test_q3_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>  <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q3_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">activations_test_q3_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;q3_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">activations_test_min_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;min_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">activations_test_min_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;min_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">activations_test_max_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="n">desired_length</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;max_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">network</span><span class="o">.</span><span class="n">activations_test_max_history</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_to_add</span><span class="p">[</span><span class="s1">&#39;max_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="test_network"><a class="viewcode-back" href="../../../toast.heat.training.html#toast.heat.training.test_network">[docs]</a><span class="k">def</span> <span class="nf">test_network</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">check_dataset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Tests a network object and a Data_Bread class instance to assure proper function.</span>
+
+<span class="sd">        Use this function to test a single pass of hte network before proceeding with a full training loop.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            network:                        A toast.heat generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">            dataset:                        A toast.heat.dataset_bread.Data_Bread class instance representing data to use to test.</span>
+<span class="sd">            path_log (str, optional):       Path to the log file for logging activity.</span>
+<span class="sd">            check_dataset (bool, optional): Whether to recursively check if there are any repeated samples in a dataset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Should execute without errors if successful.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">exit</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Network has &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">numel</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">parameters</span><span class="p">()]))</span> <span class="o">+</span> <span class="s1">&#39; parameters.&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+
+    <span class="c1"># print(next(iter(dataset.training)))</span>
+    <span class="n">test_sample</span><span class="p">,</span> <span class="n">test_label</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">training</span><span class="p">))</span>
+    <span class="c1"># Add a batch dimension to test_sample</span>
+    <span class="n">test_sample</span> <span class="o">=</span> <span class="n">test_sample</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># test_sample = torch.from_numpy(test_sample).float()</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Test Sample: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">test_sample</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,   size: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">test_sample</span><span class="o">.</span><span class="n">size</span><span class="p">()),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Test Label:  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">test_label</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,   size: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">test_label</span><span class="o">.</span><span class="n">size</span><span class="p">()),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Sample Type: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="nb">type</span><span class="p">(</span> <span class="n">test_sample</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Label  Type:  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="nb">type</span><span class="p">(</span> <span class="n">test_label</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">time_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">test_output</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span> <span class="n">test_sample</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Output: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">test_output</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,   size: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">test_output</span><span class="o">.</span><span class="n">size</span><span class="p">()),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Forward Time: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">time_start</span><span class="p">),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Output Type:  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span> <span class="n">test_output</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Output Data:  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">test_output</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">path_log</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">check_dataset</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking Dataset...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">has_validation</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">train_sample</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+              <span class="k">for</span> <span class="n">test_sample</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">testing</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">test_sample</span><span class="p">,</span> <span class="n">train_sample</span><span class="p">):</span>
+                  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATASET HAS REPEAT SAMPLES IN TRAINING AND TESTING&#39;</span><span class="p">)</span>
+                  <span class="n">exit</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">val_sample</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">validation</span><span class="p">:</span>
+                  <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">val_sample</span><span class="p">,</span> <span class="n">train_sample</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATASET HAS REPEAT SAMPLES IN TRAINING AND VALIDATION&#39;</span><span class="p">)</span>
+                    <span class="n">exit</span><span class="p">()</span>
+                  <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">val_sample</span><span class="p">,</span> <span class="n">test_sample</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATASET HAS REPEAT SAMPLES IN TESTING AND VALIDATION&#39;</span><span class="p">)</span>
+                    <span class="n">exit</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">train_sample</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+              <span class="k">for</span> <span class="n">test_sample</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">testing</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">test_sample</span><span class="p">,</span> <span class="n">train_sample</span><span class="p">):</span>
+                  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATASET HAS REPEAT SAMPLES IN TRAINING AND TESTING&#39;</span><span class="p">)</span>
+                  <span class="n">exit</span><span class="p">()</span>
+
+
+    <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+        <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Press [Enter]&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">---</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

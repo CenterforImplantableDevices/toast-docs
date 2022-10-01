@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.plate.tisc_plot &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../static/documentation_options.js"></script>
+        <script src="../../../static/jquery.js"></script>
+        <script src="../../../static/underscore.js"></script>
+        <script src="../../../static/doctools.js"></script>
+    <script src="../../../static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>toast.plate.tisc_plot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.plate.tisc_plot</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">torch.nn.functional</span> <span class="kn">import</span> <span class="n">pad</span> <span class="k">as</span> <span class="n">torch_pad</span>
+<span class="kn">from</span> <span class="nn">toast.misc</span> <span class="kn">import</span> <span class="n">tlog</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">std</span> <span class="k">as</span> <span class="n">np_std</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="make_square"><a class="viewcode-back" href="../../../toast.plate.tisc_plot.html#toast.plate.tisc_plot.make_square">[docs]</a><span class="k">def</span> <span class="nf">make_square</span><span class="p">(</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">data_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale_multiplier</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Separates TiSc data into a 2D array with each scale in one row, with each scale stretched to make an even length 2D array.</span>
+
+<span class="sd">    In this output each column index correlates wtih a unit of time.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_data (numpy array):         TiSc organized data</span>
+<span class="sd">        data_dim (int, optional):         Dimension along which the TiSc organized data is organized.</span>
+<span class="sd">        scale_multiplier (int, optional): Exponential base designating how fast the window size increases.</span>
+<span class="sd">        normalize (bool, optional):       Whether to independently normalize each scale to between 0 and 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy ndarray: 2D arra where rows are each scale the the columns are each time index.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Get the starting index for the smallest scale (smallest window, most values), and the number of levels to iterate for</span>
+    <span class="n">start_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">data_dim</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale_multiplier</span><span class="p">)</span>
+    <span class="n">num_levels</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">input_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">data_dim</span><span class="p">],</span> <span class="n">scale_multiplier</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="c1"># Create the output array</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_levels</span><span class="p">,</span> <span class="n">start_index</span><span class="p">))</span>
+    <span class="n">num_repeats</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># Iterate thorugh each scale and insert the associated scale values into the proper index in the output array.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">num_levels</span><span class="p">):</span>
+        <span class="c1"># Expand the length of the data by using the repeat_interleave function</span>
+        <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">input_data</span><span class="p">[</span> <span class="n">start_index</span><span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="n">start_index</span><span class="o">*</span><span class="n">scale_multiplier</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span> <span class="n">num_repeats</span><span class="p">)</span>
+        <span class="c1"># If we normalize each scale, divide by num_repeats</span>
+        <span class="c1"># wich increases as the scale gets larger (i.e. window size and output values get bigger)</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">num_repeats</span><span class="p">)</span>
+
+        <span class="c1"># Increment the indexing values</span>
+        <span class="n">start_index</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">start_index</span> <span class="o">/</span> <span class="n">scale_multiplier</span><span class="p">)</span>
+        <span class="n">num_repeats</span> <span class="o">*=</span> <span class="n">scale_multiplier</span>
+    
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="make_triangle"><a class="viewcode-back" href="../../../toast.plate.tisc_plot.html#toast.plate.tisc_plot.make_triangle">[docs]</a><span class="k">def</span> <span class="nf">make_triangle</span><span class="p">(</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">data_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale_multiplier</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Separates TiSc data into a 2D array with each scale in one row, where each scale remains its original length.</span>
+
+<span class="sd">    In this output, each row will exponentailly decrease in length. The remaining values which have no meaning are set to zero.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_data (numpy array):         TiSc organized data</span>
+<span class="sd">        data_dim (int, optional):         Dimension along which the TiSc organized data is organized.</span>
+<span class="sd">        scale_multiplier (int, optional): Exponential base designating how fast the window size increases.</span>
+<span class="sd">        normalize (bool, optional):       Whether to independently normalize each scale to between 0 and 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy ndarray: 2D arra where rows are each scale the the columns the scale index.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Get the starting index for the smallest scale (smallest window, most values), and the number of levels to iterate for</span>
+    <span class="n">start_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">data_dim</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale_multiplier</span><span class="p">)</span>
+    <span class="n">num_levels</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">input_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">data_dim</span><span class="p">],</span> <span class="n">scale_multiplier</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="c1"># Create the output array</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_levels</span><span class="p">,</span> <span class="n">start_index</span><span class="p">))</span>
+    <span class="n">num_repeats</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># Iterate thorugh each scale and insert the associated scale values into the proper index in the output array.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">num_levels</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Expand the length of the data by using the torch_pad function to padd with zeros.</span>
+        <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch_pad</span><span class="p">(</span> <span class="n">input_data</span><span class="p">[</span> <span class="n">start_index</span><span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="n">start_index</span><span class="o">*</span><span class="n">scale_multiplier</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">start_index</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># If we normalize each scale, divide by num_repeats</span>
+        <span class="c1"># wich increases as the scale gets larger (i.e. window size and output values get bigger)</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">num_repeats</span><span class="p">)</span>
+
+        <span class="c1"># Increment the indexing values</span>
+        <span class="n">start_index</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">start_index</span> <span class="o">/</span> <span class="n">scale_multiplier</span><span class="p">)</span>
+        <span class="n">num_repeats</span> <span class="o">*=</span> <span class="n">scale_multiplier</span>
+    
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="make_triangle_list"><a class="viewcode-back" href="../../../toast.plate.tisc_plot.html#toast.plate.tisc_plot.make_triangle_list">[docs]</a><span class="k">def</span> <span class="nf">make_triangle_list</span><span class="p">(</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">data_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale_multiplier</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Separates TiSc data into a 1D python list of 1D Numpy arrays were each scale is a list element. Each scale remains its original length.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_data (numpy array):         TiSc organized data</span>
+<span class="sd">        data_dim (int, optional):         Dimension along which the TiSc organized data is organized.</span>
+<span class="sd">        scale_multiplier (int, optional): Exponential base designating how fast the window size increases.</span>
+<span class="sd">        normalize (bool, optional):       Whether to independently normalize each scale to between 0 and 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List where each element is the scale, containing a 1D numpy array where the columns are the scale index.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Get the starting index for the smallest scale (smallest window, most values), and the number of levels to iterate for</span>
+    <span class="n">start_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">data_dim</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale_multiplier</span><span class="p">)</span>
+    <span class="n">num_levels</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">input_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">data_dim</span><span class="p">],</span> <span class="n">scale_multiplier</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="c1"># Create the output array</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_repeats</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># Iterate thorugh each scale and append the associated scale values to the proper index in the output array.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">num_levels</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">input_data</span><span class="p">[</span> <span class="n">start_index</span><span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="n">start_index</span><span class="o">*</span><span class="n">scale_multiplier</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># If we normalize each scale, divide by num_repeats</span>
+        <span class="c1"># wich increases as the scale gets larger (i.e. window size and output values get bigger)</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">num_repeats</span><span class="p">)</span>
+        
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+
+        <span class="c1"># Increment the indexing values</span>
+        <span class="n">start_index</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">start_index</span> <span class="o">/</span> <span class="n">scale_multiplier</span><span class="p">)</span>
+        <span class="n">num_repeats</span> <span class="o">*=</span> <span class="n">scale_multiplier</span>
+    
+    <span class="c1"># Since we built the output array backwards, reverse it before returning</span>
+    <span class="k">return</span> <span class="n">output</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="plot_inputWeights"><a class="viewcode-back" href="../../../toast.plate.tisc_plot.html#toast.plate.tisc_plot.plot_inputWeights">[docs]</a><span class="k">def</span> <span class="nf">plot_inputWeights</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">num_channels_data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">plot_linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_folder_name&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">bkg_color</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_agg</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses a network object to separate the weights of the first tisc layer, sort into the proper channels, and plot the weights of the channel.</span>
+
+<span class="sd">    Function assumes that weights of each channel alternate within each filter window, matching the typical .wav file organization.</span>
+
+<span class="sd">    Function assumes the network as arranges following convention of nested sequential objets, as defined below:</span>
+<span class="sd">    </span>
+<span class="sd">        * Sequential[0]       contains all TiSc-based network processing.</span>
+<span class="sd">        * Sequential[0][*]    contains one or many TiSc channels</span>
+<span class="sd">        * Sequential[0][*][0] contains a :py:class:`~toast.heat.timescaleL.TSC_input` layer to initially process the input data</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        network (toast network):              A toast.heat generated network that has been trained so that it contains training history values to plot.</span>
+<span class="sd">        num_channels_data (int):              Number of data channels to separate out.</span>
+<span class="sd">        description (str, optional):          A description of the data in the plot. This will be used as the filename.</span>
+<span class="sd">        show_plot (bool, optional):           Whether to show the plot after generation</span>
+<span class="sd">        plot_dpi (int, optional):             Resolution of the generated/saved plots.</span>
+<span class="sd">        plot_linewidth (float, optional):     Linewidth to use in the generated/saved plots.</span>
+<span class="sd">        save_plot (bool, optional):           Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">        skip_plot (bool, optional):           Whether to skip the plotting funcions. Use if only want to save data in pickle file.</span>
+<span class="sd">        save_data (bool, optional):           Whether to save the weight data in a pickle file after organization.  Note the filename will be determined based on attributes of the network&#39;s path_network attribute</span>
+<span class="sd">        save_path (str, optional):            Path to the parent directory where output plots should be saved.</span>
+<span class="sd">        output_folder_name (str, optional):   Child directory to save the plots to.</span>
+<span class="sd">        path_log (str, optional):             Path to the log file for logging activity.</span>
+<span class="sd">        bkg_color (str -or- tuple, optional): Character or RBG Thruple representing the background color of the plot.</span>
+<span class="sd">        close_plot (bool, optional):            Whether to close the figure when finished. THis helps minimize memory usage.</span>
+<span class="sd">        use_agg (bool, optional):             Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates and displays/saves a plot.</span>
+<span class="sd">        If plots are saved, a pickle file with the raw weight values will also be saved. File contians one list object with dimensions data[channel_tisc][scale][channel_eeg][raw_weights]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">use_agg</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="c1"># If no description exists, create one</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">description</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Plotting &#39;</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Extract the assoiciated layer parameter values.  These are the raw weights that we will plot.</span>
+    <span class="n">tisc_weights_channels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+        <span class="c1"># If in tisc nn.Sequential grp and Is the first element of nn.Sequential for that tisc channel</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">)):</span>
+            <span class="c1"># don&#39;t forget to move the data to the cpu to speed up operations.</span>
+            <span class="n">tisc_weights_channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;layers_encode&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">)):</span>
+            <span class="c1"># don&#39;t forget to move the data to the cpu to speed up operations.</span>
+            <span class="n">tisc_weights_channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)))</span>
+
+    <span class="c1"># Plot each tisc channel indepedently</span>
+    <span class="n">weights_all</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">channel_tisc</span><span class="p">,</span> <span class="n">tisc_weights</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">tisc_weights_channels</span><span class="p">):</span>
+        <span class="c1"># Separate the extracted weights into the respective scales.</span>
+        <span class="n">scale_weights</span> <span class="o">=</span> <span class="n">make_triangle_list</span><span class="p">(</span> <span class="n">tisc_weights</span><span class="p">)</span>
+
+        <span class="c1"># Analyze each scale independently</span>
+        <span class="n">weights_scale_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scale_weights</span><span class="p">:</span>
+            <span class="c1"># For each scale separate each eeg channel by extracting only the num_channels&#39;th value.</span>
+            <span class="n">channels_data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">num_channels_data</span><span class="p">):</span>
+                <span class="n">channels_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">::</span><span class="n">num_channels_data</span><span class="p">])</span>
+            
+            <span class="c1"># Add the separated channel values to the weights_scale_data for that scale</span>
+            <span class="n">weights_scale_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">channels_data</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">save_data</span><span class="p">:</span>
+            <span class="n">weights_all</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weights_scale_data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_plot</span><span class="p">:</span>
+            <span class="c1"># Lots of figures are about to open, so lets silent that warning</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.max_open_warning&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+            <span class="c1"># Iterate through each scale</span>
+            <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights_scale_data</span><span class="p">)):</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">description</span><span class="o">+</span><span class="s1">&#39;_wgts-tisc-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">channel_tisc</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;-sca-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;-len-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights_scale_data</span><span class="p">[</span><span class="n">scale</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+
+                <span class="c1"># plt.figure(figsize=(16,9)) #, dpi=plot_dpi)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">ax0</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+                <span class="n">ax0</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">bkg_color</span><span class="p">)</span>
+                <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;TISC &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">channel_tisc</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; : SCALE &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; : Length &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights_scale_data</span><span class="p">[</span><span class="n">scale</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">description</span><span class="p">)</span>
+                <span class="c1"># Plot each channel in its own</span>
+                <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_channels_data</span><span class="p">):</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_channels_data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ch</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span> <span class="n">weights_scale_data</span><span class="p">[</span><span class="n">scale</span><span class="p">][</span><span class="n">ch</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">plot_linewidth</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([],[])</span>
+
+                <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">)):</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">))</span>
+                    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Saving : &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">plot_dpi</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">close_plot</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">save_data</span><span class="p">:</span>
+        <span class="c1"># Pickle file will contain one object, a list with dimensions [tisc_channel][scale][eeg_channel][raw_weights]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">+</span><span class="s1">&#39;.pkl&#39;</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span> <span class="n">weights_all</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_plot</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="plot_gradCAM"><a class="viewcode-back" href="../../../toast.plate.tisc_plot.html#toast.plate.tisc_plot.plot_gradCAM">[docs]</a><span class="k">def</span> <span class="nf">plot_gradCAM</span><span class="p">(</span> <span class="n">network</span><span class="p">,</span> <span class="n">samples_to_summarize</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">analyze_classes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">one_hot_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">loss_fn</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">plot_individual_samples</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_in_network</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_reduced_dims</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_folder_name&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_agg</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Plots a color image summary of gradCAM output from input through a single tisc network.</span>
+
+<span class="sd">    If multiple layers, assumes that all layers (specifically, layer weights) are the same dimensions</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        network (toast network):                  toast network to use when generating the gradCAM output</span>
+<span class="sd">        samples_to_summarize (list):              List of samples to use when creating a dataloader object.</span>
+<span class="sd">        layers (pyTorch layer or list, optional): pyTorch layer or list of layers whos output activations will be used to generate the gradCAM output.</span>
+<span class="sd">        layer_type (toast layer, optional):       Type of toast layer that will be used when generating gradCAM output.</span>
+<span class="sd">        analyze_classes (list, optional):         List of integers indicating which labels to calculate output for. Will be one-hot encoded within the function.</span>
+<span class="sd">        one_hot_labels (bool, optional):          Whether the sample labels are one-hot encoded or not.</span>
+<span class="sd">        batch_size (int, optional):               Batch size to use when calculating output</span>
+<span class="sd">        loss_fn (torch.nn loss fcn, optional):    Loss function to use when calculating gradients</span>
+<span class="sd">        title (str, optional):                    use for title</span>
+<span class="sd">        description (str, optional):              A description of the data in the plot. This will be used as the filename.</span>
+<span class="sd">        colorbar (bool, optional):                Whether to add the colorbar scale beside each plot.</span>
+<span class="sd">        show_plot (bool, optional):               Whether to render the plot to the screen</span>
+<span class="sd">        save_data (bool, optional):               Whether to the gradCAM output, expanded output, and alpha matricies to a pickle file. Note these files can be LARGE.</span>
+<span class="sd">        save_in_network (bool, optional):         Whether to add hte gadCAM output, expanded output, and alpha matricies to the network object</span>
+<span class="sd">        save_reduced_dims (bool, optional):       Sum over the time dimension, to reduce the size of the saved data.</span>
+<span class="sd">        save_plot (bool, optional):               Whether to save the plot as a .png</span>
+<span class="sd">        plot_dpi (int, optional):                  Number of dots per inch in the output figure. Controls resolution.</span>
+<span class="sd">        save_path (str, optional):                Path to save plots to. Note plots will be saved to save_path + output_folder_name location</span>
+<span class="sd">        output_folder_name (str, optional):       Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</span>
+<span class="sd">        path_log (str, optional):                 Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</span>
+<span class="sd">        close_plot (bool, optional):            Whether to close the figure when finished. THis helps minimize memory usage.</span>
+<span class="sd">        use_agg (bool, optional):                 Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates a plot for the user to either be saved here or viewed later by the user.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">use_agg</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="k">if</span> <span class="n">description</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">path_network</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_gradCAM&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Plotting &#39;</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span> <span class="n">samples_to_summarize</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">network</span><span class="o">.</span><span class="n">track_activation_setup</span><span class="p">:</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">add_hook_activation</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">network</span><span class="o">.</span><span class="n">track_activationGrad_setup</span><span class="p">:</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">add_hook_activationGrad</span><span class="p">()</span>
+        <span class="c1"># network.add_hook_activationGrad(layer)</span>
+
+
+    <span class="n">allChannels_gradCAM</span>          <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">allChannels_gradCAM_expanded</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">allChannels_gradCAM_alpha</span>    <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">output_class</span> <span class="ow">in</span> <span class="n">analyze_classes</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">description</span><span class="o">+</span><span class="s1">&#39;-out&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">layer_activations</span>     <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">layer_activationsGrad</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># network.layer_activationsGrad_raw = None</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">layer_activations_keys_ordered</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">layer_activationsGrad_keys_ordered</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">samples_all</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">enable_grad</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">samples</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">one_hot_labels</span><span class="p">:</span>
+                    <span class="n">index_keep</span>   <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">output_class</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">index_keep</span>   <span class="o">=</span> <span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="n">output_class</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+                <span class="n">num_samples</span> <span class="o">+=</span> <span class="n">index_keep</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                <span class="n">samples_keep</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">index_keep</span><span class="p">]</span>
+                <span class="n">labels_keep</span>  <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">index_keep</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">plot_individual_samples</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples_keep</span><span class="p">:</span>
+                        <span class="n">samples_all</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">samples_keep</span><span class="p">,</span> <span class="n">labels_keep</span> <span class="o">=</span> <span class="n">samples_keep</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">labels_keep</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="c1"># Require gradients all the way back through the first layer, to make sure everything is calculated</span>
+                <span class="n">samples_keep</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">outputs</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span> <span class="n">samples_keep</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">is_regenerator</span><span class="p">:</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">samples_keep</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">labels_keep</span><span class="p">)</span>
+                <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="c1"># Assure the layer targets are valid</span>
+        <span class="k">if</span> <span class="n">layer_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Define the layers that we will analyze, using the activation keys generated after running samples</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activations_keys_ordered</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">layer</span><span class="p">,</span> <span class="n">layer_type</span><span class="p">):</span>
+                    <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">layers</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">layers</span><span class="p">]</span>
+        <span class="n">numTotal_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span>
+        <span class="n">sample_shape</span>     <span class="o">=</span> <span class="n">samples_to_summarize</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">number_scales</span>    <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max_window_exponential</span> <span class="o">-</span> <span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min_window_exponential</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># Define output variables</span>
+        <span class="n">allChannels_outputClass_gradCAM</span>          <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span> <span class="n">numTotal_layers</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">sample_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">allChannels_outputClass_gradCAM_expanded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span> <span class="n">numTotal_layers</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">number_scales</span><span class="p">,</span> <span class="n">sample_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">allChannels_outputClass_gradCAM_alpha</span>    <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span> <span class="n">numTotal_layers</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">number_scales</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">numTotal_layers</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">index_layer</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">layers</span><span class="p">):</span>
+            <span class="c1"># Define output variables</span>
+            <span class="n">gradCAM_expanded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">number_scales</span><span class="p">,</span> <span class="n">sample_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">gradCAM_alpha</span>    <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>  <span class="n">number_scales</span><span class="p">)</span>
+            <span class="c1"># gradCAM_expanded_norm = torch.Tensor([layer.scale_multiplier ** i for i in range(number_scales)])</span>
+
+            <span class="n">activations</span>      <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activations</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+            <span class="n">activations_grad</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activationsGrad</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+            <span class="n">gradCAM_out</span><span class="p">,</span> <span class="n">gradCAM_expanded</span><span class="p">,</span> <span class="n">gradCAM_alpha</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">get_gradCAM</span><span class="p">(</span><span class="n">activations</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">activations_grad</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">input_dimensions</span><span class="o">=</span><span class="n">sample_shape</span><span class="p">)</span>
+
+            <span class="c1"># Append each layers output to all_channels_output_gradCAM. Sum over the time dimension to reduce the size of saved data</span>
+            <span class="n">allChannels_outputClass_gradCAM</span><span class="p">[</span>          <span class="n">index_layer</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>    <span class="o">=</span> <span class="n">gradCAM_out</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+            <span class="n">allChannels_outputClass_gradCAM_expanded</span><span class="p">[</span> <span class="n">index_layer</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">gradCAM_expanded</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+            <span class="n">allChannels_outputClass_gradCAM_alpha</span><span class="p">[</span>    <span class="n">index_layer</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>    <span class="o">=</span> <span class="n">gradCAM_alpha</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">plot_individual_samples</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">total_plotted_samples</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="n">plot_individual_samples</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples_all</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">samples_all</span><span class="p">[:</span><span class="n">total_plotted_samples</span><span class="p">]):</span>
+                    <span class="c1"># print(&#39;\nPlotting...&#39;)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                    <span class="c1"># sample_gradCAM =  expand_dims(torch.empty_like(sample_gradCAM_out).copy_(sample_gradCAM_out).detach().cpu().numpy(), 0)</span>
+                    <span class="n">expand_gradCAM</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">gradCAM_expanded</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:])</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">gradCAM_expanded</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:])</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                    <span class="n">alpha_gradCAM</span>  <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">gradCAM_alpha</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">gradCAM_alpha</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+                    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span> <span class="n">expand_gradCAM</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+                    <span class="c1"># plt.colorbar()</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;gradCAM output&#39;</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">max_stdev</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_channels</span><span class="p">):</span>
+                        <span class="n">ch_stdev</span> <span class="o">=</span> <span class="n">np_std</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">ch</span><span class="p">::</span><span class="n">num_channels</span><span class="p">])</span>
+                        <span class="n">max_stdev</span> <span class="o">=</span> <span class="n">ch_stdev</span> <span class="k">if</span> <span class="n">ch_stdev</span> <span class="o">&gt;</span> <span class="n">max_stdev</span> <span class="k">else</span> <span class="n">max_stdev</span>
+                    <span class="n">ch_separation</span> <span class="o">=</span> <span class="n">max_stdev</span> <span class="o">*</span> <span class="mi">2</span>
+                    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_channels</span><span class="p">):</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">ch</span><span class="p">::</span><span class="n">num_channels</span><span class="p">]</span> <span class="o">+</span> <span class="n">ch_separation</span><span class="o">*</span><span class="n">ch</span><span class="p">)</span>
+                    <span class="c1"># plt.plot( data)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Raw Data&#39;</span><span class="p">)</span>
+                    <span class="c1"># plt.subplot(4,1,4)</span>
+                    <span class="c1"># plt.bar(  arange(number_scales), np_abs(alpha_gradCAM))</span>
+                    <span class="c1"># plt.title(&#39;Scale Contribution (alpha^k)&#39;)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+                    <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">)):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">))</span>
+                        <span class="n">folder_individual_samples</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_indivSamples&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">folder_individual_samples</span><span class="p">)):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">folder_individual_samples</span><span class="p">))</span>
+                        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Saving : &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">folder_individual_samples</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_output&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">folder_individual_samples</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_output&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">plot_dpi</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">close_plot</span><span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            
+
+            <span class="c1"># sum accross all samples</span>
+            <span class="n">plot_gradCAM_expanded</span> <span class="o">=</span> <span class="n">gradCAM_expanded</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># .transpose(0,1).divide(gradCAM_expanded_norm).transpose(0,1)</span>
+            <span class="n">plot_expand_gradCAM</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">plot_gradCAM_expanded</span><span class="p">)</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">plot_gradCAM_expanded</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+            <span class="c1"># plot_gradCAM_alpha    = gradCAM_alpha.abs().sum(dim=0)</span>
+            <span class="c1"># plot_alpha_gradCAM  = torch.empty_like(plot_gradCAM_alpha).copy_(plot_gradCAM_alpha).detach().cpu().numpy()</span>
+
+            <span class="n">ax0</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">numTotal_layers</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">index_layer</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span> <span class="n">plot_expand_gradCAM</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;TS&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">index_layer</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">index_layer</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">gradCAM output - class &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">index_layer</span> <span class="o">==</span> <span class="n">numTotal_layers</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ax0</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">))</span>
+            <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Saving : &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_output&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_output&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">plot_dpi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">close_plot</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">allChannels_gradCAM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>          <span class="n">allChannels_outputClass_gradCAM</span><span class="p">)</span>
+        <span class="n">allChannels_gradCAM_expanded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">allChannels_outputClass_gradCAM_expanded</span><span class="p">)</span>
+        <span class="n">allChannels_gradCAM_alpha</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>    <span class="n">allChannels_outputClass_gradCAM_alpha</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">save_data</span><span class="p">:</span>
+        <span class="c1"># FIXME Save the sums of gradcam</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.pkl&#39;</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span> <span class="n">allChannels_gradCAM</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span> <span class="n">allChannels_gradCAM_expanded</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span> <span class="n">allChannels_gradCAM_alpha</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show_plot</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">save_in_network</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">save_reduced_dims</span><span class="p">:</span>
+            <span class="n">network</span><span class="o">.</span><span class="n">gradCAM_latest</span>           <span class="o">=</span> <span class="p">[</span> <span class="n">out_class</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">out_class</span> <span class="ow">in</span> <span class="n">allChannels_gradCAM</span><span class="p">]</span>
+            <span class="n">network</span><span class="o">.</span><span class="n">gradCAM_expanded_latest</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">out_class</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">out_class</span> <span class="ow">in</span> <span class="n">allChannels_gradCAM_expanded</span><span class="p">]</span>
+            <span class="n">network</span><span class="o">.</span><span class="n">gradCAM_alpha_latest</span>     <span class="o">=</span> <span class="p">[</span> <span class="n">out_class</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">out_class</span> <span class="ow">in</span> <span class="n">allChannels_gradCAM_alpha</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">network</span><span class="o">.</span><span class="n">gradCAM_latest</span>           <span class="o">=</span> <span class="n">allChannels_gradCAM</span>
+            <span class="n">network</span><span class="o">.</span><span class="n">gradCAM_expanded_latest</span>  <span class="o">=</span> <span class="n">allChannels_gradCAM_expanded</span>
+            <span class="n">network</span><span class="o">.</span><span class="n">gradCAM_alpha_latest</span>     <span class="o">=</span> <span class="n">allChannels_gradCAM_alpha</span></div>
+
+
+<div class="viewcode-block" id="plot_gradCAMsummary"><a class="viewcode-back" href="../../../toast.plate.tisc_plot.html#toast.plate.tisc_plot.plot_gradCAMsummary">[docs]</a><span class="k">def</span> <span class="nf">plot_gradCAMsummary</span><span class="p">(</span> <span class="n">gradCAM_expanded</span><span class="p">,</span> <span class="n">contains_kfolds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s1">&#39;samples</span><span class="se">\n</span><span class="s1">kfolds&#39;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">save_txt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="o">=</span><span class="s1">&#39;no_output_folder&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">,</span> <span class="n">close_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_agg</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Plots a summary of gradCAM output from many different runs of a tisc network.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        gradCAM_expanded (list or tensor):      3D Tensor or list of 3D tensors with dimensions samples x scale_gradCAM_values x time which were obtained from gradCAM calculations. See `link to gradCAM`</span>
+<span class="sd">        contains_kfolds (bool, optional):       Whether the first dimension of the data contains output from different k-folds</span>
+<span class="sd">        x_label (str, optional):                use for x axis label</span>
+<span class="sd">        y_label (str, optional):                use for y axis label</span>
+<span class="sd">        title (str, optional):                  use for title</span>
+<span class="sd">        colorbar (bool, optional):              Whether to add the colorbar scale beside each plot.</span>
+<span class="sd">        show_plot (bool, optional):             Whether to render the plot to the screen</span>
+<span class="sd">        save_plot (bool, optional):             Whether to save the plot as a .png</span>
+<span class="sd">        plot_dpi(int, optional):                Number of dots per inch in the output figure. Controls resolution.</span>
+<span class="sd">        save_txt (bool, optional):              Whether to save a .txt summary of the final state (min, max, last) of each alpha value.</span>
+<span class="sd">        save_path (str, optional):              Path to save plots to. Note plots will be saved to save_path + output_folder_name location</span>
+<span class="sd">        output_folder_name (str, optional):     Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</span>
+<span class="sd">        description (str, optional):            A description of the data in the plot. This will be used as the filename.</span>
+<span class="sd">        path_log (str, optional):               Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</span>
+<span class="sd">        close_plot (bool, optional):            Whether to close the figure when finished. THis helps minimize memory usage.</span>
+<span class="sd">        use_agg (bool, optional):               Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates a plot for the user to either be saved here or viewed later by the user.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">use_agg</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">contains_kfolds</span><span class="p">:</span>
+        <span class="n">gradCAM_expanded</span> <span class="o">=</span> <span class="p">[</span><span class="n">gradCAM_expanded</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">description</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;gradCAM-summary&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Plotting &#39;</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">output_class</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">gradCAM_expanded</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+        <span class="c1"># Omit the time dimension, as we will sum over that as we append the data</span>
+        <span class="n">gradCAM_expanded_all</span> <span class="o">=</span> <span class="n">gradCAM_expanded</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">output_class</span><span class="p">]</span> <span class="c1"># .sum(dim=-1)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gradCAM_expanded</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">kfold</span> <span class="ow">in</span> <span class="n">gradCAM_expanded</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="c1"># Sum accross the time dimension</span>
+                <span class="n">gradCAM_expanded_all</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">gradCAM_expanded_all</span><span class="p">,</span> <span class="n">kfold</span><span class="p">[</span><span class="n">output_class</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># .sum(dim=-1)), dim=1)</span>
+
+        <span class="c1"># Normalize column-wise</span>
+        <span class="n">gradCAM_expanded_all</span> <span class="o">=</span> <span class="n">gradCAM_expanded_all</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span> <span class="n">gradCAM_expanded_all</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">numTotal_layers</span> <span class="o">=</span> <span class="n">gradCAM_expanded_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">index_layer</span><span class="p">,</span> <span class="n">data_layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">gradCAM_expanded_all</span><span class="p">):</span>
+            <span class="n">ax0</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">numTotal_layers</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">index_layer</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span> <span class="n">data_layer</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;TS&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">index_layer</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">index_layer</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Class &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; gradCAM Weighted Activation Mag.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">index_layer</span> <span class="o">==</span> <span class="n">numTotal_layers</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ax0</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">save_txt</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">OUTPUT CLASS&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; ACTIVATIONS:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gradCAM_expanded_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;SCALE &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">scale</span><span class="p">))</span>
+                <span class="n">scale_data</span> <span class="o">=</span> <span class="n">gradCAM_expanded_all</span><span class="p">[:,:,</span><span class="n">scale</span><span class="p">]</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">mean:  </span><span class="si">{:.6e}</span><span class="se">\t</span><span class="s1">stdev:  </span><span class="si">{:.6e}</span><span class="se">\t</span><span class="s1">, min:  </span><span class="si">{:.6e}</span><span class="se">\t</span><span class="s1">, max:  </span><span class="si">{:.6e}</span><span class="se">\t</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scale_data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">scale_data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">scale_data</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">scale_data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">))</span>
+            <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Saving : &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">+</span><span class="s1">&#39;_outputClass-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.txt&#39;</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">+</span><span class="s1">&#39;.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show_plot</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">))</span>
+            <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Saving : &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">+</span><span class="s1">&#39;_outputClass-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)),</span> <span class="n">path_log</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">output_folder_name</span><span class="p">,</span> <span class="n">description</span><span class="o">+</span><span class="s1">&#39;_outputClass-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_class</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">plot_dpi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">close_plot</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

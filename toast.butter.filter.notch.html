@@ -5,17 +5,17 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>toast.butter.filter.notch &mdash; toast 1.3.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
+    <script src="static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    <script src="static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="toast.butter.freq" href="toast.butter.freq.html" />
@@ -76,7 +76,7 @@
           <li><a href="toast.butter.filter.html">toast.butter.filter</a> &raquo;</li>
       <li>toast.butter.filter.notch</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/toast.butter.filter.notch.rst.txt" rel="nofollow"> View page source</a>
+            <a href="sources/toast.butter.filter.notch.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -88,7 +88,7 @@
 <span id="toast-butter-filter-notch"></span><h1>toast.butter.filter.notch<a class="headerlink" href="#module-toast.butter.filter.notch" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="toast.butter.filter.notch.notch_filter">
-<span class="sig-prename descclassname"><span class="pre">toast.butter.filter.notch.</span></span><span class="sig-name descname"><span class="pre">notch_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequencies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/butter/filter/notch.html#notch_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.butter.filter.notch.notch_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">toast.butter.filter.notch.</span></span><span class="sig-name descname"><span class="pre">notch_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequencies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/toast/butter/filter/notch.html#notch_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.butter.filter.notch.notch_filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a theoretically ideal notch filter by places poles and zeros aligned at the target frequency
 and positioned close to the unit circle, then using those components to calculate filter coefficients.
 The filter coefficients are then used with filtfilt to filter the passed signal.</p>
