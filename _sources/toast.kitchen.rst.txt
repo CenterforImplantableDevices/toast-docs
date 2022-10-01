@@ -1,0 +1,17 @@
+toast.kitchen
+=============
+
+.. automodule:: toast.kitchen
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.kitchen.parallel
+   toast.kitchen.terminate
+   toast.kitchen.tracker

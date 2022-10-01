@@ -1,0 +1,7 @@
+toast.misc.tlog
+===============
+
+.. automodule:: toast.misc.tlog
+   :members:
+   :undoc-members:
+   :show-inheritance:

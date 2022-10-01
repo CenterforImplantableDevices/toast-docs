@@ -1,0 +1,7 @@
+toast
+=====
+
+.. toctree::
+   :maxdepth: 4
+
+   toast

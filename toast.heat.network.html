@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.network &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.heat.perceptronN" href="toast.heat.perceptronN.html" />
+    <link rel="prev" title="toast.heat.multiModelN" href="toast.heat.multiModelN.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.heat.html">toast.heat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.heat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.convolutionalN.html">toast.heat.convolutionalN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.dataset_bread.html">toast.heat.dataset_bread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.encoderDecisionN.html">toast.heat.encoderDecisionN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.multiModelN.html">toast.heat.multiModelN</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.heat.network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.perceptronN.html">toast.heat.perceptronN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleF.html">toast.heat.timescaleF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleL.html">toast.heat.timescaleL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleN.html">toast.heat.timescaleN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_parallel_core%28sample%29.html">toast.heat.train_parallel_core(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_params%28sample%29.html">toast.heat.train_params(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.training.html">toast.heat.training</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
+      <li>toast.heat.network</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.heat.network.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.heat.network">
+<span id="toast-heat-network"></span><h1>toast.heat.network<a class="headerlink" href="#module-toast.heat.network" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.network.Network">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.network.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_type_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_short</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'toast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>A Class that contains all the functionality and tracking necessary to train and debug Deep Neural Networks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_type_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_short</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'toast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization function to create an instance of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_type_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – Utility attribute to declare the expected layer types of the network. Helps to organize debugging/tracking functoinality</p></li>
+<li><p><strong>path_save_progress</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the parent directory where progress and tracking data should be saved.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Description describing the contents/structure of the network for easy reference.</p></li>
+<li><p><strong>description_short</strong> (<em>str</em><em>, </em><em>optional</em>) – Short few-character description describing the network type, to be inserted into filenames.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>optional</em>) – Comment about what this network is being used to do/test/investigate for later identification of tests run.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the Class class representing a deep neural network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method intended to be overwritten by child class.  Default activity is defined below
+Overriding the nn.Module forward function to process data based on our network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – Data to be processed by the network.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The output after passing <code class="docutils literal notranslate"><span class="pre">data</span></code> through the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.convert_to_decision">
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method intended to be overwritten by child class.  Default activity is defined below
+Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> – Value output by network</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float Tensor representing the final decision of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.new_layers_added">
+<span class="sig-name descname"><span class="pre">new_layers_added</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.new_layers_added"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.new_layers_added" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets all the layer-specific tracking attributes of the network object to match new layer dimensions. Can also be used to reset tracking variables if needed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.train_with">
+<span class="sig-name descname"><span class="pre">train_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataloader_to_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">momentum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MSELoss()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_history</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_timings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.train_with"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.train_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs one epoch of training, while also tracking/logging data that has been set to be tracked/logged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataloader_to_train</strong> – Dataloader that inherits from torch.utils.data.Dataset to be used during training. Typically a Dataset_Bread instance from a Data_Bread.training class attribute</p></li>
+<li><p><strong>learning_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Learning rate to use during training. Typical value is 1e-3</p></li>
+<li><p><strong>momentum</strong> (<em>float</em><em>, </em><em>optional</em>) – Momentum coefficient.  Typical value is on the order of 0.8</p></li>
+<li><p><strong>weight_decay</strong> (<em>float</em><em>, </em><em>optional</em>) – Weight decay coefficient.  Typical value is on the order of 1e-2</p></li>
+<li><p><strong>loss_fn</strong> (<em>torch.nn loss fcn</em><em>, </em><em>optional</em>) – Torch.nn derived loss function to use when calculating loss</p></li>
+<li><p><strong>optimizer</strong> (<em>str</em><em>, </em><em>optional</em>) – Optimizer function to use. Current supported optimizers are: sgd, rmsprop, adam, adagrad, asgd, rprop, adadelta, adamw, adamax.</p></li>
+<li><p><strong>save_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the network after the epoch. Will save the network and also replace the “best” network file if performance is better.</p></li>
+<li><p><strong>track_accuracy</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to track the accuracy during training. Typically false.</p></li>
+<li><p><strong>keep_history</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to append tracked variables to the network history</p></li>
+<li><p><strong>show_timings</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show the timings of each step performed during training. Used for debug purposes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Updates the parameters/weights of the network and append any tracked variables, as requested.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.test_with">
+<span class="sig-name descname"><span class="pre">test_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataloader_to_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MSELoss()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_activations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_activationsGrad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_history</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_timings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.test_with"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.test_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests network performance through one iteration of the given dataset, while also tracking/logging data that has been set to be tracked/logged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataloader_to_test</strong> – Dataloader that inherits from torch.utils.data.Dataset to be used during testing. Typically a Dataset_Bread instance from a Data_Bread.testing class attribute</p></li>
+<li><p><strong>loss_fn</strong> (<em>torch.nn loss fcn</em><em>, </em><em>optional</em>) – Torch.nn derived loss function to use when calculating loss</p></li>
+<li><p><strong>track_accuracy</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to track the accuracy during training. Typically false.</p></li>
+<li><p><strong>track_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to log the the weights during training. Typically false.</p></li>
+<li><p><strong>track_activations</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to track activation values during forward propogation of network. Typically false.</p></li>
+<li><p><strong>track_activationsGrad</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to track activation gradient values from backpropogation. Necessary for some visualizatoin features, like GradCAM. Typically false.</p></li>
+<li><p><strong>keep_history</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to append tracked variables to the network history</p></li>
+<li><p><strong>show_timings</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show the timings of each step performed during training. Used for debug purposes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value.  Will append any tracked variables, as requested.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.get_labeled_outputs_from">
+<span class="sig-name descname"><span class="pre">get_labeled_outputs_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataloader_to_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.get_labeled_outputs_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.get_labeled_outputs_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will return true labels and corresponding output values from a dataloader for reference</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataloader_to_test</strong> – Dataloader that inherits from torch.utils.data.Dataset to be used to find labels &amp; outputs. Typically a Dataset_Bread instance from a Data_Bread.testing class attribute</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>labels</strong>: Numpy array of labels used during training.  Note if one_hot encoding was used, one_hot labels will be returned.
+<strong>outputs</strong>: Numpy array of the values output from the network</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>labels (numpy array), outputs (numpy array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.save_checkpoint">
+<span class="sig-name descname"><span class="pre">save_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.save_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.save_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a “checkpoint” of the network parameters/state so that it can be loaded in case of failure during training.
+Note that history/tracked variables are not saved or loaded. This is a reduced file-size saving method that only saves what is necessary to checkpoint performance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path (including filename) to save the network to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Network will be saved to a new file (or overwrite existing file of same name)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.load_checkpoint">
+<span class="sig-name descname"><span class="pre">load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.load_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.load_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a network from a saved “checkpoint”, if saved using above function.
+Note that history/tracked variables are not saved or loaded. “checkpoint”s are a reduced file-size saving method that only saves what is necessary to checkpoint performance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – path (including filename) to a pickle file containing a saved network.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns 1 if successful. Saved parameters/attributes will be loaded into the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.save_network">
+<span class="sig-name descname"><span class="pre">save_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_checkpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.save_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.save_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the entire network instance for later reference.  All values, parameters, and attributes are pickled saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path (including filename) to save the network to</p></li>
+<li><p><strong>remove_checkpoint</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whehter to remove existing checkpoints</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Network will be saved to a new file (or overwrite existing file of same name)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.update_save_paths">
+<span class="sig-name descname"><span class="pre">update_save_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.update_save_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.update_save_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the network attributes representing save paths. Used when attributes are edited after initialization that are used in the save_path definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>create_folders</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to create any mising folders for saved networks.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. All path attributes will be updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.get_list_of_layers">
+<span class="sig-name descname"><span class="pre">get_list_of_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.get_list_of_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.get_list_of_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an ordered list of the layer objects used by the network. These describe the network topology/organization used by the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Arguments.</strong> (<em>No</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An ordered list of the layer objects found. Note <code class="docutils literal notranslate"><span class="pre">nn.Sequential</span></code> objects are ignored in this search.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.get_param_modules">
+<span class="sig-name descname"><span class="pre">get_param_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.get_param_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.get_param_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an ordered list of the parameter modules contained in the network. These describe the weight values contained by the network.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Linear layers contain a weights parameter module and a bias parameter module. (1 layer, 2 parameter modules)</p>
+<p>Non-linearity layers do not contain parameters as they only perform a fixed operation.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Arguments.</strong> (<em>No</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An ordered list of the parameter modules found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.remove_forward_hooks">
+<span class="sig-name descname"><span class="pre">remove_forward_hooks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.remove_forward_hooks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.remove_forward_hooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters all forward hooks.</p>
+<p>May be necessary to remove hooks to move network to/from GPU or to save network, as some implemented hooks are unpickleable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Arguments.</strong> (<em>No</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No Return Value. Hooks will be unregistered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.remove_backward_hooks">
+<span class="sig-name descname"><span class="pre">remove_backward_hooks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.remove_backward_hooks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.remove_backward_hooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters all backwards hooks.</p>
+<p>May be necessary to remove hooks to move network to/from GPU or to save network, as some implemented hooks are unpickleable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Arguments.</strong> (<em>No</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No Return Value. Hooks will be unregistered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.remove_all_hooks">
+<span class="sig-name descname"><span class="pre">remove_all_hooks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.remove_all_hooks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.remove_all_hooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters all forward and backwards hooks.</p>
+<p>May be necessary to remove hooks to move network to/from GPU or to save network, as some implemented hooks are unpickleable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Arguments.</strong> (<em>No</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No Return Value. Hooks will be unregistered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network._add_forwardHook_to_layers">
+<span class="sig-name descname"><span class="pre">_add_forwardHook_to_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hook_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network._add_forwardHook_to_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network._add_forwardHook_to_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal function used to add a passed hook_function to layers.</p>
+<p>Users should not use this function, it only exists due to recursion/class structure nuances.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network._add_backwardHook_to_layers">
+<span class="sig-name descname"><span class="pre">_add_backwardHook_to_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hook_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network._add_backwardHook_to_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network._add_backwardHook_to_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal function used to add a passed hook_function to layers.</p>
+<p>Users should not use this function, it only exists due to recursion/class structure nuances.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.add_hook_activation">
+<span class="sig-name descname"><span class="pre">add_hook_activation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.add_hook_activation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.add_hook_activation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single comprehensive function that adds hooks/attributes necessary to track activation values of the network during training/testing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Arguments.</strong> (<em>No</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Hooks will be registered and attributes initialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.add_hook_activationGrad">
+<span class="sig-name descname"><span class="pre">add_hook_activationGrad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layerTarget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.add_hook_activationGrad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.add_hook_activationGrad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single comprehensive function that adds hooks/attributes necessary to track activation values of the network during training/testing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>layerTarget</strong> (<em>nn.Module layer</em><em>, </em><em>optional</em>) – Single layer to track activation gradients for. If not specified, all layers are tracked. Testing of this specific optinal input was not comprehensive, may need tweaking to assure proper cleanup and workflow with other functions.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Hooks will be registered and attributes initialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.network.Network.track_activations_cleanup">
+<span class="sig-name descname"><span class="pre">track_activations_cleanup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/network.html#Network.track_activations_cleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.network.Network.track_activations_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to easily cleanup all activation-tracking varaibles/hooks after training.</p>
+<p>May be necessary to move network to/from GPU or to save network, as the activation tracking implemention is unpickleable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Arguments.</strong> (<em>No</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Hooks will be unregistered and attributes cleared.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.network.Network.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.network.Network.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.heat.multiModelN.html" class="btn btn-neutral float-left" title="toast.heat.multiModelN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.heat.perceptronN.html" class="btn btn-neutral float-right" title="toast.heat.perceptronN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+toast.bread.format.chbmit
+=========================
+
+.. automodule:: toast.bread.format.chbmit
+   :members:
+   :undoc-members:
+   :show-inheritance:

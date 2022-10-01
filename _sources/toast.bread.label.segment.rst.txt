@@ -1,0 +1,7 @@
+toast.bread.label.segment
+=========================
+
+.. automodule:: toast.bread.label.segment
+   :members:
+   :undoc-members:
+   :show-inheritance:

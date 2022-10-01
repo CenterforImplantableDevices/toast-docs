@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.plate.heat_plot &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.plate.ox_plot" href="toast.plate.ox_plot.html" />
+    <link rel="prev" title="toast.plate.breadLabel_plot" href="toast.plate.breadLabel_plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.plate.html">toast.plate</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.plate.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.breadLabel_plot.html">toast.plate.breadLabel_plot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.plate.heat_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.ox_plot.html">toast.plate.ox_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.tisc_plot.html">toast.plate.tisc_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.zplane.html">toast.plate.zplane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.plate.html">toast.plate</a> &raquo;</li>
+      <li>toast.plate.heat_plot</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.plate.heat_plot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.plate.heat_plot">
+<span id="toast-plate-heat-plot"></span><h1>toast.plate.heat_plot<a class="headerlink" href="#module-toast.plate.heat_plot" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.heat_plot.train_test_loss">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.heat_plot.</span></span><span class="sig-name descname"><span class="pre">train_test_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracy_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Loss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_txt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_output_folder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkg_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/heat_plot.html#train_test_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.heat_plot.train_test_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a typical train-test loss curve to visualize training loss and testing loss over the course of many epochs.
+Optionally, you can include accuracy data to annotate the best, worst, and last reported accuracy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_axis</strong> – 1D Iterable: Variable agains which to plot loss. Typically Epochs</p></li>
+<li><p><strong>training_data</strong> – 1D Iterable: Training Loss, ordered according to values in x_axis</p></li>
+<li><p><strong>testing_data</strong> – 1D Iterable: Testing Loss, ordered according to values in x_axis</p></li>
+<li><p><strong>accuracy_data</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 1D Iterable: Testing Accuracy, ordered according to values in x_axis</p></li>
+<li><p><strong>training_progress</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values ordered according x_axis, 2D-value pair representing the min and max training loss, respectively.  Meant to summarize training progression</p></li>
+<li><p><strong>testing_progress</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values ordered according x_axis, 2D-value pair representing the min and max testing loss, respectively.  Meant to summarize training progression</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>optional</em>) – use for x axis label</p></li>
+<li><p><strong>y_label</strong> (<em>str</em><em>, </em><em>optional</em>) – use for y axis label</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – use for title</p></li>
+<li><p><strong>training_label</strong> (<em>str</em><em>, </em><em>optional</em>) – use in legend to identify training_data line</p></li>
+<li><p><strong>testing_label</strong> (<em>str</em><em>, </em><em>optional</em>) – use in legend to identify testing_data line</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>save_txt</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save a .txt summary of the final state (min, max, last) of the varaibles for each layer.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>bkg_color</strong> (<em>str -or- tuple</em><em>, </em><em>optional</em>) – Character or RBG Thruple representing the background color of the plot.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.heat_plot.loss_accuracy">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.heat_plot.</span></span><span class="sig-name descname"><span class="pre">loss_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracy_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracy_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_neg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Loss',</span> <span class="pre">'Accuracy']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracy_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_output_folder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkg_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/heat_plot.html#loss_accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.heat_plot.loss_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a typical train-test loss curve to visualize training loss and testing loss over the course of many epochs.
+You can optionally include accuracy data to annotate the best, worst, and last reported accuracy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_axis</strong> (<em>iterable</em>) – 1D Iterable: Variable agains which to plot accuracy. Typically Epochs</p></li>
+<li><p><strong>testing_data</strong> (<em>iterable</em>) – 1D Iterable: Testing Loss, ordered according to values in x_axis</p></li>
+<li><p><strong>accuracy_data</strong> (<em>iterable</em>) – 1D Iterable: Testing Accuracy, ordered according to values in x_axis</p></li>
+<li><p><strong>testing_progress</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values ordered according x_axis, 2D-value pair representing the min and max training loss, respectively.  Meant to summarize training progression</p></li>
+<li><p><strong>accuracy_progress</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values ordered according x_axis, 2D-value pair representing the min and max testing loss, respectively.  Meant to summarize training progression</p></li>
+<li><p><strong>false_pos</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 1D Iterable: False Positive rate, ordered according to values in x_axis</p></li>
+<li><p><strong>false_neg</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 1D Iterable: False Negative rate, ordered according to values in x_axis</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Use for x axis label</p></li>
+<li><p><strong>y_label</strong> (<em>str -or- list</em><em>, </em><em>optional</em>) – Use for y axis label. If sting will label testing_data axis, if list will label both testing_data and accuracy_data axis.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Use for title</p></li>
+<li><p><strong>testing_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Use in legend to identify training_data line</p></li>
+<li><p><strong>accuracy_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Use in legend to identify testing_data line</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>bkg_color</strong> (<em>str -or- tuple</em><em>, </em><em>optional</em>) – Character or RBG Thruple representing the background color of the plot.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.heat_plot.layer_distributions">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.heat_plot.</span></span><span class="sig-name descname"><span class="pre">layer_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_txt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Parameter</span> <span class="pre">Distribution'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_folder_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkg_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/heat_plot.html#layer_distributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.heat_plot.layer_distributions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots histograms of values for each layer to visualize distribution of data in each layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>iterable</em>) – 2D or 3D Iterable: 3D-values for successive layers, (optional)2D-values for different categories/outputs, 1D-values whose distribution will be displayed</p></li>
+<li><p><strong>testing_data</strong> (<em>iterable</em>) – 1D Iterable: Testing Loss, ordered according to values in x_axis</p></li>
+<li><p><strong>bins</strong> (<em>int</em><em>, </em><em>optional</em>) – How many bins to use in histogram. If none provided, will use twice the number of values in the second to last layer, or 100, whichever is smaller.</p></li>
+<li><p><strong>save_txt</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save a .txt summary of the final state of the varaibles for each layer</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>optional</em>) – X axis label</p></li>
+<li><p><strong>y_label</strong> (<em>list</em><em>, </em><em>optional</em>) – Label for each layer.  If nothing is provided, the layer number is used.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of plot</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>bkg_color</strong> (<em>str -or- tuple</em><em>, </em><em>optional</em>) – Character or RBG Thruple representing the background color of the plot.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.heat_plot.layer_training">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.heat_plot.</span></span><span class="sig-name descname"><span class="pre">layer_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q1_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q3_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_std_bars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Epochs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_output_folder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkg_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/heat_plot.html#layer_training"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.heat_plot.layer_training" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize the distribution of many parallel variables during training.
+Typically used to track and plot layer weight or activation distributions throughout training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_axis</strong> (<em>iterable</em>) – 1D Iterable: Variable agains which to plot avg_data. Typically Epochs</p></li>
+<li><p><strong>avg_data</strong> (<em>iterable</em>) – 2D Iterable: 1D-values for each layer, 2D-averages of data to track, ordered according to values in x_axis</p></li>
+<li><p><strong>std_data</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values for each layer, 2D-stdev of data to track, ordered according to values in x_axis</p></li>
+<li><p><strong>q1_data</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values for each layer, 2D-first quartile of data to track, ordered according to values in x_axis</p></li>
+<li><p><strong>q3_data</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values for each layer, 2D-third quartile of data to track, ordered according to values in x_axis</p></li>
+<li><p><strong>min_data</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values for each layer, 2D-minimum of data to track, ordered according to values in x_axis</p></li>
+<li><p><strong>max_data</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D Iterable: 1D-values for each layer, 2D-maximum of data to track, ordered according to values in x_axis</p></li>
+<li><p><strong>num_std_bars</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of standard deviation error bars to plot. Is limited to allow the shaded quartile data to also be visible.</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>optional</em>) – X axis label. Note that y_label is automatically set to the layer number</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of plot</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>bkg_color</strong> (<em>st -or- tuple</em><em>, </em><em>optional</em>) – Character or RBG Thruple representing the background color of the plot.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.heat_plot.output_correlation">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.heat_plot.</span></span><span class="sig-name descname"><span class="pre">output_correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_output_folder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkg_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/heat_plot.html#output_correlation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.heat_plot.output_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a scatter plot showing the correlation between two variables, stratified into different groups identified by the user.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Groups, x_variable, and y_variable should all be the same length such that values at a certain index of each array is correlated.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>groups</strong> (<em>1D numpy array</em>) – </p></li>
+<li><p><strong>x_variable</strong> (<em>ND Numpy array</em>) – </p></li>
+<li><p><strong>y_variable</strong> (<em>ND Numpy array</em>) – </p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of plot</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>optional</em>) – X axis label. Note that y_label is automatically set to the layer number</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>bkg_color</strong> (<em>st -or- tuple</em><em>, </em><em>optional</em>) – Character or RBG Thruple representing the background color of the plot.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.heat_plot.input_output_compare">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.heat_plot.</span></span><span class="sig-name descname"><span class="pre">input_output_compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'time'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separate_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_output_folder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkg_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/heat_plot.html#input_output_compare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.heat_plot.input_output_compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a plot overlaying input (blue) and output (green) waveforms to help visulaize the performance of regeneration or encoder/decoder networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>samples</strong> (<em>array</em><em> or </em><em>tensor</em>) – Input samples, to be plotted in blue</p></li>
+<li><p><strong>outputs</strong> (<em>array</em><em> or </em><em>tensor</em>) – Output samples, to be plotted in green</p></li>
+<li><p><strong>x_axis</strong> (<em>1D iterable</em><em>, </em><em>optional</em>) – Custom values to use as the x axis, if desired</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of plot</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>optional</em>) – X axis label.</p></li>
+<li><p><strong>y_label</strong> (<em>list</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – Y label to use for each subplot. Note that y_label is automatically set to the layer number.</p></li>
+<li><p><strong>separate_channels</strong> (<em>int</em><em>, </em><em>optional</em>) – How many data channels to reshape/unzip from the input/output values. Set to a negative number for no reshaping.</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>bkg_color</strong> (<em>st -or- tuple</em><em>, </em><em>optional</em>) – Character or RBG Thruple representing the background color of the plot.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.plate.breadLabel_plot.html" class="btn btn-neutral float-left" title="toast.plate.breadLabel_plot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.plate.ox_plot.html" class="btn btn-neutral float-right" title="toast.plate.ox_plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

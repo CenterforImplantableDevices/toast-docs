@@ -1,0 +1,7 @@
+toast.butter.noise.colors
+=========================
+
+.. automodule:: toast.butter.noise.colors
+   :members:
+   :undoc-members:
+   :show-inheritance:

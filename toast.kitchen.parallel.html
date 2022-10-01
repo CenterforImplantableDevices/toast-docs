@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.kitchen.parallel &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.kitchen.terminate" href="toast.kitchen.terminate.html" />
+    <link rel="prev" title="toast.kitchen" href="toast.kitchen.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.kitchen.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.kitchen.parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.kitchen.terminate.html">toast.kitchen.terminate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.kitchen.tracker.html">toast.kitchen.tracker</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.kitchen.html">toast.kitchen</a> &raquo;</li>
+      <li>toast.kitchen.parallel</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.kitchen.parallel.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.kitchen.parallel">
+<span id="toast-kitchen-parallel"></span><h1>toast.kitchen.parallel<a class="headerlink" href="#module-toast.kitchen.parallel" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.kitchen.parallel.run_parallel">
+<span class="sig-prename descclassname"><span class="pre">toast.kitchen.parallel.</span></span><span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fcn_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_job_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_job_sys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_mem_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_mem_sys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">still_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu_test_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_cache_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_newLimits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'run_parallel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_processTracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/kitchen/parallel.html#run_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.kitchen.parallel.run_parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute multiple runs of <code class="docutils literal notranslate"><span class="pre">target_fcn</span></code> in parallel asynchronously.</p>
+<p>This function will find the memory and cpu limitaitons of the machine it is running on, and automatically run as many parallel operations as is safely possible.</p>
+<p>This function will limit each parallel execution to one process and one thread (via <cite>torch.set_num_threads&lt;https://pytorch.org/docs/stable/generated/torch.set_num_threads.html#torch.set_num_threads&gt;</cite>,
+to avoid overallocation of CPU cores. Overallocation of CPU resources will slow execution dramatically.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The returned results are not necessarily in the same order, as the parallel execution is asynchronous.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_fcn</strong> (<em>function pointer</em>) – The funciton to run in parallel</p></li>
+<li><p><strong>fcn_args</strong> (<em>2D list</em>) – A list of lists of arguments to be passed to the function to test. Each entry in the outer list will be passed to the target_fcn</p></li>
+<li><p><strong>test_args</strong> (<em>list</em>) – A list of arguments (single instance) to be passed to the function to test</p></li>
+<li><p><strong>use_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use any available GPUs</p></li>
+<li><p><strong>max_job_gpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of jobs to run on each GPU</p></li>
+<li><p><strong>max_job_sys</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of jobs to run on the entire system</p></li>
+<li><p><strong>max_mem_gpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum bytes of memory to use on each GPU</p></li>
+<li><p><strong>max_mem_sys</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum bytes of memory to use on the entire system</p></li>
+<li><p><strong>percent_gpu</strong> (<em>float</em><em>, </em><em>optional</em>) – Decimal value signifying what percentage of GPU memory to use</p></li>
+<li><p><strong>percent_memory</strong> (<em>float</em><em>, </em><em>optional</em>) – Decimal value signifying what percentage of system memory to use</p></li>
+<li><p><strong>still_test</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to still perform a test run. If a smaller limit is found than what is input, the smaller limit will be used.</p></li>
+<li><p><strong>gpu_test_index</strong> (<em>int</em><em>, </em><em>optional</em>) – CUDA device index to use when testing GPU memory consumption</p></li>
+<li><p><strong>cache_results</strong> (<em>bool</em><em>, </em><em>optional</em>) – Wether to cache results in files on the disk rather than saving them in memory. Use if returned values take up excessive memory and cannot all be stored while processes are still running.</p></li>
+<li><p><strong>path_cache_results</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to a folder to cache returned values from each process.</p></li>
+<li><p><strong>path_log_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the log file for logging activity</p></li>
+<li><p><strong>find_newLimits</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to perform a test run of the passed fuction to find new machine limits.</p></li>
+<li><p><strong>run_comment</strong> (<em>str</em><em>, </em><em>optional</em>) – Comment to label the parallel processes as when tracking</p></li>
+<li><p><strong>update_processTracker</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to create and update a process tracker file in a <cite>.toast-trackers</cite> folder in the user’s home directory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>results (list, contains all of the output s of the parallel runs.  These outputs are not necessarily in the order they were passed)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.kitchen.parallel.get_memory_limits">
+<span class="sig-prename descclassname"><span class="pre">toast.kitchen.parallel.</span></span><span class="sig-name descname"><span class="pre">get_memory_limits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_job_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_job_sys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_mem_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_mem_sys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">still_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu_test_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/kitchen/parallel.html#get_memory_limits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.kitchen.parallel.get_memory_limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will run <code class="docutils literal notranslate"><span class="pre">target_fcn</span></code> with <code class="docutils literal notranslate"><span class="pre">target_args</span></code> arguments in an independent process while tracking CPU and GPU memory usage.
+After the entire function execution, it will use the maximum recorded instantaneous memory usage to calculate
+how many processes can safely be run in parallel without running out of memory or cpu cores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_fcn</strong> (<em>function pointer</em>) – The funciton to test in order to determine parallelization limits</p></li>
+<li><p><strong>target_args</strong> (<em>list</em>) – A list of arguments (single instance) to be passed to the function to test</p></li>
+<li><p><strong>use_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use any available GPUs</p></li>
+<li><p><strong>max_job_gpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of jobs to run on each GPU</p></li>
+<li><p><strong>max_job_sys</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of jobs to run on the entire system</p></li>
+<li><p><strong>max_mem_gpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum bytes of memory to use on each GPU</p></li>
+<li><p><strong>max_mem_sys</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum bytes of memory to use on the entire system</p></li>
+<li><p><strong>percent_gpu</strong> (<em>float</em><em>, </em><em>optional</em>) – Decimal value signifying what percentage of GPU memory to use</p></li>
+<li><p><strong>percent_memory</strong> (<em>float</em><em>, </em><em>optional</em>) – Decimal value signifying what percentage of system memory to use</p></li>
+<li><p><strong>still_test</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to still perform a test run. If a smaller limit is found than what is input, the smaller limit will be used.</p></li>
+<li><p><strong>gpu_test_index</strong> (<em>int</em><em>, </em><em>optional</em>) – CUDA device index to use when testing GPU memory consumption</p></li>
+<li><p><strong>path_log_file</strong> (<em>str</em><em>, </em><em>optional</em>) – path to log file where runtime output can be saved</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>num_gpu (int, number of GPU available), num_jobs (int, max number of jobs per GPU), max_jobs (int, max total number of jobs on the system)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.kitchen.parallel.track_memory_usage_gpu">
+<span class="sig-prename descclassname"><span class="pre">toast.kitchen.parallel.</span></span><span class="sig-name descname"><span class="pre">track_memory_usage_gpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/kitchen/parallel.html#track_memory_usage_gpu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.kitchen.parallel.track_memory_usage_gpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to track the maximum instantaneous GPU memory usage. This function uses global variables
+to communicaite instantaneous memory tracking values to any process which needs it.</p>
+<p>The available GPU memory at the beginning of tracking is saved in a global variable <code class="docutils literal notranslate"><span class="pre">free_gpu_memory</span></code>
+The max consumed memory from the time this funciton is called is saved in a global variable <code class="docutils literal notranslate"><span class="pre">used_gpu_memory</span></code></p>
+<p>To stop tracking, set the global variable <code class="docutils literal notranslate"><span class="pre">stop_tracking</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>device</strong> (<em>int</em>) – GPU Bus index to track</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None. Global variable <code class="docutils literal notranslate"><span class="pre">free_gpu_memory</span></code> is updated initially when first called and <code class="docutils literal notranslate"><span class="pre">used_gpu_memory</span></code> is updated continuously.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.kitchen.parallel.track_memory_usage_sys">
+<span class="sig-prename descclassname"><span class="pre">toast.kitchen.parallel.</span></span><span class="sig-name descname"><span class="pre">track_memory_usage_sys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/kitchen/parallel.html#track_memory_usage_sys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.kitchen.parallel.track_memory_usage_sys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to track the maximum instantaneous system memory usage. This function uses global variables
+to communicaite instantaneous memory tracking values to any process which needs it.</p>
+<p>The available system memory at the beginning of tracking is saved in a global variable <code class="docutils literal notranslate"><span class="pre">free_sys_memory</span></code>
+The max consumed memory from the time this funciton is called is saved in a global variable <code class="docutils literal notranslate"><span class="pre">used_sys_memory</span></code></p>
+<p>To stop tracking, set the global variable <code class="docutils literal notranslate"><span class="pre">stop_tracking</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None. Global variable <code class="docutils literal notranslate"><span class="pre">free_sys_memory</span></code> is updated initially when first called and <code class="docutils literal notranslate"><span class="pre">used_sys_memory</span></code> is updated continuously.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.kitchen.parallel.update_process_queue">
+<span class="sig-prename descclassname"><span class="pre">toast.kitchen.parallel.</span></span><span class="sig-name descname"><span class="pre">update_process_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/kitchen/parallel.html#update_process_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.kitchen.parallel.update_process_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to standardize the format of process updates in a process queue.</p>
+<p>Gets a dictionary from the passed queue and adds content to that dictionary with the
+current process ID as the dictionary key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>process_queue</strong> (<em>multiprocessing queue</em>) – Queue where process updates can be stored</p></li>
+<li><p><strong>content</strong> (<em>str</em><em>, or </em><em>any</em>) – Value to store in the queue to indicate process status.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None. Updates the passed process_queue.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.kitchen.parallel._worker_process">
+<span class="sig-prename descclassname"><span class="pre">toast.kitchen.parallel.</span></span><span class="sig-name descname"><span class="pre">_worker_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torch_device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/kitchen/parallel.html#_worker_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.kitchen.parallel._worker_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is what is run be each process to retrieve new arguments and store returned values.
+It is a helper function to be used only by <a class="reference internal" href="#toast.kitchen.parallel.run_parallel" title="toast.kitchen.parallel.run_parallel"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_parallel()</span></code></a></p>
+<p>This function will limit each parallel execution to one process and one thread (via <cite>torch.set_num_threads&lt;https://pytorch.org/docs/stable/generated/torch.set_num_threads.html#torch.set_num_threads&gt;</cite>, to avoid overallocation of CPU cores, which will slow execution down dramatically.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Function arguments are automatically <cite>copy.deepcopy()</cite>’ed after being retrieved from the queue and
+before being passed to the target function. This avoids the need to deepcopy parameters before
+placing in the queue, which can cause the queue to become excessively large and result in slowdowns
+in retrieving parameters. This scenario will lead to excessive <cite>queue.Empty</cite> exceptions as many
+processes try to access a slow queue simultaneously.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.kitchen.parallel._worker_error">
+<span class="sig-prename descclassname"><span class="pre">toast.kitchen.parallel.</span></span><span class="sig-name descname"><span class="pre">_worker_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/kitchen/parallel.html#_worker_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.kitchen.parallel._worker_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is the callback funciton if an asynchronous worker raises an error.
+It simply prints the error to stdout.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.kitchen.html" class="btn btn-neutral float-left" title="toast.kitchen" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.kitchen.terminate.html" class="btn btn-neutral float-right" title="toast.kitchen.terminate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

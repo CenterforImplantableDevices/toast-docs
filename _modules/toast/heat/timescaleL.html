@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.timescaleL &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>toast.heat.timescaleL</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.heat.timescaleL</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A Class that contains all the functionality and tracking necessary to train and debug Deep Neural Networks.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">toast.butter.noise.colors</span> <span class="k">as</span> <span class="nn">tnoise</span>
+<span class="kn">import</span> <span class="nn">toast.heat.timescaleF</span> <span class="k">as</span> <span class="nn">tsf</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+
+<div class="viewcode-block" id="TSC_input"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input">[docs]</a><span class="k">class</span> <span class="nc">TSC_input</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents a time scale convolution input layer.</span>
+
+<span class="sd">    Typically only one of these layers is present at the input.  It is designed to transofrm a 1D input into a 2D Scaled output.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="TSC_input.__init__"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_window</span><span class="p">,</span> <span class="n">max_window</span><span class="p">,</span> <span class="n">scale_multiplier</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">initialization</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialization to create a Time Scale Convolutional Layer</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            min_window (int):                   The minimum window size to consider. Value represents the min window size in number of samples.</span>
+<span class="sd">            max_window (int):                   The maximum window size to consider. Value represents the max window size in number of samples.</span>
+<span class="sd">            scale_multiplier (int, optional):   The exponential base designating how fast the window size increases.</span>
+<span class="sd">            bias (bool, optional):              Whether to add a bias node to each scale.</span>
+<span class="sd">            initialization (int/str, optional): How to initializae tisc parameters. Can be a beta value for noise, or a string requesting a noise color. See :py:func:`toast.butter.noise.colors.get_noise` or :py:func:`toast.butter.noise.colors.get_color` for more info.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the TSC_input class representing a Time Scale Convolution Layer.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TSC_input</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span>       <span class="o">=</span> <span class="n">min_window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span>       <span class="o">=</span> <span class="n">max_window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">=</span> <span class="n">scale_multiplier</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: Only scale_multiplier=2 is currently supported. Setting scale_multiplier to 2.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="c1"># Determine the minimum and miximum exponential relting the the minimum/maximum window sizes.</span>
+        <span class="c1"># Window sizes should be an even multiple of scale_multiplier, if not the windows will be reduced/expanded.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: min_window (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="s1">&#39;) was not an even multiple of scale_multiplier (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">,</span> <span class="s1">&#39;). Reducing min_window to compensate&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: New value of min_window: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: max_window (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="s1">&#39;) was not an even multiple of scale_multiplier (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">,</span> <span class="s1">&#39;). Expanding max_window to compensate&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: New value of max_window: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_window_exponential</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">))</span>
+        
+        <span class="n">weights_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span> <span class="n">weights_length</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_parameter</span><span class="p">(</span><span class="s1">&#39;bias&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span> <span class="o">=</span> <span class="n">initialization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_warning_data</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+    <span class="c1"># TODO Not sure what this does, but it&#39;s in all the examples</span>
+<div class="viewcode-block" id="TSC_input.reset_parameters"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Resets the parameters to a default distribution that was passed in __init__.</span>
+<span class="sd">        </span>
+<span class="sd">        Weights are normally distributed, unless a noise pattern/color is selected during intialization.</span>
+<span class="sd">        Bias is uniformly distributed.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            None.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Weight/Bias values will be reset.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">stdev</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="o">-</span><span class="n">stdev</span><span class="p">,</span><span class="n">stdev</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span> <span class="n">stdev</span> <span class="o">*</span> <span class="n">tnoise</span><span class="o">.</span><span class="n">get_noise</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span> <span class="n">stdev</span> <span class="o">*</span> <span class="n">tnoise</span><span class="o">.</span><span class="n">get_color</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNGING: Invalid initialization argument. Initializing to uniform distribution.&#39;</span><span class="p">)</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="o">-</span><span class="n">stdev</span><span class="p">,</span><span class="n">stdev</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># fan_in, _ = init._calculate_fan_in_and_fan_out(self.weights)</span>
+            <span class="c1"># bound = 1 / math.sqrt(fan_in)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="o">-</span><span class="n">stdev</span><span class="p">,</span> <span class="n">stdev</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="TSC_input.forward"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Overwrites the forward method of the Network class to process data based on our network structure.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): Data to be processed by the network.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The output when passing the input data through the network</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">tsf</span><span class="o">.</span><span class="n">TiScFunction_input</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_dataShape</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window_exponential</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSC_input.convert_to_decision"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.convert_to_decision">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_decision</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This method overwrites the forward method of the Network class, in case special behavior is desired</span>
+<span class="sd">        Convertrs a network output to a definite decision based on thresholds highest likelihood values.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            output: Value output by network</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Float Tensor representing the final decision of the network.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_output</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span> <span class="n">output</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">output</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_threshold</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSC_input.extra_repr"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.extra_repr">[docs]</a>    <span class="k">def</span> <span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set the extra information about this module. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;min_window=</span><span class="si">{}</span><span class="s1">, max_window=</span><span class="si">{}</span><span class="s1">, mult=</span><span class="si">{}</span><span class="s1">, bias=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSC_input.freeze_shape"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.freeze_shape">[docs]</a>    <span class="k">def</span> <span class="nf">freeze_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freeze</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Note this function does NOT freeze the bias, only the weights&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">freeze</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="TSC_input.get_gradCAM"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.get_gradCAM">[docs]</a>    <span class="k">def</span> <span class="nf">get_gradCAM</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">activations_grad</span><span class="p">,</span> <span class="n">input_dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Calculate gradCAM activation mapping for this layer, rescaled and stretched to match the input dimensions.</span>
+
+<span class="sd">        Currently, the activations and activation gradients must be extracted from the larger network object outside of this function. An example imlementation is below::</span>
+
+<span class="sd">            activations      = network.layer_activations[layer]</span>
+<span class="sd">            activations_grad = network.layer_activationsGrad[layer]</span>
+<span class="sd">            gradCAM_out, gradCAM_expanded, gradCAM_alpha = layer.get_gradCAM(activations.to(network.device), activations_grad.to(network.device), input_dimensions=sample_shape)</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            activations (Tensor):                  Activation values of layer after forward pass is performed. To track these, use :py:func:`toast.heat.network.add_hook_activation`</span>
+<span class="sd">            activations_grad (Tensor):             Gradient of the activation values after a backwards pass is performed. To track these, use :py:func:`toast.heat.network.add_hook_activationGrad`</span>
+<span class="sd">            input_dimensions (iterable, optional): Shape of the input dimensions to match. If no input dimensions are passed, the largest window of this layer is assumed to be the length of the input.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            *gradCAM_output* - gradCAM results which match shape of input sample; *gradCAM_expanded* - gradCAM results which are expanded to allow visualizaiton of activations of each independent scale; *scale_alpha* - Alpha values for each scale, signifying importance.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Precompute values for a faster forward loop</span>
+        <span class="n">scale_multiplier</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span>
+        <span class="n">min_win_expon</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window_exponential</span>
+        <span class="n">max_win_expon</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span>
+        <span class="n">current_scale</span>     <span class="o">=</span> <span class="n">max_win_expon</span>
+
+        <span class="k">if</span> <span class="n">input_dimensions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">input_dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="n">max_win_expon</span><span class="p">]</span>
+        <span class="n">index_activation</span>  <span class="o">=</span> <span class="n">input_dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="n">max_win_expon</span><span class="p">)</span>
+
+        <span class="n">scale_alpha</span>      <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">activations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_win_expon</span><span class="o">-</span><span class="n">min_win_expon</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># This is it&#39;s own matrix in case it is desired for analysis</span>
+        <span class="n">gradCAM_expanded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">activations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_win_expon</span><span class="o">-</span><span class="n">min_win_expon</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="n">min_win_expon</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">current_scale</span> <span class="o">&gt;=</span> <span class="n">min_win_expon</span><span class="p">:</span>
+            <span class="n">index_start</span> <span class="o">=</span> <span class="n">index_activation</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">index_end</span>   <span class="o">=</span> <span class="n">index_activation</span> <span class="o">*</span> <span class="n">scale_multiplier</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="c1"># alpha = activations_weighted[: , index_start:index_end].sum(axis=-1)</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">activations_grad</span><span class="p">[:</span> <span class="p">,</span> <span class="n">index_start</span><span class="p">:</span><span class="n">index_end</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">scale_alpha</span><span class="p">[:,</span> <span class="n">current_scale</span><span class="o">-</span><span class="n">min_win_expon</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha</span>
+            
+            <span class="n">gradCAM_expanded</span><span class="p">[:,</span> <span class="n">current_scale</span><span class="o">-</span><span class="n">min_win_expon</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">activations</span><span class="p">[:</span> <span class="p">,</span> <span class="n">index_start</span><span class="p">:</span><span class="n">index_end</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">scale_multiplier</span><span class="o">**</span><span class="p">(</span><span class="n">current_scale</span><span class="o">-</span><span class="n">min_win_expon</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Increment/decrement tracking variables appropriately</span>
+            <span class="n">index_activation</span> <span class="o">=</span> <span class="n">index_activation</span> <span class="o">*</span> <span class="n">scale_multiplier</span>
+            <span class="n">current_scale</span>   <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="c1"># Dimension order should be [samples, scales, time]</span>
+        <span class="n">repeat_matchInput</span> <span class="o">=</span> <span class="n">input_dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="n">gradCAM_expanded</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fcn_relu</span>          <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="n">gradCAM_out</span>       <span class="o">=</span> <span class="n">fcn_relu</span><span class="p">(</span><span class="n">gradCAM_expanded</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">repeat_matchInput</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">gradCAM_expanded</span>  <span class="o">=</span> <span class="n">fcn_relu</span><span class="p">(</span><span class="n">gradCAM_expanded</span>            <span class="p">)</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">repeat_matchInput</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">gradCAM_out</span><span class="p">,</span> <span class="n">gradCAM_expanded</span><span class="p">,</span> <span class="n">scale_alpha</span></div>
+
+
+<div class="viewcode-block" id="TSC_input.get_gradCAM_single"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input.get_gradCAM_single">[docs]</a>    <span class="k">def</span> <span class="nf">get_gradCAM_single</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">activations_grad</span><span class="p">,</span> <span class="n">input_dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Calculate gradCAM activation mapping for this layer, rescaled and stretched to match the input dimensions. It is recommended to use :py:func:`get_gradCAM` instead of this function. This is maintained for backwards compatibility.</span>
+
+<span class="sd">        Currently, the activations and activation gradients must be extracted from the larger network object outside of this function. An example imlementation is below::</span>
+
+<span class="sd">            activations      = network.layer_activations[layer]</span>
+<span class="sd">            activations_grad = network.layer_activationsGrad[layer]</span>
+<span class="sd">            gradCAM_out, gradCAM_expanded, gradCAM_alpha = layer.get_gradCAM(activations.to(network.device), activations_grad.to(network.device), input_dimensions=sample_shape)</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            activations (Tensor):                  Activation values of layer after forward pass is performed. To track these, use :py:func:`toast.heat.network.add_hook_activation`</span>
+<span class="sd">            activations_grad (Tensor):             Gradient of the activation values after a backwards pass is performed. To track these, use :py:func:`toast.heat.network.add_hook_activationGrad`</span>
+<span class="sd">            input_dimensions (iterable, optional): Shape of the input dimensions to match. If no input dimensions are passed, the largest window of this layer is assumed to be the length of the input.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            *gradCAM_output* - gradCAM results which match shape of input sample; *gradCAM_expanded* - gradCAM results which are expanded to allow visualizaiton of activations of each independent scale; *scale_alpha* - Alpha values for each scale, signifying importance.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Precompute values for a faster forward loop</span>
+        <span class="n">scale_multiplier</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span>
+        <span class="n">min_win_expon</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window_exponential</span>
+        <span class="n">max_win_expon</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span>
+        <span class="n">current_scale</span>     <span class="o">=</span> <span class="n">max_win_expon</span>
+
+        <span class="k">if</span> <span class="n">input_dimensions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">input_dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="n">max_win_expon</span><span class="p">]</span>
+        <span class="n">index_activation</span>  <span class="o">=</span> <span class="n">input_dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="n">max_win_expon</span><span class="p">)</span>
+
+        <span class="n">scale_alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_win_expon</span><span class="o">-</span><span class="n">min_win_expon</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># This is it&#39;s own matrix in case it is desired for analysis</span>
+        <span class="n">gradCAM_expanded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_win_expon</span><span class="o">-</span><span class="n">min_win_expon</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="n">min_win_expon</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">current_scale</span> <span class="o">&gt;=</span> <span class="n">min_win_expon</span><span class="p">:</span>
+            <span class="n">index_start</span> <span class="o">=</span> <span class="n">index_activation</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">index_end</span>   <span class="o">=</span> <span class="n">index_activation</span> <span class="o">*</span> <span class="n">scale_multiplier</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="c1"># alpha = activations_weighted[index_start : index_end].sum()</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">activations_grad</span><span class="p">[</span><span class="n">index_start</span> <span class="p">:</span> <span class="n">index_end</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="n">scale_alpha</span><span class="p">[</span><span class="n">current_scale</span><span class="o">-</span><span class="n">min_win_expon</span><span class="p">]</span>        <span class="o">=</span> <span class="n">alpha</span>
+            <span class="n">gradCAM_expanded</span><span class="p">[</span><span class="n">current_scale</span><span class="o">-</span><span class="n">min_win_expon</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">activations</span><span class="p">[</span><span class="n">index_start</span><span class="p">:</span><span class="n">index_end</span><span class="p">]</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">scale_multiplier</span><span class="o">**</span><span class="p">(</span><span class="n">current_scale</span><span class="o">-</span><span class="n">min_win_expon</span><span class="p">))</span>
+            
+            <span class="c1"># Increment/decrement tracking variables appropriately</span>
+            <span class="n">index_activation</span> <span class="o">=</span> <span class="n">index_activation</span> <span class="o">*</span> <span class="n">scale_multiplier</span>
+            <span class="n">current_scale</span>   <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="n">repeat_matchInput</span> <span class="o">=</span> <span class="n">input_dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="n">gradCAM_expanded</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fcn_relu</span>          <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="n">gradCAM_out</span>       <span class="o">=</span> <span class="n">fcn_relu</span><span class="p">(</span><span class="n">gradCAM_expanded</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">repeat_matchInput</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">gradCAM_expanded</span>  <span class="o">=</span> <span class="n">fcn_relu</span><span class="p">(</span><span class="n">gradCAM_expanded</span>             <span class="p">)</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">repeat_matchInput</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">gradCAM_out</span><span class="p">,</span> <span class="n">gradCAM_expanded</span><span class="p">,</span> <span class="n">scale_alpha</span></div>
+
+    <span class="k">def</span> <span class="nf">_check_dataShape</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_warning_data</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: input data is not a multiple of max_window. Truncating data to a valid length.&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">show_warning_data</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_warning_data</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: input data is not a multiple of max_window. Truncating data to a valid length.&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">show_warning_data</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="p">:</span> <span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">)</span> <span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="TSCTranspose_input"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input">[docs]</a><span class="k">class</span> <span class="nc">TSCTranspose_input</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents a transposed time scale convolution input layer.</span>
+<span class="sd">    Typically used to build a mirrored Decoder structure in an time scale encoder/decoder network.</span>
+
+<span class="sd">    returns an encoded vector back to input dimensions.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="TSCTranspose_input.__init__"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_window</span><span class="p">,</span> <span class="n">max_window</span><span class="p">,</span> <span class="n">scale_multiplier</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">initialization</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialization to create a Transposed Time Scale Convolutional Layer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            min_window (int):                   The minimum window size to consider. Value represents the min window size in number of samples.</span>
+<span class="sd">            max_window (int):                   The maximum window size to consider. Value represents the max window size in number of samples.</span>
+<span class="sd">            scale_multiplier (int, optional):   The exponential base designating how fast the window size increases.</span>
+<span class="sd">            bias (bool, optional):              Whether to add a bias node to each scale.</span>
+<span class="sd">            initialization (int/str, optional): How to initializae tisc parameters. Can be a beta value for noise, or a string requesting a noise color. See :py:func:`toast.butter.noise.colors.get_noise` or :py:func:`toast.butter.noise.colors.get_color` for more info.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the TSC_input class representing a Time Scale Convolution Layer.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TSCTranspose_input</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span>       <span class="o">=</span> <span class="n">min_window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span>       <span class="o">=</span> <span class="n">max_window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">=</span> <span class="n">scale_multiplier</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: Only scale_multiplier=2 is currently supported. Setting scale_multiplier to 2.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="c1"># Determine the minimum and miximum exponential relting the the minimum/maximum window sizes.</span>
+        <span class="c1"># Window sizes should be an even multiple of scale_multiplier, if not the windows will be reduced/expanded.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: min_window (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="s1">&#39;) was not an even multiple of scale_multiplier (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">,</span> <span class="s1">&#39;). Reducing min_window to compensate&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: New value of min_window: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: max_window (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="s1">&#39;) was not an even multiple of scale_multiplier (&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">,</span> <span class="s1">&#39;). Expanding max_window to compensate&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">**</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: New value of max_window: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_window_exponential</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">))</span>
+        
+        <span class="n">weights_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span> <span class="n">weights_length</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_parameter</span><span class="p">(</span><span class="s1">&#39;bias&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span> <span class="o">=</span> <span class="n">initialization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_warning_data</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+    <span class="c1"># TODO Not sure what this does, but it&#39;s in all the examples</span>
+<div class="viewcode-block" id="TSCTranspose_input.reset_parameters"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Resets the parameters to a default distribution that was passed in __init__.</span>
+<span class="sd">        </span>
+<span class="sd">        Weights are normally distributed, unless a noise pattern/color is selected during intialization.</span>
+<span class="sd">        Bias is uniformly distributed.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            None.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Weight/Bias values will be reset.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">stdev</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="o">-</span><span class="n">stdev</span><span class="p">,</span><span class="n">stdev</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span> <span class="n">stdev</span> <span class="o">*</span> <span class="n">tnoise</span><span class="o">.</span><span class="n">get_noise</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span> <span class="n">stdev</span> <span class="o">*</span> <span class="n">tnoise</span><span class="o">.</span><span class="n">get_color</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_initialization</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNGING: Invalid initialization argument. Initializing to uniform distribution.&#39;</span><span class="p">)</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="o">-</span><span class="n">stdev</span><span class="p">,</span><span class="n">stdev</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># fan_in, _ = init._calculate_fan_in_and_fan_out(self.weights)</span>
+            <span class="c1"># bound = 1 / math.sqrt(fan_in)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="o">-</span><span class="n">stdev</span><span class="p">,</span> <span class="n">stdev</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="TSCTranspose_input.forward"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Overwrites the forward method of the Network class to process data based on our network structure.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): Data to be processed by the network.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The output when passing the input data through the network</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">tsf</span><span class="o">.</span><span class="n">TiScTransposeFunction_input</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_window_exponential</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window_exponential</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSCTranspose_input.convert_to_decision"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input.convert_to_decision">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_decision</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This method overwrites the forward method of the Network class, in case special behavior is desired</span>
+<span class="sd">        Convertrs a network output to a definite decision based on thresholds highest likelihood values.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            output: Value output by network</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Float Tensor representing the final decision of the network.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_output</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span> <span class="n">output</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">output</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_threshold</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSCTranspose_input.extra_repr"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input.extra_repr">[docs]</a>    <span class="k">def</span> <span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set the extra information about this module. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;min_window=</span><span class="si">{}</span><span class="s1">, max_window=</span><span class="si">{}</span><span class="s1">, mult=</span><span class="si">{}</span><span class="s1">, bias=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span></div></div>
+
+
+
+<div class="viewcode-block" id="TSC_batchnorm"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_batchnorm">[docs]</a><span class="k">class</span> <span class="nc">TSC_batchnorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="TSC_batchnorm.__init__"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_batchnorm.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length_input</span><span class="p">,</span> <span class="n">min_scale</span><span class="p">,</span> <span class="n">max_scale</span><span class="p">,</span> <span class="n">scale_multiplier</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Wrapper of the pytorch BatchNorm Normalization layer for Time Scale layers.</span>
+<span class="sd">        Applies normalization to each scale independently rather than to the layer data collectively.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            length_input (int):     The length of the data input into the network, which is necessary to calculte data dimensions.</span>
+<span class="sd">            min_scale (int):        Smallest scale index to apply normalization to.</span>
+<span class="sd">            max_scale (int):        Largest scale index to apply normalization to.</span>
+<span class="sd">            scale_multiplier (int): Exponential base designating how fast the window size increases.</span>
+<span class="sd">            **kwargs (misc):        Othe arguments to pass to batchnorm layer</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the TiscBatchNorm class representing a TimeScale Batch Normalization Layer</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TSC_batchnorm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">batchnorm_scales</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span> <span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="n">length_input</span> <span class="o">//</span> <span class="p">(</span><span class="n">scale_multiplier</span><span class="o">**</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_scale</span><span class="p">,</span> <span class="n">max_scale</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">padding_scales</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">padding_right</span>       <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">padding_left</span>        <span class="o">=</span> <span class="n">length_input</span> <span class="o">//</span> <span class="p">(</span><span class="n">scale_multiplier</span><span class="o">**</span><span class="n">min_scale</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_scale</span><span class="p">,</span> <span class="n">min_scale</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">padding_scales</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">nn</span><span class="o">.</span><span class="n">ConstantPad1d</span><span class="p">((</span><span class="n">padding_left</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding_right</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">padding_right</span> <span class="o">+=</span> <span class="n">padding_left</span>
+            <span class="n">padding_left</span>   <span class="o">=</span> <span class="n">padding_left</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="c1"># self.padding_scales = nn.ModuleList( self.padding_scales)</span>
+
+        <span class="c1"># Note, you must subtract one from these indexes when using them. This subtration is omitted to allow easier movement between scales</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index_start</span>      <span class="o">=</span> <span class="n">length_input</span> <span class="o">//</span> <span class="p">(</span><span class="n">scale_multiplier</span><span class="o">**</span><span class="n">min_scale</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index_end</span>        <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_start</span> <span class="o">*</span> <span class="n">scale_multiplier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span> <span class="o">=</span> <span class="n">scale_multiplier</span></div>
+
+<div class="viewcode-block" id="TSC_batchnorm.forward"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_batchnorm.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Overwrites the forward method of the Network class to process data based on our network structure.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): Data to be processed by the network.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The output when passing the input data through the network</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span>
+            
+        <span class="n">index_start</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_start</span>
+        <span class="n">index_end</span>        <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_end</span>
+        <span class="n">scale_multiplier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_multiplier</span>
+        
+        <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">batchnorm</span><span class="p">,</span> <span class="n">padding</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">batchnorm_scales</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding_scales</span><span class="p">):</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">output</span><span class="p">,</span> <span class="n">padding</span><span class="p">(</span> <span class="n">batchnorm</span><span class="p">(</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">index_start</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">index_end</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)))</span>
+
+            <span class="n">index_start</span> <span class="o">=</span> <span class="n">index_start</span> <span class="o">//</span> <span class="n">scale_multiplier</span>
+            <span class="n">index_end</span>   <span class="o">=</span> <span class="n">index_end</span>   <span class="o">//</span> <span class="n">scale_multiplier</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="TSC_batchnorm.extra_repr"><a class="viewcode-back" href="../../../toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_batchnorm.extra_repr">[docs]</a>    <span class="k">def</span> <span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set the extra information about this module. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;num_scales=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batchnorm_scales</span><span class="p">))</span></div></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">testNet</span> <span class="o">=</span> <span class="n">TSC_input</span><span class="p">(</span> <span class="mi">4</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16384</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_multiplier</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Network:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">testNet</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fin.&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

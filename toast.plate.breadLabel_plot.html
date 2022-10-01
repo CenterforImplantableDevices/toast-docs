@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.plate.breadLabel_plot &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.plate.heat_plot" href="toast.plate.heat_plot.html" />
+    <link rel="prev" title="toast.plate" href="toast.plate.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.plate.html">toast.plate</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.plate.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.plate.breadLabel_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.heat_plot.html">toast.plate.heat_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.ox_plot.html">toast.plate.ox_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.tisc_plot.html">toast.plate.tisc_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.zplane.html">toast.plate.zplane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.plate.html">toast.plate</a> &raquo;</li>
+      <li>toast.plate.breadLabel_plot</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.plate.breadLabel_plot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.plate.breadLabel_plot">
+<span id="toast-plate-breadlabel-plot"></span><h1>toast.plate.breadLabel_plot<a class="headerlink" href="#module-toast.plate.breadLabel_plot" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.breadLabel_plot.plot_labels">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.breadLabel_plot.</span></span><span class="sig-name descname"><span class="pre">plot_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_labels_dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_x_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{2:</span> <span class="pre">'before',</span> <span class="pre">3:</span> <span class="pre">'after',</span> <span class="pre">4:</span> <span class="pre">'between'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_pkl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[16,</span> <span class="pre">9]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_close</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/breadLabel_plot.html#plot_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.breadLabel_plot.plot_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>General funcitons used for plotting output to check the resulting labeling data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_labels_dataframe</strong> (<em>dataframe</em>) – Dataframe containing all raw data</p></li>
+<li><p><strong>save_plots</strong> (<em>bool</em>) – Whether to save the plots</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – Path to save the data (if save_plots is true)</p></li>
+<li><p><strong>filename_header</strong> (<em>str</em>) – Prefix to use for filename to identify the contents of the plot</p></li>
+<li><p><strong>col_x_axis</strong> (<em>str</em><em>, </em><em>optional</em>) – Column in all_labels_dataframe to use for the x axis.</p></li>
+<li><p><strong>label_key</strong> (<em>dict</em><em>, </em><em>optional</em>) – Key for the label_ints and the string label. Used in x axis label.</p></li>
+<li><p><strong>plot_skip</strong> (<em>list</em><em>, </em><em>optional</em>) – List of strings indicating a plot to skip. Options include <cite>session</cite>, <cite>event_startStop</cite>, <cite>time_beforeEvent</cite>, <cite>time_afterEvent</cite>, <cite>time_duringEvent</cite>, <cite>labels</cite>, <cite>label_int</cite></p></li>
+<li><p><strong>save_pkl</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save figure in a pickle file.  Note these files can be large files (&gt;1GB).</p></li>
+<li><p><strong>plot_size</strong> (<em>list</em><em>, </em><em>optional</em>) – Dimensions of each output figure</p></li>
+<li><p><strong>plot_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Pixels per inch to generate when saving the file.</p></li>
+<li><p><strong>plot_linewidth</strong> (<em>float</em><em>, </em><em>optional</em>) – Linewidth to use for lines in each plot.</p></li>
+<li><p><strong>plot_close</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close each plot after generation. Recommended to avoid excessive memory use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Creates plots that can be later displayed using plt.show(). Also saves .png files if desired.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.breadLabel_plot.plot_segments">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.breadLabel_plot.</span></span><span class="sig-name descname"><span class="pre">plot_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_labels_dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_x_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime_ts'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight_border</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['y',</span> <span class="pre">'b',</span> <span class="pre">'g',</span> <span class="pre">'m',</span> <span class="pre">'c',</span> <span class="pre">'r']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_pkl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[16,</span> <span class="pre">9]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_close</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/breadLabel_plot.html#plot_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.breadLabel_plot.plot_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>General funcitons used for plotting output to check the resulting labeling data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_labels_dataframe</strong> (<em>dataframe</em>) – Dataframe containing all raw data</p></li>
+<li><p><strong>segments</strong> (<em>list</em>) – List of dictionaries defining segments. See CID convention for this dictionary in toast/bread/README.md</p></li>
+<li><p><strong>sample_rate</strong> (<em>int</em>) – Rate that data is sampled at.</p></li>
+<li><p><strong>save_plots</strong> (<em>bool</em>) – Whether to save the plots</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – Path to save the data (if save_plots is true)</p></li>
+<li><p><strong>filename_header</strong> (<em>str</em>) – Prefix to use for filename to identify the contents of the plot</p></li>
+<li><p><strong>col_x_axis</strong> (<em>str</em><em>, </em><em>optional</em>) – Column in all_labels_dataframe to use for the x axis.</p></li>
+<li><p><strong>highlight_border</strong> (<em>float</em><em>, </em><em>optional</em>) – Number of seconds to leave blank on either side when shading samples. This helps visually separate each sample.</p></li>
+<li><p><strong>highlight_colors</strong> (<em>list</em><em>, </em><em>optional</em>) – list of colors to use when highlighting each label.</p></li>
+<li><p><strong>save_pkl</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save figure in a pickle file.  Note these files can be large files (&gt;1GB).</p></li>
+<li><p><strong>plot_size</strong> (<em>list</em><em>, </em><em>optional</em>) – Dimensions of each output figure</p></li>
+<li><p><strong>plot_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Pixels per inch to generate when saving the file.</p></li>
+<li><p><strong>plot_linewidth</strong> (<em>float</em><em>, </em><em>optional</em>) – Linewidth to use for lines in each plot.</p></li>
+<li><p><strong>plot_close</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close each plot after generation. Recommended to avoid excessive memory use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Creates plots that can be later displayed using plt.show(). Also saves .png files if desired.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.plate.html" class="btn btn-neutral float-left" title="toast.plate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.plate.heat_plot.html" class="btn btn-neutral float-right" title="toast.plate.heat_plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

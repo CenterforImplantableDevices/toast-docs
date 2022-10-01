@@ -1,0 +1,7 @@
+toast.butter.filter.handcrafted
+===============================
+
+.. automodule:: toast.butter.filter.handcrafted
+   :members:
+   :undoc-members:
+   :show-inheritance:

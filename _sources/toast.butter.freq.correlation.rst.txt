@@ -1,0 +1,7 @@
+toast.butter.freq.correlation
+=============================
+
+.. automodule:: toast.butter.freq.correlation
+   :members:
+   :undoc-members:
+   :show-inheritance:

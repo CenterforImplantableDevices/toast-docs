@@ -1,0 +1,7 @@
+toast.plate.ox\_plot
+====================
+
+.. automodule:: toast.plate.ox_plot
+   :members:
+   :undoc-members:
+   :show-inheritance:

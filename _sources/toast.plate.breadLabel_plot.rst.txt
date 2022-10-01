@@ -1,0 +1,7 @@
+toast.plate.breadLabel\_plot
+============================
+
+.. automodule:: toast.plate.breadLabel_plot
+   :members:
+   :undoc-members:
+   :show-inheritance:

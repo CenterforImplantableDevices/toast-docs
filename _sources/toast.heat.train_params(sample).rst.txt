@@ -1,0 +1,7 @@
+toast.heat.train\_params\(sample\)
+==================================
+
+.. automodule:: toast.heat.train_params(sample)
+   :members:
+   :undoc-members:
+   :show-inheritance:

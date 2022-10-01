@@ -1,0 +1,7 @@
+toast.heat.encoderDecisionN
+===========================
+
+.. automodule:: toast.heat.encoderDecisionN
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+toast.bread.label.assign
+========================
+
+.. automodule:: toast.bread.label.assign
+   :members:
+   :undoc-members:
+   :show-inheritance:

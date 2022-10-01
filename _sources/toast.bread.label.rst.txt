@@ -1,0 +1,17 @@
+toast.bread.label
+=================
+
+.. automodule:: toast.bread.label
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.bread.label.assign
+   toast.bread.label.importData
+   toast.bread.label.segment

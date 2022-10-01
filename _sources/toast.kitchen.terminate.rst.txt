@@ -1,0 +1,7 @@
+toast.kitchen.terminate
+=======================
+
+.. automodule:: toast.kitchen.terminate
+   :members:
+   :undoc-members:
+   :show-inheritance:

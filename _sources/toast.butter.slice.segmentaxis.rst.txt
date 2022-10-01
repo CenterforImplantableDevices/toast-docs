@@ -1,0 +1,7 @@
+toast.butter.slice.segmentaxis
+==============================
+
+.. automodule:: toast.butter.slice.segmentaxis
+   :members:
+   :undoc-members:
+   :show-inheritance:

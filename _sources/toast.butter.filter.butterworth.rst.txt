@@ -1,0 +1,7 @@
+toast.butter.filter.butterworth
+===============================
+
+.. automodule:: toast.butter.filter.butterworth
+   :members:
+   :undoc-members:
+   :show-inheritance:

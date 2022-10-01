@@ -1,0 +1,26 @@
+toast.heat
+==========
+
+.. automodule:: toast.heat
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.heat.convolutionalN
+   toast.heat.dataset_bread
+   toast.heat.encoderDecisionN
+   toast.heat.multiModelN
+   toast.heat.network
+   toast.heat.perceptronN
+   toast.heat.timescaleF
+   toast.heat.timescaleL
+   toast.heat.timescaleN
+   toast.heat.train_parallel_core(sample)
+   toast.heat.train_params(sample)
+   toast.heat.training

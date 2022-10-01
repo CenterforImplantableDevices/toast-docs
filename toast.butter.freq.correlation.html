@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.butter.freq.correlation &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.butter.freq.fourier" href="toast.butter.freq.fourier.html" />
+    <link rel="prev" title="toast.butter.freq" href="toast.butter.freq.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.butter.html">toast.butter</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.butter.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.butter.filter.html">toast.butter.filter</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="toast.butter.freq.html">toast.butter.freq</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="toast.butter.freq.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="toast.butter.noise.html">toast.butter.noise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.butter.slice.html">toast.butter.slice</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.butter.html">toast.butter</a> &raquo;</li>
+          <li><a href="toast.butter.freq.html">toast.butter.freq</a> &raquo;</li>
+      <li>toast.butter.freq.correlation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.butter.freq.correlation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.butter.freq.correlation">
+<span id="toast-butter-freq-correlation"></span><h1>toast.butter.freq.correlation<a class="headerlink" href="#module-toast.butter.freq.correlation" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.butter.freq.correlation.get_stac">
+<span class="sig-prename descclassname"><span class="pre">toast.butter.freq.correlation.</span></span><span class="sig-name descname"><span class="pre">get_stac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maintain_signs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/butter/freq/correlation.html#get_stac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.butter.freq.correlation.get_stac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slides a window accross the data and calculated the autocorrelation of each window.</p>
+<p>Times can be excluded to avoid noise unsing the <code class="docutils literal notranslate"><span class="pre">exclude_times</span></code> optional arguemnt.
+To exclude times 20-40 and 200-450: <code class="docutils literal notranslate"><span class="pre">exclude_offset=[[20,</span> <span class="pre">40],</span> <span class="pre">[200,</span> <span class="pre">450]]</span></code></p>
+<p>It will probably be helpful to low-pass filter data before analyzing autocorrelation, to prevent a spike-y output.
+See the lowpass_filter function <a class="reference internal" href="toast.butter.filter.butterworth.html#toast.butter.filter.butterworth.lowpass_filter" title="toast.butter.filter.butterworth.lowpass_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">lowpass_filter()</span></code></a> for more info.</p>
+<p>Example of plotting data:</p>
+<blockquote>
+<div><p>fig, ax = plt.subplots()
+cs = ax.contourf(stac_time, stac_offsetts, stac_values, cmap=’gnuplot’)
+_ = fig.colorbar(cs) # to show color scale</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Function can only handle one channel at a time.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy array</em>) – Array (single row) representing the data to be filtered.</p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sample rate of the data.</p></li>
+<li><p><strong>window</strong> (<em>int</em>) – Size of the window used when computing the periodogram.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Step size to use when sliding widow across data.</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – Mode to use when calculating autocorrelation. Must correspond to the options in <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.correlate.html">scipy.signal.correlate</a></p></li>
+<li><p><strong>window_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of window to use for preprocessing.  Must be compatible with the scipy <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.get_window.html">get_window</a> function.</p></li>
+<li><p><strong>scaling</strong> (<em>int/float</em><em>, </em><em>optional</em>) – Exponent to use when scaling the data when converting to power.</p></li>
+<li><p><strong>maintain_signs</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to maintain the sign of the output. If false, all values will be positive.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to normalize each window independently to range from 0 - 1</p></li>
+<li><p><strong>remove_center</strong> (<em>bool</em><em>, </em><em>optional</em>) – Will remove the first half of the autocorrelation output. Allows you to see less obvious correlation patterns in the greater offsets.</p></li>
+<li><p><strong>exclude_offset</strong> (<em>iterable</em><em>, </em><em>optional</em>) – 2D list of time offsets to exclude for plotting.  Values in this range are set to the minimum existing coefficient value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new_time (numpy array) - Plot X axis. Frequency axis (Hz) corresponding to the output stft coefficients.
+freq_values (numpy array) - Plot Y axis. of the frequency values corresponding to the output stft coefficients.
+stac_values (numpy ndarray) - Plot Z axis. Autocorrelation output magnitudes, ready to plot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.butter.freq.correlation.get_autocorr_maxFreq">
+<span class="sig-prename descclassname"><span class="pre">toast.butter.freq.correlation.</span></span><span class="sig-name descname"><span class="pre">get_autocorr_maxFreq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/butter/freq/correlation.html#get_autocorr_maxFreq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.butter.freq.correlation.get_autocorr_maxFreq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the maximum frequency, identified by finding the first peak in the autocorrelation calculation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy array</em>) – Array (single row) representing the data to be filtered.</p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sample rate of the data.</p></li>
+<li><p><strong>window</strong> (<em>int</em>) – Size of the window used when computing the autocorrelation.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Step size to use when sliding widow across data.</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Mode to use when calculating autocorrelation. Must correspond to the options in <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.correlate.html">scipy.signal.correlate</a></p>
+</p></li>
+<li><p><strong>window_type</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Type of window to use for preprocessing.  Must be compatible with the scipy <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.get_window.html">get_window</a> function.</p>
+</p></li>
+<li><p><strong>cutoff_filter</strong> (<em>int/float</em><em>, </em><em>optional</em>) – Filter cutoff to use when filtering autocorrelation before finding first peak and maxFreq.</p></li>
+<li><p><strong>scaling</strong> (<em>int/float</em><em>, </em><em>optional</em>) – Exponent to use when scaling the data when converting to power.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new_time (numpy array) - Plot X axis. Frequency axis (Hz) corresponding to the output stft coefficients.
+freq_values (numpy array) - Plot Y axis. of the frequency values corresponding to the maximum identified frequency</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.butter.freq.html" class="btn btn-neutral float-left" title="toast.butter.freq" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.butter.freq.fourier.html" class="btn btn-neutral float-right" title="toast.butter.freq.fourier" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

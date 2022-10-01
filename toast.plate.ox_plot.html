@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.plate.ox_plot &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.plate.tisc_plot" href="toast.plate.tisc_plot.html" />
+    <link rel="prev" title="toast.plate.heat_plot" href="toast.plate.heat_plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.plate.html">toast.plate</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.plate.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.breadLabel_plot.html">toast.plate.breadLabel_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.heat_plot.html">toast.plate.heat_plot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.plate.ox_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.tisc_plot.html">toast.plate.tisc_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.zplane.html">toast.plate.zplane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.plate.html">toast.plate</a> &raquo;</li>
+      <li>toast.plate.ox_plot</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.plate.ox_plot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.plate.ox_plot">
+<span id="toast-plate-ox-plot"></span><h1>toast.plate.ox_plot<a class="headerlink" href="#module-toast.plate.ox_plot" title="Permalink to this headline">¶</a></h1>
+<p>Functions for plotting data with labels/structure that match what is expected within the oxford bionode dataset.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.ox_plot.show_all_data">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.ox_plot.</span></span><span class="sig-name descname"><span class="pre">show_all_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_seizure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_seizure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all_data'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_pkl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/ox_plot.html#show_all_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.ox_plot.show_all_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots all 4 baseline channels Respiration, EKG1, EKG2, and ECoG</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>iterable</em>) – Time array of data</p></li>
+<li><p><strong>data</strong> (<em>numpy array</em>) – Numpy ndarray of data with row0=resp, row1=EKG1, row2=EKG2, row3=ECoG</p></li>
+<li><p><strong>start_seizure</strong> (<em>list</em><em>, </em><em>optional</em>) – List of times that labeled seizures start. Units should match time array.</p></li>
+<li><p><strong>end_seizure</strong> (<em>list</em><em>, </em><em>optional</em>) – List of times that labeled seizures end.   Units should match time array.</p></li>
+<li><p><strong>plot_linewidth</strong> (<em>float</em><em>, </em><em>optional</em>) – Linewidth used by matplotlib to plot data.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of plot</p></li>
+<li><p><strong>save_plots</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether plots should be saved.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of folder for file to be saved in</p></li>
+<li><p><strong>save_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Filename (without extnesion) to save file under.</p></li>
+<li><p><strong>save_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dots per inch in the output figure. Controls resolution.</p></li>
+<li><p><strong>save_pkl</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save a pickle file of the plot (not recommended).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.ox_plot.show_all_fft">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.ox_plot.</span></span><span class="sig-name descname"><span class="pre">show_all_fft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all_fft'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_pkl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/ox_plot.html#show_all_fft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.ox_plot.show_all_fft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots all 4 fft output of channels Respiration, EKG1, EKG2, and ECoG</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy array</em>) – Numpy ndarray of data where  row0=respiration, row1=EKG1, row2=EKG2, row3=ECoG</p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sample Frequency (Hz)</p></li>
+<li><p><strong>plot_linewidth</strong> (<em>float</em><em>, </em><em>optional</em>) – Linewidth used by matplotlib to plot data.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of plot</p></li>
+<li><p><strong>save_plots</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether plots should be saved.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of folder for file to be saved in</p></li>
+<li><p><strong>save_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Filename (without extnesion) to save file under.</p></li>
+<li><p><strong>save_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dots per inch in the output figure. Controls resolution.</p></li>
+<li><p><strong>save_pkl</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save a pickle file of the plot (not recommended)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.ox_plot.show_stft">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.ox_plot.</span></span><span class="sig-name descname"><span class="pre">show_stft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_extend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[]]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">150]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all_stft'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_pkl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/ox_plot.html#show_stft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.ox_plot.show_stft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the stft of the given data. Seizures are marked on the X axis (Green=start, Red=end)</p>
+<p>Arguments marked with an ‘*’ are passed directly to <code class="xref py py-func docutils literal notranslate"><span class="pre">save_to_some_file()</span></code> .
+Refer to this function definition for full functionality description.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function can only plot single-channel data.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>iterable</em>) – Time array of data</p></li>
+<li><p><strong>data</strong> (<em>numpy array</em>) – Numpy array or ndarray (single row) representing the data to be plotted.</p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sample rate of the data.</p></li>
+<li><p><strong>window</strong> (<em>int</em>) – Size of the window used when computing the fft for the stft</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Step size to use when sliding widow across data.</p></li>
+<li><p><strong>zero_extend</strong> (<em>int</em><em>, </em><em>optional</em>) – Multiple of len(data) to zero extend by.  i.e. passing 2 would add 2*len(data) zeros to the end of each window of data.</p></li>
+<li><p><strong>scaling</strong> (<em>int</em><em>, </em><em>optional</em>) – Integer level for relative scaling of coefficients (for plotting).</p></li>
+<li><p><strong>exclude_offset</strong> (<em>list</em><em>, </em><em>optional</em>) – 2D list of time offsets to exclude for plotting.  Values in this range are set to the minimum existing coefficient value.</p></li>
+<li><p><strong>frequency_range</strong> (<em>list</em><em>, </em><em>optional</em>) – Frequency range to return, if only interested in a specific range. Note the full stft is calculated regardless.</p></li>
+<li><p><strong>start_marker</strong> (<em>list</em><em>, </em><em>optional</em>) – 1D List of times in which labeled seizures start. Units should match time array.</p></li>
+<li><p><strong>end_marker</strong> (<em>list</em><em>, </em><em>optional</em>) – 1D List of times in which labeled seizures end.   Units should match time array.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of plot</p></li>
+<li><p><strong>save_plots</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether plots should be saved.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of folder for file to be saved in</p></li>
+<li><p><strong>save_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Filename (without extnesion) to save file under.</p></li>
+<li><p><strong>save_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dots per inch in the output figure. Controls resolution.</p></li>
+<li><p><strong>save_pkl</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save a pickle file of the plot (not recommended)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.plate.heat_plot.html" class="btn btn-neutral float-left" title="toast.plate.heat_plot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.plate.tisc_plot.html" class="btn btn-neutral float-right" title="toast.plate.tisc_plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

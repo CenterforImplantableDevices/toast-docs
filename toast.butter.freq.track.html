@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.butter.freq.track &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.butter.noise" href="toast.butter.noise.html" />
+    <link rel="prev" title="toast.butter.freq.fourier" href="toast.butter.freq.fourier.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.butter.html">toast.butter</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.butter.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.butter.filter.html">toast.butter.filter</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="toast.butter.freq.html">toast.butter.freq</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="toast.butter.freq.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="toast.butter.noise.html">toast.butter.noise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.butter.slice.html">toast.butter.slice</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.butter.html">toast.butter</a> &raquo;</li>
+          <li><a href="toast.butter.freq.html">toast.butter.freq</a> &raquo;</li>
+      <li>toast.butter.freq.track</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.butter.freq.track.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.butter.freq.track">
+<span id="toast-butter-freq-track"></span><h1>toast.butter.freq.track<a class="headerlink" href="#module-toast.butter.freq.track" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.butter.freq.track.track_peak_frequency">
+<span class="sig-prename descclassname"><span class="pre">toast.butter.freq.track.</span></span><span class="sig-name descname"><span class="pre">track_peak_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_extend=6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolate_fcn=&lt;class</span> <span class="pre">'scipy.interpolate._cubic.CubicSpline'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/butter/freq/track.html#track_peak_frequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.butter.freq.track.track_peak_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks the peak frequency within a certain frequency range.
+ex. Track heart rate, which exists within 0.66 Hz - 4 Hz in humans (40 BMP - 240 BPM)</p>
+<p>Function can only handle one channel at a time.</p>
+<p>Note: The interpolation fuction used can be easily changed. Currently a cubic spline interpolation function is used.</p>
+<p>Note: An stft reduces the size of the data slightly.  To account for this the first and last
+few data points are extended from the first and last calculated values so that the
+size of the data matches the input size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy array</em>) – Numpy array or ndarray (single row) representing the data to be filtered.</p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sample rate of the data.</p></li>
+<li><p><strong>min_freq</strong> (<em>int</em><em> or </em><em>float</em>) – The minimum expected frequency of the tracked frequency.</p></li>
+<li><p><strong>max_freq</strong> (<em>int</em><em> or </em><em>float</em>) – The maximum expected frequency of the tracked frequency.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the window used when computing the fft for the stft used to track freq.</p></li>
+<li><p><strong>step</strong> (<em>int</em><em>, </em><em>optional</em>) – Step size to use when sliding widow across data.</p></li>
+<li><p><strong>zero_extend</strong> (<em>int</em><em>, </em><em>optional</em>) – Multiple of len(data) to zero extend by.  i.e. passing 2 would add 2*len(data) zeros to the end of each window of data.</p></li>
+<li><p><strong>interpolate_fcn</strong> (<em>fcn</em><em>, </em><em>optional</em>) – Function pointer to be used when inerpolating output data. Do not include parenthesis when passing function pointers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Numpy array or ndarray (single row) (matching the format passed) of peak frequency for the entire duration of data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.butter.freq.track.track_mean_frequency">
+<span class="sig-prename descclassname"><span class="pre">toast.butter.freq.track.</span></span><span class="sig-name descname"><span class="pre">track_mean_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_extend=6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolate_fcn=&lt;class</span> <span class="pre">'scipy.interpolate._cubic.CubicSpline'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/butter/freq/track.html#track_mean_frequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.butter.freq.track.track_mean_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks the centroid frequency within a certain frequency range.</p>
+<p>For example, can be used to track EEG frequency power. The mean frequency should rise as seizure activity begins.</p>
+<dl class="simple">
+<dt>Note: The stft call in this function reduces the size of the data slightly.</dt><dd><p>To account for this the first and last few data points are extended from the
+first and last calculated values so that the size of the data matches the input size.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy array</em><em> or </em><em>ndarray</em>) – Data to be filtered. <strong>Function can only handle one channel at a time.</strong></p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sample rate of the data.</p></li>
+<li><p><strong>min_freq</strong> (<em>float</em>) – Minimum expected frequency of the tracked frequency.</p></li>
+<li><p><strong>max_freq</strong> (<em>float</em>) – Maximum expected frequency of the tracked frequency.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the window used when computing the fft for the stft used to track freq.</p></li>
+<li><p><strong>step</strong> (<em>int</em><em>, </em><em>optional</em>) – Step size to use when sliding widow across data.</p></li>
+<li><p><strong>zero_extend</strong> (<em>int</em><em>, </em><em>optional</em>) – Multiple of len(data) to zero extend by.  i.e. passing 2 would add 2*len(data) zeros to the end of each window of data.</p></li>
+<li><p><strong>interpolate_fcn</strong> (<em>fcn</em><em>, </em><em>optional</em>) – Function pointer to be used when inerpolating output data. Do not include parenthesis when passing function pointers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Numpy array or ndarray (single row) (matching the format passed) of peak frequency for the entire duration of data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.butter.freq.track.track_perc_frequency">
+<span class="sig-prename descclassname"><span class="pre">toast.butter.freq.track.</span></span><span class="sig-name descname"><span class="pre">track_perc_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile=75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_extend=6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolate_fcn=&lt;class</span> <span class="pre">'scipy.interpolate._cubic.CubicSpline'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/butter/freq/track.html#track_perc_frequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.butter.freq.track.track_perc_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks the Upper Percentile frequency within a certain frequency range.</p>
+<p>For example, can be used to track EEG frequency power. The mean frequency should rise as seizure activity begins.</p>
+<dl class="simple">
+<dt>Note: The stft call in this function reduces the size of the data slightly.</dt><dd><p>To account for this the first and last few data points are extended from the
+first and last calculated values so that the size of the data matches the input size.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy array</em><em> or </em><em>ndarray</em>) – Data to be filtered. <strong>Function can only handle one channel at a time.</strong></p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sample rate of the data.</p></li>
+<li><p><strong>min_freq</strong> (<em>float</em>) – Minimum expected frequency of the tracked frequency.</p></li>
+<li><p><strong>max_freq</strong> (<em>float</em>) – Maximum expected frequency of the tracked frequency.</p></li>
+<li><p><strong>percentile</strong> (<em>float</em><em>, </em><em>optional</em>) – The frequency percentile to track.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the window used when computing the fft for the stft used to track freq.</p></li>
+<li><p><strong>step</strong> (<em>int</em><em>, </em><em>optional</em>) – Step size to use when sliding widow across data.</p></li>
+<li><p><strong>zero_extend</strong> (<em>int</em><em>, </em><em>optional</em>) – Multiple of len(data) to zero extend by.  i.e. passing 2 would add 2*len(data) zeros to the end of each window of data.</p></li>
+<li><p><strong>interpolate_fcn</strong> (<em>fcn</em><em>, </em><em>optional</em>) – Function pointer to be used when inerpolating output data. Do not include parenthesis when passing function pointers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Numpy array or ndarray (single row) (matching the format passed) of desired frequency percentile for the entire duration of data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.butter.freq.fourier.html" class="btn btn-neutral float-left" title="toast.butter.freq.fourier" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.butter.noise.html" class="btn btn-neutral float-right" title="toast.butter.noise" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

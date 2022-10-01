@@ -1,0 +1,7 @@
+toast.heat.train\_parallel\_core\(sample\)
+==========================================
+
+.. automodule:: toast.heat.train_parallel_core(sample)
+   :members:
+   :undoc-members:
+   :show-inheritance:

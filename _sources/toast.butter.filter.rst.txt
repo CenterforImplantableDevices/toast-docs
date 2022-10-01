@@ -1,0 +1,17 @@
+toast.butter.filter
+===================
+
+.. automodule:: toast.butter.filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.butter.filter.butterworth
+   toast.butter.filter.handcrafted
+   toast.butter.filter.notch

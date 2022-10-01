@@ -1,0 +1,7 @@
+toast.bread.load.wav
+====================
+
+.. automodule:: toast.bread.load.wav
+   :members:
+   :undoc-members:
+   :show-inheritance:

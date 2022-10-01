@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.convolutionalN &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.heat.dataset_bread" href="toast.heat.dataset_bread.html" />
+    <link rel="prev" title="toast.heat" href="toast.heat.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.heat.html">toast.heat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.heat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.heat.convolutionalN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.dataset_bread.html">toast.heat.dataset_bread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.encoderDecisionN.html">toast.heat.encoderDecisionN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.multiModelN.html">toast.heat.multiModelN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.network.html">toast.heat.network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.perceptronN.html">toast.heat.perceptronN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleF.html">toast.heat.timescaleF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleL.html">toast.heat.timescaleL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleN.html">toast.heat.timescaleN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_parallel_core%28sample%29.html">toast.heat.train_parallel_core(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_params%28sample%29.html">toast.heat.train_params(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.training.html">toast.heat.training</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
+      <li>toast.heat.convolutionalN</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.heat.convolutionalN.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.heat.convolutionalN">
+<span id="toast-heat-convolutionaln"></span><h1>toast.heat.convolutionalN<a class="headerlink" href="#module-toast.heat.convolutionalN" title="Permalink to this headline">¶</a></h1>
+<p>A Class containing all the functionality and tracking necessary to train and debug Deep Neural Networks.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvolutionalMlpN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.convolutionalN.</span></span><span class="sig-name descname"><span class="pre">ConvolutionalMlpN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvolutionalMlpN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvolutionalMlpN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="toast.heat.network.html#toast.heat.network.Network" title="toast.heat.network.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">toast.heat.network.Network</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvolutionalMlpN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvolutionalMlpN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvolutionalMlpN.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines a Convolutional layer encoders with a mutlilayer perceptron <cite>~toast.heat.perceptronN.PerceptronN</cite> decision/classifier component.</p>
+<p>This is a convenience class to help easily initialize networks that follow a certain predefined organization.
+This organization includes some combination of convolutional layers, max-pooling layers, and avg-pooling layers as the first layers in a network, typically
+used as a “feature extraction” section.  These layers can then be followed by fully connected layers typically used as a “calssifier” section.
+The organization/sequence of these layers is provided in the layer_desc parameter of this class initializaer. With this, you can define the
+properties of each layer according to the following ordered inputs for each layer.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer Type</p></th>
+<th class="head"><p><cite>layer_desc</cite> entry for that layer</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Convolutional Layer</p></td>
+<td><p>[   ‘conv’, [kernel_dimensions(1D,2D,or3D)], stride, number_repitions, dropout ]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Max-Pool Layer</p></td>
+<td><p>[    ‘max’, [kernel_dimensions(1D,2D,or3D)], stride, dropout ]</p></td>
+</tr>
+<tr class="row-even"><td><p>Avg-Pool Layer</p></td>
+<td><p>[    ‘avg’, [kernel_dimensions(1D,2D,or3D)], stride, dropout ]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lineaer Layer</p></td>
+<td><p>[ ‘linear’, [sequential layer sizes], dropout, keyword_args ]</p></td>
+</tr>
+</tbody>
+</table>
+<p>Note that the linear layer definition is passed to toast_perceptron.define_sequential_linear_layers, check there for functionality</p>
+<p>Example usage to replicate a network from “Efficient Epileptic Seizure Prediction Based on Deep Learning” -Daoud H, Bayoumi MA</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">network</span> <span class="o">=</span> <span class="n">ConvolutionalMlpN</span><span class="p">(</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">1280</span><span class="p">],</span>
+                          <span class="p">[</span> <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                            <span class="p">[</span>   <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span>      <span class="kc">True</span><span class="p">],</span>
+                            <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                            <span class="p">[</span>   <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span>      <span class="kc">True</span><span class="p">],</span>
+                            <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                            <span class="p">[</span>   <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span>      <span class="kc">True</span><span class="p">],</span>
+                            <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                            <span class="p">[</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]]</span>
+                        <span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Don’t forget to include a dimension for the number of input channels, likely a [1, …] or [3, …] dim before the data/image size</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_shape</strong> (<em>1D iterable</em>) – 1D Iterable defining the input shape.  Don’t forget to include a dimension for the number of input channels, likely a [1, …] or [3, …] dim before the data/image size</p></li>
+<li><p><strong>layer_desc</strong> (<em>2D iterable</em>) – 2D Iterable: sequential list contianing elemnt lists that describe each layers architecture. Specific indes values are defined in detail above.</p></li>
+<li><p><strong>dropout</strong> (<em>1D iterable</em><em>, </em><em>optional</em>) – 1D Iterable of Boolean Values: Sequentially decide if the correlating layer in layer_size iterable should be followed by a dropout layer. If value(s) don’t exist they will be set to False.</p></li>
+<li><p><strong>dropout_perc</strong> (<em>float</em><em>, </em><em>optional</em>) – The percentage dropout to implement in the dropotu layers.</p></li>
+<li><p><strong>nonlinearity</strong> (<em>pyTorch Module</em><em>, </em><em>optional</em>) – A pyTorch Module that representes the desired nonlinearity class for the entire network.</p></li>
+<li><p><strong>nonlinearity_final</strong> (<em>pyTorch Module</em><em>, </em><em>optional</em>) – A pyTorch Module that representes the desired nonlinearity class for the final output node.</p></li>
+<li><p><strong>path_save_progress</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the parent directory where progress and tracking data should be saved.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description describing the contents/structure of the network for easy reference.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>optional</em>) – A comment about what this network is being used to do/test/investigate for later identification of tests run.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the ConvolutionalN class representing a deep neural network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvolutionalMlpN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvolutionalMlpN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvolutionalMlpN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the forward method of the Network class to process data based on our network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – Data to be processed by the network.</p>
+</dd>
+</dl>
+<p>output: The output of the network</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvolutionalMlpN.convert_to_decision">
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvolutionalMlpN.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvolutionalMlpN.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method overwrites the forward method of the Network class, in case special behavior is desired
+Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> – Value output by network</p></li>
+<li><p><strong>one_hot_encode</strong> (<em>bool</em>) – Whether the data is one_hot_encoded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float Tensor representing the final decision of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvolutionalMlpN.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.convolutionalN.ConvolutionalMlpN.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.convolutionalEncoderDecoderN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.convolutionalN.</span></span><span class="sig-name descname"><span class="pre">convolutionalEncoderDecoderN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#convolutionalEncoderDecoderN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.convolutionalEncoderDecoderN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="toast.heat.network.html#toast.heat.network.Network" title="toast.heat.network.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">toast.heat.network.Network</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.convolutionalEncoderDecoderN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#convolutionalEncoderDecoderN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.convolutionalEncoderDecoderN.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization function to create an instance of an Convolutional Encoder Decoder Network</p>
+<p>This is a convenience class to help easily initialize networks that follow a certain predefined organization.
+This organization includes some combination of convolutional layers, max-pooling layers, and avg-pooling layers
+as the first layers in a network, typically used as a “encoding” section.  These layers are then be followed by
+inverse layers of the same dimensions that map the encoded representation back to the original image in the
+“decoding” section. The organization/sequence of the encoding layers is provided in the layer_desc parameter of
+this class initializer. The inverse decoding layers are automatically generated. Using the the layer_desc
+parameter, you can define the properties of each layer according to the following ordered inputs for each layer.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer Type</p></th>
+<th class="head"><p><cite>layer_desc</cite> entry for that layer</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Convolutional Layer</p></td>
+<td><p>[   ‘conv’, [kernel_dimensions(1D,2D,or3D)], stride, number_repitions, dropout, batch_norm ]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Max-Pool Layer</p></td>
+<td><p>[    ‘max’, [kernel_dimensions(1D,2D,or3D)], stride, dropout, batch_norm ]</p></td>
+</tr>
+<tr class="row-even"><td><p>Avg-Pool Layer</p></td>
+<td><p>[    ‘avg’, [kernel_dimensions(1D,2D,or3D)], stride, dropout, batch_norm ]</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example usage to replicate a network from “Efficient Epileptic Seizure Prediction Based on Deep Learning” -Daoud H, Bayoumi MA</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">network</span> <span class="o">=</span> <span class="n">convolutionalEncoderDecoderN</span><span class="p">(</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">1280</span><span class="p">],</span>
+                        <span class="p">[</span> <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                            <span class="p">[</span>   <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span>      <span class="kc">True</span><span class="p">],</span>
+                            <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                            <span class="p">[</span>   <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span>      <span class="kc">True</span><span class="p">],</span>
+                            <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                            <span class="p">[</span>   <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span>      <span class="kc">True</span><span class="p">],</span>
+                            <span class="p">[</span>  <span class="s1">&#39;conv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+                        <span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Don’t forget to include a dimension for the number of input channels, likely a [1, …] or [3, …] dim before the data/image size</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_shape</strong> (<em>1D iterable</em>) – 1D Iterable defining the input shape.  Don’t forget to include a dimension for the number of input channels, likely a [1, …] or [3, …] dim before the data/image size</p></li>
+<li><p><strong>layer_desc</strong> (<em>2D iterable</em>) – 2D Iterable: sequential list contianing elemnt lists that describe each layers architecture. Specific indes values are defined in detail above.</p></li>
+<li><p><strong>dropout</strong> (<em>1D iterable</em><em>, </em><em>optional</em>) – 1D Iterable of Boolean Values: Sequentially decide if the correlating layer in layer_size iterable should be followed by a dropout layer. If value(s) don’t exist they will be set to False.</p></li>
+<li><p><strong>dropout_perc</strong> (<em>float</em><em>, </em><em>optional</em>) – The percentage dropout to implement in the dropotu layers.</p></li>
+<li><p><strong>nonlinearity</strong> (<em>pyTorch Module</em><em>, </em><em>optional</em>) – A pyTorch Module that representes the desired nonlinearity class for the entire network.</p></li>
+<li><p><strong>path_save_progress</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the parent directory where progress and tracking data should be saved.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description describing the contents/structure of the network for easy reference.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>optional</em>) – A comment about what this network is being used to do/test/investigate for later identification of tests run.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the AutoEncoderN class representing a deep neural network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.convolutionalEncoderDecoderN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#convolutionalEncoderDecoderN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.convolutionalEncoderDecoderN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the forward method of the Network class to process data based on our network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – Data to be processed by the network.</p>
+</dd>
+</dl>
+<p>output: The output of the network</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.convolutionalEncoderDecoderN.convert_to_decision">
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#convolutionalEncoderDecoderN.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.convolutionalEncoderDecoderN.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method overwrites the forward method of the Network class, in case special behavior is desired
+Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> – Value output by network</p></li>
+<li><p><strong>one_hot_encode</strong> (<em>bool</em>) – Whether the data is one_hot_encoded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float Tensor representing the final decision of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.convolutionalEncoderDecoderN.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.convolutionalN.convolutionalEncoderDecoderN.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvTiscMlpN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.convolutionalN.</span></span><span class="sig-name descname"><span class="pre">ConvTiscMlpN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_tisc_channels=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_input=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_tisc=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tisc_scale_multiplier=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvTiscMlpN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvTiscMlpN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="toast.heat.network.html#toast.heat.network.Network" title="toast.heat.network.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">toast.heat.network.Network</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvTiscMlpN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_tisc_channels=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_input=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_tisc=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tisc_scale_multiplier=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvTiscMlpN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvTiscMlpN.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intended to replicate the TiSc architecture, but using CNN layers with time-invariant convolution.</p>
+<p>Implementation and usage should exaclty match <code class="xref py py-func docutils literal notranslate"><span class="pre">TiscMlpN()</span></code> to allow for side-by-side comparison.</p>
+<p>If length_input is set to <cite>None</cite>, then the largest window size is assumed to be the length of the input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_desc</strong> (<em>2D iterable</em>) – 2D Iterable: sequential list contianing elemnt lists that describe each layers architecture. Specific indes values are defined in detail above.</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – Step size of each window. A each scale’s stride will be set to <cite>min(stride, window_length)</cite> to avoid skipping samples.</p></li>
+<li><p><strong>num_tisc_channels</strong> (<em>int</em><em>, </em><em>optional</em>) – How many repetitions or independent channels of Time Scale layers to apply to the data.</p></li>
+<li><p><strong>length_input</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the data that will be input into the network. Necessary if the largest TiSc window size does not cover the entire data length, to aid in dimension calculation.</p></li>
+<li><p><strong>dropout</strong> (<em>1D iterable</em><em>, </em><em>optional</em>) – 1D Iterable of Boolean Values: Sequentially decide if the correlating layer in layer_desc iterable should be followed by a dropout layer. If value(s) don’t exist they will be set to False.</p></li>
+<li><p><strong>dropout_perc</strong> (<em>float</em><em>, </em><em>optional</em>) – The percentage dropout to implement in the dropotu layers.</p></li>
+<li><p><strong>nonlinearity_tisc</strong> (<em>torch activation</em><em>, </em><em>optional</em>) – pytorch.nn activation fuction to use within the TiSc operation. Pass a reference to the class, not an instance of the class (don’t use parenthesis).</p></li>
+<li><p><strong>nonlinearity</strong> (<em>torch activation</em><em>, </em><em>optional</em>) – pytorch.nn activation fuction to use. Pass a reference to the class, not an instance of the class (don’t use parenthesis).</p></li>
+<li><p><strong>nonlinearity_final</strong> (<em>torch activation</em><em>, </em><em>optional</em>) – pytorch.nn activation fuction to use after the final layer. Pass a reference to the class, not an instance of the class (don’t use parenthesis).</p></li>
+<li><p><strong>tisc_scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – Exponential base designating how fast the window size increases.</p></li>
+<li><p><strong>path_save_progress</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the parent directory where progress and tracking data should be saved.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description describing the contents/structure of the network for easy reference.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>optional</em>) – A comment about what this network is being used to do/test/investigate for later identification of tests run.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the ConvolutionalN class representing a deep neural network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvTiscMlpN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvTiscMlpN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvTiscMlpN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the forward method of the Network class to process data based on our network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – Data to be processed by the network.</p>
+</dd>
+</dl>
+<p>output: The output of the network</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvTiscMlpN.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.convolutionalN.ConvTiscMlpN.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.ConvTiscMlpN.convert_to_decision">
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#ConvTiscMlpN.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.ConvTiscMlpN.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method overwrites the forward method of the Network class, in case special behavior is desired
+Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> – Value output by network</p></li>
+<li><p><strong>one_hot_encode</strong> (<em>bool</em>) – Whether the data is one_hot_encoded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float Tensor representing the final decision of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.heat.convolutionalN.define_sequential_conv_layers">
+<span class="sig-prename descclassname"><span class="pre">toast.heat.convolutionalN.</span></span><span class="sig-name descname"><span class="pre">define_sequential_conv_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_decode=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm=[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/convolutionalN.html#define_sequential_conv_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.convolutionalN.define_sequential_conv_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Streamlined to generate sequential object of containting standard layers in an order commonly seen in CNN architectures.</p>
+<p>It is expected for most users to use the more comprehensive <code class="xref py py-class docutils literal notranslate"><span class="pre">ConvolutionalN</span></code> class when defining convolutional networks, however
+this function is spearated out for integration with other class definitions to maintain consistency within the toast framework.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_shape</strong> (<em>1D iterable</em>) – Expected dimensions of the input dat</p></li>
+<li><p><strong>layer_desc</strong> (<em>1D iterable</em>) – Sequential list of the description of each layer, starting with the input layer and ending with the output layer.</p></li>
+<li><p><strong>get_decode</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to also assemble mirrored decoding layers</p></li>
+<li><p><strong>dropout</strong> (<em>1D iterable</em><em>, </em><em>optional</em>) – Iterable of Boolean Values: Sequentially decide if the correlating layer in layer_size iterable should be followed by a dropout layer. If value(s) don’t exist they will be set to False.</p></li>
+<li><p><strong>dropout_perc</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of an element to be zeroed.</p></li>
+<li><p><strong>nonlinearity</strong> (<em>torch activation</em><em>, </em><em>optional</em>) – pytorch.nn activation fuction to use. Pass a reference to the class, not an instance of the class (don’t use parenthesis).</p></li>
+<li><p><strong>batchnorm</strong> (<em>1D iterable</em><em>, </em><em>optional</em>) – Sequential list of whether or not to include batch normalization layers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>torch.nn.Sequential object containting the requested convolutional layers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.heat.html" class="btn btn-neutral float-left" title="toast.heat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.heat.dataset_bread.html" class="btn btn-neutral float-right" title="toast.heat.dataset_bread" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

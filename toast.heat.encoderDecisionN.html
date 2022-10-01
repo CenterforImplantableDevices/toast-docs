@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.encoderDecisionN &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.heat.multiModelN" href="toast.heat.multiModelN.html" />
+    <link rel="prev" title="toast.heat.dataset_bread" href="toast.heat.dataset_bread.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.heat.html">toast.heat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.heat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.convolutionalN.html">toast.heat.convolutionalN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.dataset_bread.html">toast.heat.dataset_bread</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.heat.encoderDecisionN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.multiModelN.html">toast.heat.multiModelN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.network.html">toast.heat.network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.perceptronN.html">toast.heat.perceptronN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleF.html">toast.heat.timescaleF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleL.html">toast.heat.timescaleL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleN.html">toast.heat.timescaleN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_parallel_core%28sample%29.html">toast.heat.train_parallel_core(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_params%28sample%29.html">toast.heat.train_params(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.training.html">toast.heat.training</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
+      <li>toast.heat.encoderDecisionN</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.heat.encoderDecisionN.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.heat.encoderDecisionN">
+<span id="toast-heat-encoderdecisionn"></span><h1>toast.heat.encoderDecisionN<a class="headerlink" href="#module-toast.heat.encoderDecisionN" title="Permalink to this headline">¶</a></h1>
+<p>A Class containing all the functionality and tracking necessary to train and debug Deep Neural Networks.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.encoderDecisionN.EncodeMlpN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.encoderDecisionN.</span></span><span class="sig-name descname"><span class="pre">EncodeMlpN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoded_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">independent_encode_channels=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze_encoder=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insert_dropout=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/encoderDecisionN.html#EncodeMlpN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.encoderDecisionN.EncodeMlpN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="toast.heat.network.html#toast.heat.network.Network" title="toast.heat.network.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">toast.heat.network.Network</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.encoderDecisionN.EncodeMlpN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoded_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">independent_encode_channels=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze_encoder=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insert_dropout=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_perc=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinearity_final=&lt;class</span> <span class="pre">'torch.nn.modules.activation.Sigmoid'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save_progress='./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment='none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/encoderDecisionN.html#EncodeMlpN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.encoderDecisionN.EncodeMlpN.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Wrapper network object to allow the use of existing and/or pretrained encoder layers as an encoder</dt><dd><p>with a mutlilayer perceptron <cite>~toast.heat.perceptronN.PerceptronN</cite> decision/classifier component.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoder_layers</strong> (<em>pytorch network</em><em>)     </em><em>Network object</em><em> (</em><em>often a nn.Sequential wrapper</em>) – </p></li>
+<li><p><strong>encoded_shape</strong> (<em>1D iterable</em>) – Defines the dimensions output by the encoder layer.</p></li>
+<li><p><strong>layer_desc</strong> (<em>2D iterable</em>) – 2D Iterable: sequential list contianing elemnt lists that describe each layers architecture. Specific indes values are defined in detail above.</p></li>
+<li><p><strong>independent_encode_channels</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the encoder contains multiple independent channels, which must be fed the data separately and have their output concatonated.</p></li>
+<li><p><strong>freeze_encoder</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to freeze the weights of the encoder during training</p></li>
+<li><p><strong>insert_dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to insert a dropout layer between the encoder and decoder layers.</p></li>
+<li><p><strong>dropout</strong> (<em>1D iterable</em><em>, </em><em>optional</em>) – 1D Iterable of Boolean Values: Sequentially decide if the correlating layer in layer_size iterable should be followed by a dropout layer. If value(s) don’t exist they will be set to False.</p></li>
+<li><p><strong>dropout_perc</strong> (<em>float</em><em>, </em><em>optional</em>) – The percentage dropout to implement in the dropotu layers.</p></li>
+<li><p><strong>nonlinearity</strong> (<em>pyTorch Module</em><em>, </em><em>optional</em>) – A pyTorch Module that representes the desired nonlinearity class for the entire network.</p></li>
+<li><p><strong>nonlinearity_final</strong> (<em>pyTorch Module</em><em>, </em><em>optional</em>) – A pyTorch Module that representes the desired nonlinearity class for the final output node.</p></li>
+<li><p><strong>path_save_progress</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the parent directory where progress and tracking data should be saved.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description describing the contents/structure of the network for easy reference.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>optional</em>) – A comment about what this network is being used to do/test/investigate for later identification of tests run.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the AutoEncoderN class representing a deep neural network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.encoderDecisionN.EncodeMlpN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/encoderDecisionN.html#EncodeMlpN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.encoderDecisionN.EncodeMlpN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the forward method of the Network class to process data based on our network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – Data to be processed by the network.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The output of the network</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.encoderDecisionN.EncodeMlpN.convert_to_decision">
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/encoderDecisionN.html#EncodeMlpN.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.encoderDecisionN.EncodeMlpN.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method overwrites the forward method of the Network class, in case special behavior is desired
+Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> – Value output by network</p></li>
+<li><p><strong>one_hot_encode</strong> (<em>bool</em>) – Whether the data is one_hot_encoded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float Tensor representing the final decision of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.encoderDecisionN.EncodeMlpN.freeze_encoderLayers">
+<span class="sig-name descname"><span class="pre">freeze_encoderLayers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freeze</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/encoderDecisionN.html#EncodeMlpN.freeze_encoderLayers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.encoderDecisionN.EncodeMlpN.freeze_encoderLayers" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method will freeze or unfreeze the weights of the encoder layers.</p>
+<p>Frozen weights are locked, and will not change during training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>freeze</strong> (<em>bool</em>) – Whether to freeze the encoder layers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nothing. The <cite>requires_grad</cite> attribute of the encoder layers will be set based on user input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.encoderDecisionN.EncodeMlpN.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.encoderDecisionN.EncodeMlpN.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.heat.dataset_bread.html" class="btn btn-neutral float-left" title="toast.heat.dataset_bread" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.heat.multiModelN.html" class="btn btn-neutral float-right" title="toast.heat.multiModelN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

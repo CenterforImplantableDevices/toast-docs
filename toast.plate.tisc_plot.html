@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.plate.tisc_plot &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.plate.zplane" href="toast.plate.zplane.html" />
+    <link rel="prev" title="toast.plate.ox_plot" href="toast.plate.ox_plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.plate.html">toast.plate</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.plate.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.breadLabel_plot.html">toast.plate.breadLabel_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.heat_plot.html">toast.plate.heat_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.ox_plot.html">toast.plate.ox_plot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.plate.tisc_plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.plate.zplane.html">toast.plate.zplane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.plate.html">toast.plate</a> &raquo;</li>
+      <li>toast.plate.tisc_plot</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.plate.tisc_plot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.plate.tisc_plot">
+<span id="toast-plate-tisc-plot"></span><h1>toast.plate.tisc_plot<a class="headerlink" href="#module-toast.plate.tisc_plot" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.tisc_plot.make_square">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.tisc_plot.</span></span><span class="sig-name descname"><span class="pre">make_square</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/tisc_plot.html#make_square"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.tisc_plot.make_square" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separates TiSc data into a 2D array with each scale in one row, with each scale stretched to make an even length 2D array.</p>
+<p>In this output each column index correlates wtih a unit of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>numpy array</em>) – TiSc organized data</p></li>
+<li><p><strong>data_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Dimension along which the TiSc organized data is organized.</p></li>
+<li><p><strong>scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – Exponential base designating how fast the window size increases.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to independently normalize each scale to between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2D arra where rows are each scale the the columns are each time index.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Numpy ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.tisc_plot.make_triangle">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.tisc_plot.</span></span><span class="sig-name descname"><span class="pre">make_triangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/tisc_plot.html#make_triangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.tisc_plot.make_triangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separates TiSc data into a 2D array with each scale in one row, where each scale remains its original length.</p>
+<p>In this output, each row will exponentailly decrease in length. The remaining values which have no meaning are set to zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>numpy array</em>) – TiSc organized data</p></li>
+<li><p><strong>data_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Dimension along which the TiSc organized data is organized.</p></li>
+<li><p><strong>scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – Exponential base designating how fast the window size increases.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to independently normalize each scale to between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2D arra where rows are each scale the the columns the scale index.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Numpy ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.tisc_plot.make_triangle_list">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.tisc_plot.</span></span><span class="sig-name descname"><span class="pre">make_triangle_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/tisc_plot.html#make_triangle_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.tisc_plot.make_triangle_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separates TiSc data into a 1D python list of 1D Numpy arrays were each scale is a list element. Each scale remains its original length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>numpy array</em>) – TiSc organized data</p></li>
+<li><p><strong>data_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Dimension along which the TiSc organized data is organized.</p></li>
+<li><p><strong>scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – Exponential base designating how fast the window size increases.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to independently normalize each scale to between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List where each element is the scale, containing a 1D numpy array where the columns are the scale index.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.tisc_plot.plot_inputWeights">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.tisc_plot.</span></span><span class="sig-name descname"><span class="pre">plot_inputWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_folder_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkg_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/tisc_plot.html#plot_inputWeights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.tisc_plot.plot_inputWeights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses a network object to separate the weights of the first tisc layer, sort into the proper channels, and plot the weights of the channel.</p>
+<p>Function assumes that weights of each channel alternate within each filter window, matching the typical .wav file organization.</p>
+<p>Function assumes the network as arranges following convention of nested sequential objets, as defined below:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Sequential[0]       contains all TiSc-based network processing.</p></li>
+<li><p>Sequential[0][*]    contains one or many TiSc channels</p></li>
+<li><p>Sequential[0][*][0] contains a <a class="reference internal" href="toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input" title="toast.heat.timescaleL.TSC_input"><code class="xref py py-class docutils literal notranslate"><span class="pre">TSC_input</span></code></a> layer to initially process the input data</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network</strong> (<em>toast network</em>) – A toast.heat generated network that has been trained so that it contains training history values to plot.</p></li>
+<li><p><strong>num_channels_data</strong> (<em>int</em>) – Number of data channels to separate out.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show the plot after generation</p></li>
+<li><p><strong>plot_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Resolution of the generated/saved plots.</p></li>
+<li><p><strong>plot_linewidth</strong> (<em>float</em><em>, </em><em>optional</em>) – Linewidth to use in the generated/saved plots.</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot after generation.  Note the filename will be determined based on attributes of the network’s path_network attribute</p></li>
+<li><p><strong>skip_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to skip the plotting funcions. Use if only want to save data in pickle file.</p></li>
+<li><p><strong>save_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the weight data in a pickle file after organization.  Note the filename will be determined based on attributes of the network’s path_network attribute</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the parent directory where output plots should be saved.</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Child directory to save the plots to.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the log file for logging activity.</p></li>
+<li><p><strong>bkg_color</strong> (<em>str -or- tuple</em><em>, </em><em>optional</em>) – Character or RBG Thruple representing the background color of the plot.</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates and displays/saves a plot.
+If plots are saved, a pickle file with the raw weight values will also be saved. File contians one list object with dimensions data[channel_tisc][scale][channel_eeg][raw_weights]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.tisc_plot.plot_gradCAM">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.tisc_plot.</span></span><span class="sig-name descname"><span class="pre">plot_gradCAM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples_to_summarize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analyze_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">one_hot_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MSELoss()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_individual_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_in_network</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_reduced_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_folder_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/tisc_plot.html#plot_gradCAM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.tisc_plot.plot_gradCAM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a color image summary of gradCAM output from input through a single tisc network.</p>
+<p>If multiple layers, assumes that all layers (specifically, layer weights) are the same dimensions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network</strong> (<em>toast network</em>) – toast network to use when generating the gradCAM output</p></li>
+<li><p><strong>samples_to_summarize</strong> (<em>list</em>) – List of samples to use when creating a dataloader object.</p></li>
+<li><p><strong>layers</strong> (<em>pyTorch layer</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – pyTorch layer or list of layers whos output activations will be used to generate the gradCAM output.</p></li>
+<li><p><strong>layer_type</strong> (<em>toast layer</em><em>, </em><em>optional</em>) – Type of toast layer that will be used when generating gradCAM output.</p></li>
+<li><p><strong>analyze_classes</strong> (<em>list</em><em>, </em><em>optional</em>) – List of integers indicating which labels to calculate output for. Will be one-hot encoded within the function.</p></li>
+<li><p><strong>one_hot_labels</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the sample labels are one-hot encoded or not.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size to use when calculating output</p></li>
+<li><p><strong>loss_fn</strong> (<em>torch.nn loss fcn</em><em>, </em><em>optional</em>) – Loss function to use when calculating gradients</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – use for title</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>colorbar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add the colorbar scale beside each plot.</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to the gradCAM output, expanded output, and alpha matricies to a pickle file. Note these files can be LARGE.</p></li>
+<li><p><strong>save_in_network</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add hte gadCAM output, expanded output, and alpha matricies to the network object</p></li>
+<li><p><strong>save_reduced_dims</strong> (<em>bool</em><em>, </em><em>optional</em>) – Sum over the time dimension, to reduce the size of the saved data.</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>plot_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dots per inch in the output figure. Controls resolution.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.plate.tisc_plot.plot_gradCAMsummary">
+<span class="sig-prename descclassname"><span class="pre">toast.plate.tisc_plot.</span></span><span class="sig-name descname"><span class="pre">plot_gradCAMsummary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradCAM_expanded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains_kfolds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'samples\nkfolds'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_txt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_output_folder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_agg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/plate/tisc_plot.html#plot_gradCAMsummary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.plate.tisc_plot.plot_gradCAMsummary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a summary of gradCAM output from many different runs of a tisc network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gradCAM_expanded</strong> (<em>list</em><em> or </em><em>tensor</em>) – 3D Tensor or list of 3D tensors with dimensions samples x scale_gradCAM_values x time which were obtained from gradCAM calculations. See <cite>link to gradCAM</cite></p></li>
+<li><p><strong>contains_kfolds</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the first dimension of the data contains output from different k-folds</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>optional</em>) – use for x axis label</p></li>
+<li><p><strong>y_label</strong> (<em>str</em><em>, </em><em>optional</em>) – use for y axis label</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – use for title</p></li>
+<li><p><strong>colorbar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add the colorbar scale beside each plot.</p></li>
+<li><p><strong>show_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to render the plot to the screen</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the plot as a .png</p></li>
+<li><p><strong>plot_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dots per inch in the output figure. Controls resolution.</p></li>
+<li><p><strong>save_txt</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save a .txt summary of the final state (min, max, last) of each alpha value.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save plots to. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>output_folder_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – A description of the data in the plot. This will be used as the filename.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder name to save plots into. Note plots will be saved to save_path + output_folder_name location</p></li>
+<li><p><strong>close_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to close the figure when finished. THis helps minimize memory usage.</p></li>
+<li><p><strong>use_agg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the Agg backend of matplotlib.  Use when connecting to non-display machines/servers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates a plot for the user to either be saved here or viewed later by the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.plate.ox_plot.html" class="btn btn-neutral float-left" title="toast.plate.ox_plot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.plate.zplane.html" class="btn btn-neutral float-right" title="toast.plate.zplane" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

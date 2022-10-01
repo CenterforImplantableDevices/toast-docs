@@ -1,0 +1,7 @@
+toast.kitchen.parallel
+======================
+
+.. automodule:: toast.kitchen.parallel
+   :members:
+   :undoc-members:
+   :show-inheritance:

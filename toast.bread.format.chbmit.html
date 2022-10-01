@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.bread.format.chbmit &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.bread.format.ox" href="toast.bread.format.ox.html" />
+    <link rel="prev" title="toast.bread.format" href="toast.bread.format.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="toast.bread.html">toast.bread</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.bread.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="toast.bread.format.html">toast.bread.format</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="toast.bread.format.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="toast.bread.label.html">toast.bread.label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.bread.load.html">toast.bread.load</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.bread.html">toast.bread</a> &raquo;</li>
+          <li><a href="toast.bread.format.html">toast.bread.format</a> &raquo;</li>
+      <li>toast.bread.format.chbmit</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.bread.format.chbmit.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.bread.format.chbmit">
+<span id="toast-bread-format-chbmit"></span><h1>toast.bread.format.chbmit<a class="headerlink" href="#module-toast.bread.format.chbmit" title="Permalink to this headline">¶</a></h1>
+<p>Methods that help with formatting data from the CHB-MIT dataset.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.chbmit.format_and_save">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.chbmit.</span></span><span class="sig-name descname"><span class="pre">format_and_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wav'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_firstRepeatedCh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/chbmit.html#format_and_save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.chbmit.format_and_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>High level function that allows data formatting and saving to all happen with one function</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>Much of the functionality of this function is determined by other functions. Check <a class="reference internal" href="#toast.bread.format.chbmit.format_data" title="toast.bread.format.chbmit.format_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">format_data()</span></code></a> and <code class="xref py py-func docutils literal notranslate"><span class="pre">save_to_some_file()</span></code> for full functionality description.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Path to the folder where the data exists</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The specific filename of the file to process.  Do not include extensions.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – File path of where to save the data</p></li>
+<li><p><strong>out</strong> (<em>str</em><em>, </em><em>optional</em>) – Output format to use.  Default is .wav format.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</p></li>
+<li><p><strong>add_datetime</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the datetime information. Note this adds a lot of processing time and file size</p></li>
+<li><p><strong>label_group</strong> (<em>list</em><em>, </em><em>optional</em>) – Specific labels to save (ordered)</p></li>
+<li><p><strong>data_group</strong> (<em>list</em><em>, </em><em>optional</em>) – Specific data channels to save (ordered)</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em><em>, </em><em>optional</em>) – Specific Metadata channels to save (ordered)</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>rename_firstRepeatedCh</strong> (<em>bool</em><em>, </em><em>optional</em>) – If a channel is repeated, whether to rename the FIRST channel to add an index value 0. Indexes 1+ will automatically be added to subsequent channels regardless to avoid name conflicts.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if successful, False if unsuccessful. Generates the “_label” “_data” and “_metadata” files in the save_path location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.chbmit.format_data">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.chbmit.</span></span><span class="sig-name descname"><span class="pre">format_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_firstRepeatedCh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/chbmit.html#format_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.chbmit.format_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports the raw data from the passed filename into a usable dictionary format</p>
+<p>Currently supports the following sources:</p>
+<ul class="simple">
+<li><p>‘test’ - Does not alter filepath other than adding extensions. For testing.</p></li>
+</ul>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Filenames should be passed without the extension</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Path to the folder where the data exists</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The specific filename of the file to process.  Do not include extensions.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</p></li>
+<li><p><strong>add_datetime</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the datetime information. Note this adds a lot of processing time and file size</p></li>
+<li><p><strong>rename_firstRepeatedCh</strong> (<em>bool</em><em>, </em><em>optional</em>) – If a channel is repeated, whether to rename the FIRST channel to add an index value 0. Indexes 1+ will automatically be added to subsequent channels regardless to avoid name conflicts.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary of numpy arrays.  Each element is one channel of data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.chbmit.get_eeg_channels">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.chbmit.</span></span><span class="sig-name descname"><span class="pre">get_eeg_channels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'test'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_firstRepeatedCh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/chbmit.html#get_eeg_channels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.chbmit.get_eeg_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Housekeeping function to get the EEG channel information from the summary.txt file.</p>
+<p>This is used when extracting metadata information (channel ID) about recording files in the CHB-MIT dataset.</p>
+<p>Currently supports the following sources:</p>
+<ul class="simple">
+<li><p>‘test’ - Does not alter filepath other than adding extensions. For testing.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Path to the folder where the data exists</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The specific filename of the file to process.  Do not include extensions.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</p></li>
+<li><p><strong>rename_firstRepeatedCh</strong> (<em>bool</em><em>, </em><em>optional</em>) – If a channel is repeated, whether to rename the FIRST channel to add an index value 0. Indexes 1+ will automatically be added to subsequent channels regardless to avoid name conflicts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of extracted channel labels.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.bread.format.html" class="btn btn-neutral float-left" title="toast.bread.format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.bread.format.ox.html" class="btn btn-neutral float-right" title="toast.bread.format.ox" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

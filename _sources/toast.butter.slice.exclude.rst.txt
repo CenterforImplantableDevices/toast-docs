@@ -1,0 +1,7 @@
+toast.butter.slice.exclude
+==========================
+
+.. automodule:: toast.butter.slice.exclude
+   :members:
+   :undoc-members:
+   :show-inheritance:

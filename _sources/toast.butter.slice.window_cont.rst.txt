@@ -1,0 +1,7 @@
+toast.butter.slice.window\_cont
+===============================
+
+.. automodule:: toast.butter.slice.window_cont
+   :members:
+   :undoc-members:
+   :show-inheritance:

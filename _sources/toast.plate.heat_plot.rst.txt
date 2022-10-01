@@ -1,0 +1,7 @@
+toast.plate.heat\_plot
+======================
+
+.. automodule:: toast.plate.heat_plot
+   :members:
+   :undoc-members:
+   :show-inheritance:

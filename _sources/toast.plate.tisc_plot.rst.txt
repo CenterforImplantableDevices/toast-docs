@@ -1,0 +1,7 @@
+toast.plate.tisc\_plot
+======================
+
+.. automodule:: toast.plate.tisc_plot
+   :members:
+   :undoc-members:
+   :show-inheritance:

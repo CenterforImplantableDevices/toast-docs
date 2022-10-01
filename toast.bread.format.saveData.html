@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.bread.format.saveData &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.bread.label" href="toast.bread.label.html" />
+    <link rel="prev" title="toast.bread.format.ox" href="toast.bread.format.ox.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="toast.bread.html">toast.bread</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.bread.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="toast.bread.format.html">toast.bread.format</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="toast.bread.format.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="toast.bread.label.html">toast.bread.label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.bread.load.html">toast.bread.load</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.bread.html">toast.bread</a> &raquo;</li>
+          <li><a href="toast.bread.format.html">toast.bread.format</a> &raquo;</li>
+      <li>toast.bread.format.saveData</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.bread.format.saveData.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.bread.format.saveData">
+<span id="toast-bread-format-savedata"></span><h1>toast.bread.format.saveData<a class="headerlink" href="#module-toast.bread.format.saveData" title="Permalink to this headline">¶</a></h1>
+<p>Functions that standardize the saving of raw data files in a format
+that is optimized for ML applications.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_some_file">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_some_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wav'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'synology'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_some_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_some_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function to allow one common-use function for multiple file types</p>
+<p>Much of the functionality of this function is determined by the funcitons below. Reference those relevant functions for execution details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_data</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>folder_path</strong> (<em>str</em>) – File path where the raw data files are saved.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename of the raw data file (used as filename prefix for newly formatted data)</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – File path where the output files should be saved.</p></li>
+<li><p><strong>sample_frequency</strong> (<em>int</em>) – frequency that the data is sampled at.</p></li>
+<li><p><strong>out</strong> (<em>str</em><em>, </em><em>optional</em>) – Which file format to save with. <cite>.wav</cite> is the standard for CID applications.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.create_dataframe">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">create_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#create_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.create_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a list of dictionaries to a dataframe for better structure for saving.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Three dataframes representing the label_group, data_group, and metadata_group data (respectively)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>df_label, df_data, df_metadata</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_wav">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_wav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_wav"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_wav" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves raw-data, label-data, and meta-data to separate <cite>.wav</cite> files.</p>
+<p>These files are saved in a standardized way to assure compatibility with other toast packages/modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em>) – Path where the data should be saved</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename prefix to use when generating the data files.</p></li>
+<li><p><strong>data_dict</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>sample_frequency</strong> (<em>int</em>) – Frequency that the data is sampled at.</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path locaiton.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_hdf5">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_hdf5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path_bin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves raw-data, label-data, and meta-data to separate <cite>.hdf5</cite> files.</p>
+<p>These files are saved in a standardized way to assure compatibility with other toast packages/modules.</p>
+<p>Uses the h5py library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em>) – Path where the data should be saved</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename prefix to use when generating the data files.</p></li>
+<li><p><strong>data_dict</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>file_path_bin</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the original .bin file. Used to read the header line and transfer to hdf5 file.</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path locaiton.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_hdf5c">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_hdf5c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path_bin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_hdf5c"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_hdf5c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves raw-data, label-data, and meta-data to separate <cite>.hdf5</cite> files, with compression</p>
+<p>These files are saved in a standardized way to assure compatibility with other toast packages/modules.</p>
+<p>Uses the h5py library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em>) – Path where the data should be saved</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename prefix to use when generating the data files.</p></li>
+<li><p><strong>data_dict</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>file_path_bin</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the original .bin file. Used to read the header line and transfer to hdf5 file.</p></li>
+<li><p><strong>compression_level</strong> (<em>int</em><em>, </em><em>optional</em>) – Level of compression. Ranges from 0 to 9.</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path locaiton.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_hdf5_pandas">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_hdf5_pandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_hdf5_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_hdf5_pandas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves raw-data, label-data, and meta-data to separate <cite>.hdf5</cite> files.</p>
+<p>These files are saved in a standardized way to assure compatibility with other toast packages/modules.</p>
+<p>Uses the pandas library to make a dataframe, the the <cite>.to_hdf()</cite> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em>) – Path where the data should be saved</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename prefix to use when generating the data files.</p></li>
+<li><p><strong>data_dict</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path locaiton.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_pkl">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_pkl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_pkl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_pkl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves raw-data, label-data, and meta-data to separate <cite>.pkl</cite> files.</p>
+<p>These files are saved in a standardized way to assure compatibility with other toast packages/modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em>) – Path where the data should be saved</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename prefix to use when generating the data files.</p></li>
+<li><p><strong>data_dict</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path locaiton.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_edf">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_edf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_edf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_edf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves raw-data, label-data, and meta-data to separate <cite>.edf</cite> files.</p>
+<p>These files are saved in a standardized way to assure compatibility with other toast packages/modules.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>EDF files can only handle up to 16 bit data (-32768 to 32767)</p>
+<p>This can inhibit storing datetime values or timestampes.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em>) – Path where the data should be saved</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename prefix to use when generating the data files.</p></li>
+<li><p><strong>data_dict</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>sample_frequency</strong> (<em>int</em><em>, </em><em>optional</em>) – Frequency that the data is sampled at.</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path locaiton.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="toast.bread.format.saveData.save_to_csv">
+<span class="sig-prename descclassname"><span class="pre">toast.bread.format.saveData.</span></span><span class="sig-name descname"><span class="pre">save_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/bread/format/saveData.html#save_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.bread.format.saveData.save_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves raw-data, label-data, and meta-data to separate <cite>.csv</cite> files.</p>
+<p>These files are saved in a standardized way to assure compatibility with other toast packages/modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em>) – Path where the data should be saved</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename prefix to use when generating the data files.</p></li>
+<li><p><strong>data_dict</strong> (<em>dict</em>) – Dictionary of numpy arrays</p></li>
+<li><p><strong>label_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_label” file</p></li>
+<li><p><strong>data_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_data” file</p></li>
+<li><p><strong>metadata_group</strong> (<em>list</em>) – Python list of strings (keys in raw_data) identifying the groups for the “_metadata” file</p></li>
+<li><p><strong>dataset_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>path_log</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file for outputing logs during execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the “_label” “_data” and “_metadata” files in the save_path locaiton.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.bread.format.ox.html" class="btn btn-neutral float-left" title="toast.bread.format.ox" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.bread.label.html" class="btn btn-neutral float-right" title="toast.bread.label" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

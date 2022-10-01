@@ -1,0 +1,7 @@
+toast.misc.path
+===============
+
+.. automodule:: toast.misc.path
+   :members:
+   :undoc-members:
+   :show-inheritance:

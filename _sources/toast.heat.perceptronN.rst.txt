@@ -1,0 +1,7 @@
+toast.heat.perceptronN
+======================
+
+.. automodule:: toast.heat.perceptronN
+   :members:
+   :undoc-members:
+   :show-inheritance:

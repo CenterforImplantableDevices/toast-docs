@@ -1,0 +1,7 @@
+toast.butter.filter.notch
+=========================
+
+.. automodule:: toast.butter.filter.notch
+   :members:
+   :undoc-members:
+   :show-inheritance:

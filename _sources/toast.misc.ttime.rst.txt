@@ -1,0 +1,7 @@
+toast.misc.ttime
+================
+
+.. automodule:: toast.misc.ttime
+   :members:
+   :undoc-members:
+   :show-inheritance:

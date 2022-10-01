@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.bread.label.assign &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>toast.bread.label.assign</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.bread.label.assign</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">toast.misc</span> <span class="kn">import</span> <span class="n">tlog</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+
+<div class="viewcode-block" id="assign_label_int"><a class="viewcode-back" href="../../../../toast.bread.label.assign.html#toast.bread.label.assign.assign_label_int">[docs]</a><span class="k">def</span> <span class="nf">assign_label_int</span><span class="p">(</span> <span class="n">all_labels_dataframe</span><span class="p">,</span> <span class="n">time_beforeEvent</span><span class="p">,</span> <span class="n">time_afterEvent</span><span class="p">,</span> <span class="n">time_betweenEvent_before</span><span class="p">,</span> <span class="n">time_betweenEvent_after</span><span class="p">,</span> <span class="n">column_event</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">beforeEvent_label</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">afterEvent_label</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">betweenEvent_label</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Adds several columns to a dataframe that includes pointwise labels (integer form) relating to some boolean event in ``column_event``</span>
+
+<span class="sd">    Within the passed dataframe in column ``column_event``, this function assuems </span>
+
+<span class="sd">        - label 0 is a null label</span>
+<span class="sd">        - label 1 is the event of interest    </span>
+<span class="sd">    </span>
+<span class="sd">    The following columsn will be added to the dataframe</span>
+<span class="sd">    </span>
+<span class="sd">        * `event_startStop` (int), +1 = start; -1 = end</span>
+<span class="sd">        * `time_beforeEvent` (float), seconds before the next event</span>
+<span class="sd">        * `time_afterEvent` (float), seconds after the end of the last event</span>
+<span class="sd">        * `time_duringEvent` (float), time since the start of the event. Only &gt;0 during the event.</span>
+<span class="sd">        * `beforeEvent` (int), indicates a valid beforeEvent time based on inputs. 0 = not valid, ``beforeEvent_label`` = valid</span>
+<span class="sd">        * `afterEvent` (int), indicates a valid afterEvent time based on inputs. 0 = not valid, ``afterEvent_label`` = valid</span>
+<span class="sd">        * `betweenEvent` (int), indicates a valid betweenEvent time based on inputs. 0 = not valid, ``betweenEvent_label`` = valid</span>
+<span class="sd">        * `label_int` (int), combines all of the above labels. Takes the maximum label value for each time point.</span>
+<span class="sd">    </span>
+<span class="sd">    Tip:</span>
+<span class="sd">        This function will create multiple columns in the passed dataframe.</span>
+<span class="sd">        To delete a column you may not need from a dataframe: ``all_labels_dataframe.drop([&#39;event_startStop&#39;, &#39;prething&#39;, ...], axis=1)``</span>
+
+<span class="sd">    Args:   </span>
+<span class="sd">        all_labels_dataframe (dataframe):   Dataframe with all of the data and labels in a column named &quot;thing&quot;</span>
+<span class="sd">        time_beforeEvent (float):           Time (seconds) before an event (thing) that designates data as occuring right before a thing happens.</span>
+<span class="sd">        time_afterEvent (float):            Time (seconds) after a thing that designates data as occuring right after a thing happens.</span>
+<span class="sd">        time_betweenEvent_before (float):   Time (seconds) before an event when data can safely be labeles as a baseline between events.</span>
+<span class="sd">        time_betweenEvent_after (float):    Time (seconds) after an event when data can safely be labeles as a baseline between events.</span>
+<span class="sd">        column_event (str, optional):          Column in ``all_labels_dataframe`` where the event of interest is indicated.</span>
+<span class="sd">        beforeEvent_label (int, optional):  Integer assigned to prething label</span>
+<span class="sd">        afterEvent_label (int, optional):   Integer assigned to postthing label (can be the same as prething_label to combine labels.)</span>
+<span class="sd">        betweenEvent_label (int, optional): Integer assigend to interthing label.</span>
+<span class="sd">        path_log (str, optional):           Path to the file for outputing logs during execution.</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        A dataframe containing new labels relative to the passed &quot;thing&quot; label column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Finding &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">column_event</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; start / stop times&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;event_startStop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Calculating time to &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">column_event</span><span class="p">),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">times_event_start</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="n">all_labels_dataframe</span><span class="p">[</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;event_startStop&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">])</span>
+
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">start_ts</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">times_event_start</span><span class="p">):</span>
+        <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span> <span class="p">[</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">],</span> <span class="n">start_ts</span><span class="o">-</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Calculating time since &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">column_event</span><span class="p">),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">times_event_end</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="n">all_labels_dataframe</span><span class="p">[</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;event_startStop&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">])</span>
+
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">end_ts</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">times_event_end</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span> <span class="p">[</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">],</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">end_ts</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating event progress&#39;</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_duringEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">start_ts</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">times_event_start</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_duringEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span> <span class="p">[</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_duringEvent&#39;</span><span class="p">],</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">start_ts</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_duringEvent&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;time_duringEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="c1"># Metric only valid during event.  If thing not occuring, set to &quot;invalid&quot; -1</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;time_duringEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="c1"># Determine beforeEvent period</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Determining beforeEvent Labels&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">time_beforeEvent</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="s1">&#39;beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beforeEvent_label</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Determine afterEvent period</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Determining afterEvent Labels&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span>  <span class="o">&lt;</span> <span class="n">time_afterEvent</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span>  <span class="s1">&#39;afterEvent&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">afterEvent_label</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Determine valid inbetween periods</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Determining betweenEvent Labels&#39;</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">((</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">time_betweenEvent_before</span><span class="o">*</span><span class="mi">3600</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">time_betweenEvent_after</span><span class="o">*</span><span class="mi">3600</span><span class="p">)),</span> <span class="s1">&#39;interictal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">betweenEvent_label</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Exclude Ends</span>
+    <span class="n">allData_start</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="n">allData_end</span>   <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">((</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">allData_start</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">time_betweenEvent_after</span><span class="o">*</span><span class="mi">3600</span><span class="p">),</span>  <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">((</span><span class="n">allData_end</span> <span class="o">-</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">])</span>   <span class="o">&lt;</span> <span class="n">time_betweenEvent_before</span><span class="o">*</span><span class="mi">3600</span><span class="p">),</span> <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Condensing labels to 1 column&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;label_int&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="p">[[</span><span class="n">column_event</span><span class="p">,</span> <span class="s1">&#39;beforeEvent&#39;</span><span class="p">,</span> <span class="s1">&#39;afterEvent&#39;</span><span class="p">,</span> <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">all_labels_dataframe</span></div>
+
+
+
+<div class="viewcode-block" id="assign_label_forPredict"><a class="viewcode-back" href="../../../../toast.bread.label.assign.html#toast.bread.label.assign.assign_label_forPredict">[docs]</a><span class="k">def</span> <span class="nf">assign_label_forPredict</span><span class="p">(</span> <span class="n">all_labels_dataframe</span><span class="p">,</span> <span class="n">time_beforeEvent</span><span class="p">,</span> <span class="n">time_afterEvent</span><span class="p">,</span> <span class="n">time_betweenEvent_before</span><span class="p">,</span> <span class="n">time_betweenEvent_after</span><span class="p">,</span> <span class="n">column_event</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">beforeEvent_label</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">afterEvent_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">betweenEvent_label</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Adds columns to a dataframe that include labels necessary for event prediction only.</span>
+
+<span class="sd">    Within the passed dataframe in column ``column_event``, this function assuems </span>
+
+<span class="sd">        - label 0 is a null label</span>
+<span class="sd">        - label 1 is the event of interest    </span>
+<span class="sd">    </span>
+<span class="sd">    The following columsn will be added to the dataframe</span>
+<span class="sd">    </span>
+<span class="sd">        * `event_startStop` (int), +1 = start; -1 = end</span>
+<span class="sd">        * `time_beforeEvent` (float), seconds before the next event</span>
+<span class="sd">        * `time_afterEvent` (float), seconds after the end of the last event</span>
+<span class="sd">        * `beforeEvent` (int), indicates a valid beforeEvent time based on inputs. 0 = not valid, ``beforeEvent_label`` = valid</span>
+<span class="sd">        * `betweenEvent` (int), indicates a valid betweenEvent time based on inputs. 0 = not valid, ``betweenEvent_label`` = valid</span>
+<span class="sd">        * `label_int` (int), combines all of the above labels. Takes the maximum label value for each time point.</span>
+<span class="sd">    </span>
+<span class="sd">    Tip:</span>
+<span class="sd">        This function will create multiple columns in the passed dataframe.</span>
+<span class="sd">        To delete a column you may not need from a dataframe: ``all_labels_dataframe.drop([&#39;event_startStop&#39;, &#39;prething&#39;, ...], axis=1)``</span>
+
+<span class="sd">    Args:   </span>
+<span class="sd">        all_labels_dataframe (dataframe):   Dataframe with all of the data and labels in a column named &quot;thing&quot;</span>
+<span class="sd">        time_beforeEvent (int):             Time (seconds) before an event (thing) that designates data as occuring right before a thing happens.</span>
+<span class="sd">        time_afterEvent (int):              NOT USED: Maintained for legacy</span>
+<span class="sd">        time_betweenEvent_before (int):     Time (seconds) before an event when data can safely be labeles as a baseline between events.</span>
+<span class="sd">        time_betweenEvent_after (int):      Time (seconds) after an event when data can safely be labeles as a baseline between events.</span>
+<span class="sd">        column_event (str, optional):          Column in ``all_labels_dataframe`` where the event of interest is indicated.</span>
+<span class="sd">        beforeEvent_label (int, optional):  Integer assigned to prething label</span>
+<span class="sd">        afterEvent_label (int, optional):   NOT USED: Maintained for legacy</span>
+<span class="sd">        betweenEvent_label (int, optional): Integer assigend to interthing label.</span>
+<span class="sd">        path_log (str, optional):           Path to the file for outputing logs during execution.</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        A dataframe containing new labels relative to the passed &quot;thing&quot; label column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Finding &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">column_event</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; start / stop times&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;event_startStop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Calculating time to &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">column_event</span><span class="p">),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">times_event_start</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="n">all_labels_dataframe</span><span class="p">[</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;event_startStop&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">])</span>
+
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">start_ts</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">times_event_start</span><span class="p">):</span>
+        <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span> <span class="p">[</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">],</span> <span class="n">start_ts</span><span class="o">-</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Calculating time since &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">column_event</span><span class="p">),</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">times_event_end</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="n">all_labels_dataframe</span><span class="p">[</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;event_startStop&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">])</span>
+
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">end_ts</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">times_event_end</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span> <span class="p">[</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">],</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">end_ts</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+
+    <span class="c1"># SKIP CALCULATING EVENT PROGRESS</span>
+    <span class="c1"># print(&#39;Calculating event progress&#39;)</span>
+    <span class="c1"># all_labels_dataframe[&#39;time_duringEvent&#39;] = all_labels_dataframe.loc[len(all_labels_dataframe)-1, &#39;datetime_ts&#39;]</span>
+    <span class="c1"># for start_ts in sorted( times_event_start, reverse=True):</span>
+    <span class="c1">#     all_labels_dataframe[&#39;time_duringEvent&#39;] = pd.concat( [all_labels_dataframe[&#39;time_duringEvent&#39;], all_labels_dataframe[&#39;datetime_ts&#39;]-start_ts], axis=1).min(axis=1)</span>
+    <span class="c1">#     all_labels_dataframe.loc[ (all_labels_dataframe[&#39;time_duringEvent&#39;] &lt; 0), &#39;time_duringEvent&#39;] = all_labels_dataframe.loc[len(all_labels_dataframe)-1, &#39;datetime_ts&#39;]</span>
+    <span class="c1"># # Metric only valid during event.  If thing not occuring, set to &quot;invalid&quot; -1</span>
+    <span class="c1"># all_labels_dataframe.loc[ (all_labels_dataframe[column_event] == 0), &#39;time_duringEvent&#39;] = -1</span>
+
+    <span class="c1"># Determine beforeEvent period</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Determining beforeEvent Labels&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">time_beforeEvent</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="s1">&#39;beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beforeEvent_label</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;beforeEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># # Determine afterEvent period</span>
+    <span class="c1"># tlog.output_log(&#39;Determining afterEvent Labels&#39;, path_log)</span>
+    <span class="c1"># all_labels_dataframe[&#39;afterEvent&#39;] = 0</span>
+    <span class="c1"># all_labels_dataframe.loc[ (all_labels_dataframe[&#39;time_afterEvent&#39;]  &lt; time_afterEvent*60),  &#39;afterEvent&#39;]  = afterEvent_label</span>
+    <span class="c1"># all_labels_dataframe.loc[ (all_labels_dataframe[column_event] == 1), &#39;afterEvent&#39;] = 0</span>
+
+    <span class="c1"># Determine valid inbetween periods</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Determining betweenEvent Labels&#39;</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">((</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_beforeEvent&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">time_betweenEvent_before</span><span class="o">*</span><span class="mi">3600</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;time_afterEvent&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">time_betweenEvent_after</span><span class="o">*</span><span class="mi">3600</span><span class="p">)),</span> <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">betweenEvent_label</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">(</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="n">column_event</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Exclude Ends</span>
+    <span class="n">allData_start</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="n">allData_end</span>   <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">((</span><span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">allData_start</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">time_betweenEvent_after</span><span class="o">*</span><span class="mi">3600</span><span class="p">),</span>  <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">all_labels_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="p">((</span><span class="n">allData_end</span> <span class="o">-</span> <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;datetime_ts&#39;</span><span class="p">])</span>   <span class="o">&lt;</span> <span class="n">time_betweenEvent_before</span><span class="o">*</span><span class="mi">3600</span><span class="p">),</span> <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Condensing labels to 1 column&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="n">all_labels_dataframe</span><span class="p">[</span><span class="s1">&#39;label_int&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_labels_dataframe</span><span class="p">[[</span><span class="n">column_event</span><span class="p">,</span> <span class="s1">&#39;beforeEvent&#39;</span><span class="p">,</span> <span class="s1">&#39;betweenEvent&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">all_labels_dataframe</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.dataset_bread &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>toast.heat.dataset_bread</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.heat.dataset_bread</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This module contains class definitions defining how data and datasets will be handled.</span>
+
+<span class="sd">Data_Bread class acts as a wrapper class, and should be the object managing all of the </span>
+<span class="sd">data and segmentation required for a dataset to be used for ML applications.</span>
+
+<span class="sd">Dataset_Bread class defines individual datasets that will be iterated over during training.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="n">splitext</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">float32</span> <span class="k">as</span> <span class="n">npFloat32</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">int16</span> <span class="k">as</span> <span class="n">npInt16</span>
+<span class="kn">from</span> <span class="nn">toast.bread.load</span> <span class="kn">import</span> <span class="n">wav</span>
+<span class="kn">import</span> <span class="nn">torch.utils.data</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="Data_Bread"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Data_Bread">[docs]</a><span class="k">class</span> <span class="nc">Data_Bread</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Data_Bread class acts as a wrapper class, managing all of the data and reladed sub-datasets required for a dataset to be used for ML applications.</span>
+
+<span class="sd">    Manages multiple Dataset_Bread instances automatically, making for a more cohesive user workflow so the user can manage data through a single class instance.</span>
+<span class="sd">    Initialized with only a few arguments to setup the necessary datasets for training and testing ML models</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Data_Bread.__init__"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Data_Bread.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">,</span> <span class="n">path_sample_descriptions</span><span class="p">,</span> <span class="n">label_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">needs_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">one_hot_encode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">npInt16</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialization function to create an object instance of data.</span>
+
+<span class="sd">        Args:  </span>
+<span class="sd">            path_data (str):                   Path to the subject folder containing raw data. This joined the &#39;filename&#39; feild of a sample dict should identify the raw data file.</span>
+<span class="sd">            path_sample_descriptions (str):    Path to the .pkl file containing the sample dict that will be used for training. Note this is only the file prefix, do not include the &quot;_train.pkl&quot; part of the filename.</span>
+<span class="sd">            label_key (dict, optional):        Dictionary that will be used to convert the &quot;label_int&quot; field of the sample dict to the &quot;label_out&quot; feild that will be used by the network during training.</span>
+<span class="sd">            needs_validation (bool, optional): Whether a validation set is needed</span>
+<span class="sd">            one_hot_encode (bool, optional):   Whether the output should be on_hot_encoded</span>
+<span class="sd">            data_files (str, optional):        Suffix of data filenames designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">            data_type (np dtype, optional):    Data type to use when unpacking the data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the Data_Bread class to be used to manage the dataset.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span> <span class="o">=</span> <span class="n">path_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_sample_descriptions</span> <span class="o">=</span> <span class="n">path_sample_descriptions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span> <span class="o">=</span> <span class="n">label_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span> <span class="o">=</span> <span class="n">data_files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span> <span class="o">=</span> <span class="n">data_type</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_validation</span> <span class="o">=</span> <span class="n">needs_validation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_validation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_validation</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_all_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_key</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training</span>    <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">testing</span>     <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation</span>  <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># training/testing/validation attributes must be defined differently based on if a validation is included.</span>
+        <span class="c1"># Different .pkl files are imported, and the attributes themselves must be defined appropriately, requiring 2 separate intialization flows.</span>
+        <span class="k">if</span> <span class="n">needs_validation</span><span class="p">:</span>
+            <span class="n">training_perc</span>   <span class="o">=</span> <span class="mf">0.50</span>
+            <span class="n">validation_perc</span> <span class="o">=</span> <span class="mf">0.25</span>
+            <span class="n">testing_perc</span>    <span class="o">=</span> <span class="mf">0.25</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">training_perc</span>   <span class="o">=</span> <span class="mf">0.70</span>
+            <span class="n">testing_perc</span>    <span class="o">=</span> <span class="mf">0.30</span>
+
+        <span class="c1"># Append the appropriate ending to the targeted filenames.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">join</span><span class="p">(</span> <span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_sample_descriptions</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_train-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">training_perc</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">join</span><span class="p">(</span> <span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_sample_descriptions</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_test-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">testing_perc</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">needs_validation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">join</span><span class="p">(</span> <span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_sample_descriptions</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_val-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">validation_perc</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span><span class="p">))</span>
+
+        <span class="c1"># If any of these sample files don&#39;t already exist, we must generate them</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span> <span class="p">[</span><span class="ow">not</span><span class="p">(</span> <span class="n">exists</span><span class="p">(</span> <span class="n">p</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="p">]):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_sample_descriptions</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">sample_for_single_label</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+                <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span> <span class="n">sample_for_single_label</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">needs_validation</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>   <span class="n">sample_for_single_label</span><span class="p">[</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">training_perc</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_for_single_label</span><span class="p">))])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">samples_validation</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="n">sample_for_single_label</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">training_perc</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_for_single_label</span><span class="p">))</span> <span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">training_perc</span><span class="o">+</span><span class="n">validation_perc</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_for_single_label</span><span class="p">))])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>    <span class="n">sample_for_single_label</span><span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">training_perc</span><span class="o">+</span><span class="n">validation_perc</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_for_single_label</span><span class="p">))</span> <span class="p">:</span> <span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="n">sample_for_single_label</span><span class="p">[</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">training_perc</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_for_single_label</span><span class="p">))])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>  <span class="n">sample_for_single_label</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">training_perc</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_for_single_label</span><span class="p">))</span> <span class="p">:</span> <span class="p">])</span>
+
+        <span class="c1"># Otherwise just load the existing files</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">needs_validation</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">samples_validation</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="c1"># Append all of the samples into one list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_all_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_all_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">needs_validation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_all_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_validation</span><span class="p">)</span>
+
+        <span class="c1"># Define a default label key, if one is not passed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">label_int_unique</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">sample_set</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_all_list</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sample_set</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;label_int&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">label_int_unique</span><span class="p">:</span>
+                        <span class="n">label_int_unique</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;label_int&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">label_int_unique</span><span class="p">]</span>
+
+        <span class="c1"># One hot encode the samples if necessary</span>
+        <span class="k">if</span> <span class="n">one_hot_encode</span><span class="p">:</span>
+            <span class="c1"># Note: set will remove duplicate values</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_key</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span> <span class="nb">set</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_sample_labels</span><span class="p">(</span><span class="n">one_hot_encode</span><span class="o">=</span><span class="n">one_hot_encode</span><span class="p">)</span>
+
+        <span class="c1"># Save these results to a file, so they don&#39;t need to be calculated every time</span>
+        <span class="k">for</span> <span class="n">dataset_filename</span><span class="p">,</span> <span class="n">data_samples</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames_sample_descriptions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_all_list</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">dataset_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span> <span class="n">data_samples</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">testing</span>  <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">needs_validation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_validation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Data_Bread.set_sample_labels"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Data_Bread.set_sample_labels">[docs]</a>    <span class="k">def</span> <span class="nf">set_sample_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">one_hot_encode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Define label_out, which will be used in `__get_item__()` in the Dataset_Bread object definition</span>
+
+<span class="sd">            Also find the relative occurance of each label, and define a weighting to use when calculating loss.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                one_hot_encode (bool, optional): Whether to one_hot_encode the labels</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_unique_labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">)</span>
+        <span class="n">label_counts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_unique_labels</span>
+        <span class="k">for</span> <span class="n">sample_set</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_all_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sample_set</span><span class="p">:</span>
+                <span class="n">s_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">[</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;label_int&#39;</span><span class="p">]]</span>
+                <span class="c1"># Generate network output labels</span>
+                <span class="k">if</span> <span class="n">one_hot_encode</span><span class="p">:</span>
+                    <span class="n">s</span><span class="p">[</span><span class="s1">&#39;label_out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_encode</span><span class="p">(</span> <span class="n">s_label</span><span class="p">,</span> <span class="n">num_labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_unique_labels</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s</span><span class="p">[</span><span class="s1">&#39;label_out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s_label</span><span class="p">]</span>
+                <span class="c1"># Track label counts</span>
+                <span class="k">if</span> <span class="n">one_hot_encode</span><span class="p">:</span>
+                    <span class="n">label_counts</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_key</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">s_label</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">label_counts</span><span class="p">[</span> <span class="n">s_label</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">label_counts</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: At least one indicated label has no samples. Please include at least one sample of each label.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_weight</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_samples</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">label_counts</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_weight</span> <span class="o">=</span> <span class="p">[</span> <span class="n">min_samples</span> <span class="o">/</span> <span class="n">cnt</span> <span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">label_counts</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Data_Bread.generate_training_k_folds"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Data_Bread.generate_training_k_folds">[docs]</a>    <span class="k">def</span> <span class="nf">generate_training_k_folds</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">number_folds</span><span class="p">,</span> <span class="n">plot_foldGroup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Used to generate k folds in the training dataset to allow for k-fold training.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            number_folds (int):              How many folds to divide the training set into.</span>
+<span class="sd">            plot_foldGroup (bool, optional): Whether to display a plot visualizing the fold groups. Typically used for visual confirmation of data splits.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generates the samples_training_fold_traingroup attribute </span>
+<span class="sd">            containing a 2D list: 1D-data for each training execution on the respective </span>
+<span class="sd">            fold iteration/index, 2D-contains the [training_dataset, testing_dataset] for </span>
+<span class="sd">            each fold iteration.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">length_fold</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">)</span> <span class="o">/</span> <span class="n">number_folds</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">plot_foldGroup</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+            <span class="n">data_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span><span class="p">)</span>
+        
+        <span class="c1"># Determine the folds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">number_folds</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">[</span> <span class="n">i</span><span class="o">*</span><span class="n">length_fold</span> <span class="p">:</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">length_fold</span><span class="p">])</span>
+
+        <span class="c1"># Use the folds to create a list of training/testing dataset pairs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold_traingroup</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">testing_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">number_folds</span><span class="p">):</span>
+            <span class="n">training_samples</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">testing_samples</span>  <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">number_folds</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">testing_i</span><span class="p">:</span>
+                    <span class="n">testing_samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>  <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">training_samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">plot_foldGroup</span><span class="p">:</span>
+                <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;...labeling training...&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">training_samples</span><span class="p">:</span>
+                    <span class="n">s_row</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR DUPLICATE SAMPLE&#39;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">s_row</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                    <span class="n">data_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;...labeling testing...&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">testing_samples</span><span class="p">:</span>
+                    <span class="n">s_row</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR DUPLICATE SAMPLE&#39;</span><span class="p">)</span>
+                    <span class="n">data_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">3</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span><span class="p">:</span>
+                    <span class="n">s_row</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR DUPLICATE SAMPLE&#39;</span><span class="p">)</span>
+                    <span class="n">data_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">7</span>
+                
+                <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Fold Training Group &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">testing_i</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Category (1=train, 2=test)&#39;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            
+            <span class="n">training_dataset</span> <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">training_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+            <span class="n">testing_dataset</span>  <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">testing_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold_traingroup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">training_dataset</span><span class="p">,</span> <span class="n">testing_dataset</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="Data_Bread.generate_trainingValidation_k_folds"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Data_Bread.generate_trainingValidation_k_folds">[docs]</a>    <span class="k">def</span> <span class="nf">generate_trainingValidation_k_folds</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">number_folds</span><span class="p">,</span> <span class="n">plot_foldGroup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Ignore previous training/testing splits.</span>
+<span class="sd">        Used to generate k folds after combining the training, testing, and validation dataset to allow for k-fold training</span>
+<span class="sd">        across ALL of the data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            number_folds (int): How many folds to divide the training set into.</span>
+<span class="sd">            plot_foldGroup (bool, optional): Whether to display a plot visualizing the fold groups. Typically used for visual confirmation of data splits.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return value. Generates the samples_training_fold_traingroup attribute </span>
+<span class="sd">            containing a 2D list: 1D-data for each training execution on the respective </span>
+<span class="sd">            fold iteration/index, 2D-contains the [training_dataset, testing_dataset] for </span>
+<span class="sd">            each fold iteration.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">samples_all</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_testing</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_validation</span><span class="p">:</span>
+            <span class="n">samples_all</span> <span class="o">=</span> <span class="n">samples_all</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_validation</span>
+
+        <span class="n">length_fold</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">samples_all</span><span class="p">)</span> <span class="o">/</span> <span class="n">number_folds</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">plot_foldGroup</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+            <span class="n">data_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">samples_all</span><span class="p">)</span>
+
+        <span class="c1"># Determine the folds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">number_folds</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">samples_all</span><span class="p">[</span> <span class="n">i</span><span class="o">*</span><span class="n">length_fold</span> <span class="p">:</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">length_fold</span><span class="p">])</span>
+
+        <span class="c1"># Use the folds to create a list of training/testing dataset pairs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold_traingroup</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">testing_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">number_folds</span><span class="p">):</span>
+            <span class="n">training_samples</span>   <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">validation_samples</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">testing_samples</span>    <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">number_folds</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">testing_i</span><span class="p">:</span>
+                    <span class="n">testing_samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>    <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">j</span> <span class="o">==</span> <span class="p">((</span><span class="n">testing_i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">number_folds</span><span class="p">):</span>
+                    <span class="n">validation_samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">training_samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>   <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">plot_foldGroup</span><span class="p">:</span>
+                <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;...labeling training...&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">training_samples</span><span class="p">:</span>
+                    <span class="n">s_row</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR DUPLICATE SAMPLE&#39;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">s_row</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                    <span class="n">data_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;...labeling validation...&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">validation_samples</span><span class="p">:</span>
+                    <span class="n">s_row</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR DUPLICATE SAMPLE&#39;</span><span class="p">)</span>
+                    <span class="n">data_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">3</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;...labeling testing...&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">testing_samples</span><span class="p">:</span>
+                    <span class="n">s_row</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="n">s_row</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR DUPLICATE SAMPLE&#39;</span><span class="p">)</span>
+                    <span class="n">data_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">7</span>
+                
+                <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;start_datetime&#39;</span><span class="p">],</span> <span class="n">data_all</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Fold Training Group &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">testing_i</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Category (1=train, 3=val, 7=test)&#39;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+            <span class="n">training_dataset</span>   <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">training_samples</span><span class="p">,</span>   <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+            <span class="n">validation_dataset</span> <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">validation_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+            <span class="n">testing_dataset</span>    <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">testing_samples</span><span class="p">,</span>    <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_fold_traingroup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">training_dataset</span><span class="p">,</span> <span class="n">validation_dataset</span><span class="p">,</span> <span class="n">testing_dataset</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="Data_Bread.generate_training_leave_one_out"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Data_Bread.generate_training_leave_one_out">[docs]</a>    <span class="k">def</span> <span class="nf">generate_training_leave_one_out</span><span class="p">(</span> <span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Used to generate datasets for all the iterations needed in leave_one_out training</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No return values. Generates the samples_training_loo_traingroup attribute containing a 2D list: 1D-data for each training execution on the respective iteration/index, 2D-contains the [training_dataset, testing_dataset] for each iteration.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Create a list of training/testing dataset pairs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_loo_traingroup</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">testing_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">)):</span>
+            <span class="n">training_samples</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">[:</span><span class="n">testing_i</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">[</span><span class="n">testing_i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">testing_samples</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_training</span><span class="p">[</span><span class="n">testing_i</span><span class="p">]]</span>
+
+            <span class="n">training_dataset</span> <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">training_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+            <span class="n">testing_dataset</span>  <span class="o">=</span> <span class="n">Dataset_Bread</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">testing_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_training_loo_traingroup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">training_dataset</span><span class="p">,</span> <span class="n">testing_dataset</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Data_Bread.one_hot_encode"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Data_Bread.one_hot_encode">[docs]</a>    <span class="k">def</span> <span class="nf">one_hot_encode</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">num_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Returns the corresponding one_hot_encoding for a given label.</span>
+
+<span class="sd">        Args:  </span>
+<span class="sd">            label (int):                Integer value of the desired label</span>
+<span class="sd">            num_labels (int, optional): How many unique labels exist, i.e. how many possible one-hot values to include.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            encoding (list):                The one_hot encoded version of the input label integer.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">num_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_unique_labels</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_labels</span>
+        <span class="n">encoding</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_key</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">label</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">encoding</span></div></div>
+
+
+
+<div class="viewcode-block" id="Dataset_Bread"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Dataset_Bread">[docs]</a><span class="k">class</span> <span class="nc">Dataset_Bread</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Dataset_Bread class defines individual datasets that will be iterated over during training.</span>
+<span class="sd">        Inherits torch.utils.data.Dataset class for optimized implementation</span>
+
+<span class="sd">        Tip:</span>
+<span class="sd">            User can override the preprocess() function below to add a data preprocessing step that will be executed every time a sample is loaded. See description below.</span>
+
+<span class="sd">        Attention:</span>
+<span class="sd">            This class should not be directly used.</span>
+<span class="sd">            </span>
+<span class="sd">            It is best to access this class as an attribute of the Data_Bread class for more streamlined dataset management.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Dataset_Bread.__init__"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Dataset_Bread.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">,</span> <span class="n">sample_descriptions</span><span class="p">,</span> <span class="n">label_key</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">npInt16</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialization function for an independent dataset that can be used for training or validation or testing.</span>
+
+<span class="sd">        An instance attribute ``show_timings`` exists can be set to TRUE to print timing information to the stdout buffer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path_data (str):                Path to the subject folder containing raw data. This joined the &#39;filename&#39; feild of a sample dict should identify the raw data file.</span>
+<span class="sd">            sample_descriptions (str):      List of the samples that were extracted from the .pkl file.</span>
+<span class="sd">            label_key (dict):               A dictionary that will be used to convert the &quot;label_int&quot; field of the sample dict to the &quot;label_out&quot; feild that will be used by the network during training.</span>
+<span class="sd">            data_files (str, optional):     Suffix of data filenames designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">            data_type (np dtype, optional): Data type to use when unpacking the data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of Dataset_Bread object to be used as a data source.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span> <span class="o">=</span> <span class="n">path_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">sample_descriptions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">label_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span> <span class="o">=</span> <span class="n">data_files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span> <span class="o">=</span> <span class="n">data_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_timings</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_timings_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Dataset_Bread.preprocess"><a class="viewcode-back" href="../../../toast.heat.dataset_bread.html#toast.heat.dataset_bread.Dataset_Bread.preprocess">[docs]</a>    <span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data_recall_return</span><span class="p">,</span> <span class="n">sample_metadata</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Preprocessing function that is applied to the data before it is passed to the network.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            This function exists to be overwritten, there is initially no preprocessing applied.</span>
+<span class="sd">            First define a function with the same parameters and return values</span>
+<span class="sd">            To overwrite, use command::</span>
+<span class="sd">            </span>
+<span class="sd">               toast.heat.dataset_bread.Dataset_Bread.preprocess = my_function</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data_recall_return (numpy array): First index of values returned directly from `toast bread.load.*.recall_data*`, </span>
+<span class="sd">                                              containing the numpy data to process. For more information, see :py:func:`~toast.bread.load.wav.recall_data`</span>
+<span class="sd">            sample_metadata (int):            Second index of values returned directly from `toast bread.load.*.recall_data*`, </span>
+<span class="sd">                                              containing the number of channels. For more information, see :py:func:`~toast.bread.load.wav.recall_data`</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            data_as_numpy (numpy array): The data array after any desired preprocessing functions are applied.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Note: You must return a copy of the ndarray so that it is writable, as PyTorch does not support non-writable tensors</span>
+        <span class="k">return</span> <span class="n">data_recall_return</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_timings</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span> <span class="n">wav</span><span class="o">.</span><span class="n">recall_data</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;start_index&#39;</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;stop_index&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">),</span> <span class="n">sample</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">npFloat32</span><span class="p">)),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;label_out&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">show_timings_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_timings_count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">show_timings</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">show_timings_count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">wav</span><span class="o">.</span><span class="n">recall_data</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_raw_data</span><span class="p">,</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;start_index&#39;</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;stop_index&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t\t\t</span><span class="s1">Time to read data from disk:</span><span class="se">\t</span><span class="si">{:&gt;9.6f}</span><span class="s1"> s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t\t\t</span><span class="s1">Time to preprocess data:</span><span class="se">\t</span><span class="si">{:&gt;9.6f}</span><span class="s1"> s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">npFloat32</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t\t\t</span><span class="s1">Time to npcast to float:</span><span class="se">\t</span><span class="si">{:&gt;9.6f}</span><span class="s1"> s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span> <span class="n">data</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t\t\t</span><span class="s1">Time to cast to tensor:</span><span class="se">\t\t</span><span class="si">{:&gt;9.6f}</span><span class="s1"> s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+                <span class="c1"># start_time = time.time()</span>
+                <span class="c1"># data = data.float()</span>
+                <span class="c1"># print(&#39;\t\t\tTime to cast to float:\t\t{:&gt;9.6f} s&#39;.format(time.time() - start_time))</span>
+                <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;label_out&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+                
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR reading sample &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="s1">&#39; from &#39;</span><span class="p">,</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

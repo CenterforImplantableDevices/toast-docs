@@ -1,0 +1,15 @@
+toast.butter.noise
+==================
+
+.. automodule:: toast.butter.noise
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.butter.noise.colors

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.dataset_bread &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.heat.encoderDecisionN" href="toast.heat.encoderDecisionN.html" />
+    <link rel="prev" title="toast.heat.convolutionalN" href="toast.heat.convolutionalN.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.heat.html">toast.heat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.heat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.convolutionalN.html">toast.heat.convolutionalN</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.heat.dataset_bread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.encoderDecisionN.html">toast.heat.encoderDecisionN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.multiModelN.html">toast.heat.multiModelN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.network.html">toast.heat.network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.perceptronN.html">toast.heat.perceptronN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleF.html">toast.heat.timescaleF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleL.html">toast.heat.timescaleL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleN.html">toast.heat.timescaleN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_parallel_core%28sample%29.html">toast.heat.train_parallel_core(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_params%28sample%29.html">toast.heat.train_params(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.training.html">toast.heat.training</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
+      <li>toast.heat.dataset_bread</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.heat.dataset_bread.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.heat.dataset_bread">
+<span id="toast-heat-dataset-bread"></span><h1>toast.heat.dataset_bread<a class="headerlink" href="#module-toast.heat.dataset_bread" title="Permalink to this headline">¶</a></h1>
+<p>This module contains class definitions defining how data and datasets will be handled.</p>
+<p>Data_Bread class acts as a wrapper class, and should be the object managing all of the
+data and segmentation required for a dataset to be used for ML applications.</p>
+<p>Dataset_Bread class defines individual datasets that will be iterated over during training.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Data_Bread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.dataset_bread.</span></span><span class="sig-name descname"><span class="pre">Data_Bread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_sample_descriptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs_validation=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">one_hot_encode=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.int16'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Data_Bread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Data_Bread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Data_Bread class acts as a wrapper class, managing all of the data and reladed sub-datasets required for a dataset to be used for ML applications.</p>
+<p>Manages multiple Dataset_Bread instances automatically, making for a more cohesive user workflow so the user can manage data through a single class instance.
+Initialized with only a few arguments to setup the necessary datasets for training and testing ML models</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Data_Bread.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_sample_descriptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs_validation=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">one_hot_encode=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.int16'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Data_Bread.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Data_Bread.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization function to create an object instance of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_data</strong> (<em>str</em>) – Path to the subject folder containing raw data. This joined the ‘filename’ feild of a sample dict should identify the raw data file.</p></li>
+<li><p><strong>path_sample_descriptions</strong> (<em>str</em>) – Path to the .pkl file containing the sample dict that will be used for training. Note this is only the file prefix, do not include the “_train.pkl” part of the filename.</p></li>
+<li><p><strong>label_key</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary that will be used to convert the “label_int” field of the sample dict to the “label_out” feild that will be used by the network during training.</p></li>
+<li><p><strong>needs_validation</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether a validation set is needed</p></li>
+<li><p><strong>one_hot_encode</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the output should be on_hot_encoded</p></li>
+<li><p><strong>data_files</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of data filenames designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>data_type</strong> (<em>np dtype</em><em>, </em><em>optional</em>) – Data type to use when unpacking the data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the Data_Bread class to be used to manage the dataset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Data_Bread.set_sample_labels">
+<span class="sig-name descname"><span class="pre">set_sample_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">one_hot_encode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Data_Bread.set_sample_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Data_Bread.set_sample_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define label_out, which will be used in <cite>__get_item__()</cite> in the Dataset_Bread object definition</p>
+<p>Also find the relative occurance of each label, and define a weighting to use when calculating loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>one_hot_encode</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to one_hot_encode the labels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Data_Bread.generate_training_k_folds">
+<span class="sig-name descname"><span class="pre">generate_training_k_folds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_foldGroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Data_Bread.generate_training_k_folds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Data_Bread.generate_training_k_folds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to generate k folds in the training dataset to allow for k-fold training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number_folds</strong> (<em>int</em>) – How many folds to divide the training set into.</p></li>
+<li><p><strong>plot_foldGroup</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display a plot visualizing the fold groups. Typically used for visual confirmation of data splits.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the samples_training_fold_traingroup attribute
+containing a 2D list: 1D-data for each training execution on the respective
+fold iteration/index, 2D-contains the [training_dataset, testing_dataset] for
+each fold iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Data_Bread.generate_trainingValidation_k_folds">
+<span class="sig-name descname"><span class="pre">generate_trainingValidation_k_folds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_foldGroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Data_Bread.generate_trainingValidation_k_folds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Data_Bread.generate_trainingValidation_k_folds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ignore previous training/testing splits.
+Used to generate k folds after combining the training, testing, and validation dataset to allow for k-fold training
+across ALL of the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number_folds</strong> (<em>int</em>) – How many folds to divide the training set into.</p></li>
+<li><p><strong>plot_foldGroup</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display a plot visualizing the fold groups. Typically used for visual confirmation of data splits.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Generates the samples_training_fold_traingroup attribute
+containing a 2D list: 1D-data for each training execution on the respective
+fold iteration/index, 2D-contains the [training_dataset, testing_dataset] for
+each fold iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Data_Bread.generate_training_leave_one_out">
+<span class="sig-name descname"><span class="pre">generate_training_leave_one_out</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Data_Bread.generate_training_leave_one_out"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Data_Bread.generate_training_leave_one_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to generate datasets for all the iterations needed in leave_one_out training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1D-data for each training execution on the respective iteration/index, 2D-contains the [training_dataset, testing_dataset] for each iteration.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>No return values. Generates the samples_training_loo_traingroup attribute containing a 2D list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Data_Bread.one_hot_encode">
+<span class="sig-name descname"><span class="pre">one_hot_encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Data_Bread.one_hot_encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Data_Bread.one_hot_encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the corresponding one_hot_encoding for a given label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>int</em>) – Integer value of the desired label</p></li>
+<li><p><strong>num_labels</strong> (<em>int</em><em>, </em><em>optional</em>) – How many unique labels exist, i.e. how many possible one-hot values to include.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The one_hot encoded version of the input label integer.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>encoding (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Dataset_Bread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.dataset_bread.</span></span><span class="sig-name descname"><span class="pre">Dataset_Bread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_descriptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.int16'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Dataset_Bread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Dataset_Bread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<p>Dataset_Bread class defines individual datasets that will be iterated over during training.
+Inherits torch.utils.data.Dataset class for optimized implementation</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>User can override the preprocess() function below to add a data preprocessing step that will be executed every time a sample is loaded. See description below.</p>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This class should not be directly used.</p>
+<p>It is best to access this class as an attribute of the Data_Bread class for more streamlined dataset management.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Dataset_Bread.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_descriptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.int16'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Dataset_Bread.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Dataset_Bread.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization function for an independent dataset that can be used for training or validation or testing.</p>
+<p>An instance attribute <code class="docutils literal notranslate"><span class="pre">show_timings</span></code> exists can be set to TRUE to print timing information to the stdout buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_data</strong> (<em>str</em>) – Path to the subject folder containing raw data. This joined the ‘filename’ feild of a sample dict should identify the raw data file.</p></li>
+<li><p><strong>sample_descriptions</strong> (<em>str</em>) – List of the samples that were extracted from the .pkl file.</p></li>
+<li><p><strong>label_key</strong> (<em>dict</em>) – A dictionary that will be used to convert the “label_int” field of the sample dict to the “label_out” feild that will be used by the network during training.</p></li>
+<li><p><strong>data_files</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix of data filenames designating which dataset organization to use. Necessary when following CID convention.</p></li>
+<li><p><strong>data_type</strong> (<em>np dtype</em><em>, </em><em>optional</em>) – Data type to use when unpacking the data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of Dataset_Bread object to be used as a data source.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.dataset_bread.Dataset_Bread.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_recall_return</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/dataset_bread.html#Dataset_Bread.preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.dataset_bread.Dataset_Bread.preprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preprocessing function that is applied to the data before it is passed to the network.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This function exists to be overwritten, there is initially no preprocessing applied.
+First define a function with the same parameters and return values
+To overwrite, use command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">toast</span><span class="o">.</span><span class="n">heat</span><span class="o">.</span><span class="n">dataset_bread</span><span class="o">.</span><span class="n">Dataset_Bread</span><span class="o">.</span><span class="n">preprocess</span> <span class="o">=</span> <span class="n">my_function</span>
+</pre></div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_recall_return</strong> (<em>numpy array</em>) – First index of values returned directly from <cite>toast bread.load.*.recall_data*</cite>,
+containing the numpy data to process. For more information, see <a class="reference internal" href="toast.bread.load.wav.html#toast.bread.load.wav.recall_data" title="toast.bread.load.wav.recall_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">recall_data()</span></code></a></p></li>
+<li><p><strong>sample_metadata</strong> (<em>int</em>) – Second index of values returned directly from <cite>toast bread.load.*.recall_data*</cite>,
+containing the number of channels. For more information, see <a class="reference internal" href="toast.bread.load.wav.html#toast.bread.load.wav.recall_data" title="toast.bread.load.wav.recall_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">recall_data()</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The data array after any desired preprocessing functions are applied.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>data_as_numpy (numpy array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.heat.convolutionalN.html" class="btn btn-neutral float-left" title="toast.heat.convolutionalN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.heat.encoderDecisionN.html" class="btn btn-neutral float-right" title="toast.heat.encoderDecisionN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

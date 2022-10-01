@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.timescaleF &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.heat.timescaleL" href="toast.heat.timescaleL.html" />
+    <link rel="prev" title="toast.heat.perceptronN" href="toast.heat.perceptronN.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.heat.html">toast.heat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.heat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.convolutionalN.html">toast.heat.convolutionalN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.dataset_bread.html">toast.heat.dataset_bread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.encoderDecisionN.html">toast.heat.encoderDecisionN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.multiModelN.html">toast.heat.multiModelN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.network.html">toast.heat.network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.perceptronN.html">toast.heat.perceptronN</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.heat.timescaleF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleL.html">toast.heat.timescaleL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleN.html">toast.heat.timescaleN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_parallel_core%28sample%29.html">toast.heat.train_parallel_core(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_params%28sample%29.html">toast.heat.train_params(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.training.html">toast.heat.training</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
+      <li>toast.heat.timescaleF</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.heat.timescaleF.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.heat.timescaleF">
+<span id="toast-heat-timescalef"></span><h1>toast.heat.timescaleF<a class="headerlink" href="#module-toast.heat.timescaleF" title="Permalink to this headline">¶</a></h1>
+<p>A Class that contains the low-level operations performed by a TiSc Input Layer.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.timescaleF.TiScFunction_input">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleF.</span></span><span class="sig-name descname"><span class="pre">TiScFunction_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScFunction_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
+<p>Class defining static forward() and backward() methods for use by <a class="reference internal" href="toast.heat.timescaleL.html#toast.heat.timescaleL.TSC_input" title="toast.heat.timescaleL.TSC_input"><code class="xref py py-class docutils literal notranslate"><span class="pre">TSC_input</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleF.TiScFunction_input.forward">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScFunction_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>forward method defining the forward pass operations.</p>
+<p>Bias must be included, but its value may be <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Assumes input data is of dim=2 where dimensions represent (data_size, batch_size)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is up to the user to verfify that the lengths of data samples (<code class="docutils literal notranslate"><span class="pre">data.shape[0]</span></code>) is an even multiple of the max_window size.
+Invalid dimension errors during windowing/reshaping commands will be raised if this is not true.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Tensor</em>) – 1D Tensor holding the input data.</p></li>
+<li><p><strong>weights</strong> (<em>Tensor</em>) – 1D Tensor holding the weights. Note these values are interpreted in a pseudo-2D sequence assigning different values to different scales.</p></li>
+<li><p><strong>bias</strong> (<em>Tensor</em>) – 1D Tensor holding the bias values.</p></li>
+<li><p><strong>min_window_exponential</strong> (<em>int</em>) – Exponent value designating the minimum window exponential to consider. Should be defined consistent with the scale_multiplier variable.</p></li>
+<li><p><strong>max_window_exponential</strong> (<em>int</em>) – Exponent value designating the maximum window exponential to consider. Should be defined consistent with the scale_multiplier variable.</p></li>
+<li><p><strong>scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – Exponential base designating how fast the window size increases.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1D Tensor representing the output. Note these values should be interpreted in a pseudo-2D sequence assigning different values to different scales.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleF.TiScFunction_input.backward">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">backward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScFunction_input.backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScFunction_input.backward" title="Permalink to this definition">¶</a></dt>
+<dd><p>backward method defining the backward pass operations. Relates the gradient values to each of the input parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>grad_output</strong> (<em>Tensor</em>) – 1D Tensor holding the input data representing the gradient of this functions output.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1D Tensor holding the gradient of data values after the most recent forward pass.
+weights (Tensor):     1D Tensor holding the gradient of weight values after the most recent forward pass. Note these values are interpreted in a pseudo-2D sequence assigning different values to different scales.
+bias (Tensor):        1D Tensor holding the gradient of bias values after the most recent forward pass.
+None:                 Placeholder return value, represting the “gradient” of min_window_exponential
+None:                 Placeholder return value, represting the “gradient” of max_window_exponential
+None:                 Placeholder return value, represting the “gradient” of scale_multiplier</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>data (Tensor)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.timescaleF.TiScTransposeFunction_input">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleF.</span></span><span class="sig-name descname"><span class="pre">TiScTransposeFunction_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScTransposeFunction_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
+<p>Class defining static forward() and backward() methods for use by <a class="reference internal" href="toast.heat.timescaleL.html#toast.heat.timescaleL.TSCTranspose_input" title="toast.heat.timescaleL.TSCTranspose_input"><code class="xref py py-class docutils literal notranslate"><span class="pre">TSCTranspose_input</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleF.TiScTransposeFunction_input.forward">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window_exponential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScTransposeFunction_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>forward method defining the forward pass operations.
+Bias must be included, but its value may be <code class="docutils literal notranslate"><span class="pre">None</span></code>
+Assumes that passed data is trimmed so that the output of min_window kernels is in the last half of values (no trailing zeros).
+.. important:: Assumes input data is of dim=2 where dimensions represent (data_size, batch_size)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is up to the user to verfify that the lengths of data samples (<code class="docutils literal notranslate"><span class="pre">data.shape[0]</span></code>) is an even multiple of the max_window size.
+Invalid dimension errors during windowing/reshaping commands will be raised if this is not true.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Tensor</em>) – 1D Tensor holding the input data.</p></li>
+<li><p><strong>weights</strong> (<em>Tensor</em>) – 1D Tensor holding the weights. Note these values are interpreted in a pseudo-2D sequence assigning different values to different scales.</p></li>
+<li><p><strong>bias</strong> (<em>Tensor</em>) – 1D Tensor holding the bias values.</p></li>
+<li><p><strong>min_window_exponential</strong> (<em>int</em>) – Exponent value designating the minimum window exponential to consider. Should be defined consistent with the scale_multiplier variable.</p></li>
+<li><p><strong>max_window_exponential</strong> (<em>int</em>) – Exponent value designating the maximum window exponential to consider. Should be defined consistent with the scale_multiplier variable.</p></li>
+<li><p><strong>scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – Exponential base designating how fast the window size increases.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1D Tensor representing the output. Note these values should be interpreted in a pseudo-2D sequence assigning different values to different scales.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleF.TiScTransposeFunction_input.backward">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">backward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleF.html#TiScTransposeFunction_input.backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleF.TiScTransposeFunction_input.backward" title="Permalink to this definition">¶</a></dt>
+<dd><p>backward method defining the backward pass operations. Relates the gradient values to each of the input parameters.
+:param grad_output: 1D Tensor holding the input data representing the gradient of this functions output.
+:type grad_output: Tensor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>1D Tensor holding the gradient of data values after the most recent forward pass.
+weights (Tensor):     1D Tensor holding the gradient of weight values after the most recent forward pass. Note these values are interpreted in a pseudo-2D sequence assigning different values to different scales.
+bias (Tensor):        1D Tensor holding the gradient of bias values after the most recent forward pass.
+None:                 Placeholder return value, represting the “gradient” of min_window_exponential
+None:                 Placeholder return value, represting the “gradient” of max_window_exponential
+None:                 Placeholder return value, represting the “gradient” of scale_multiplier</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>data (Tensor)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.heat.perceptronN.html" class="btn btn-neutral float-left" title="toast.heat.perceptronN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.heat.timescaleL.html" class="btn btn-neutral float-right" title="toast.heat.timescaleL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

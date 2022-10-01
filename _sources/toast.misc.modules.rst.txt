@@ -1,0 +1,7 @@
+toast.misc.modules
+==================
+
+.. automodule:: toast.misc.modules
+   :members:
+   :undoc-members:
+   :show-inheritance:

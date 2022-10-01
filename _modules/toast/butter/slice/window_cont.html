@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.butter.slice.window_cont &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>toast.butter.slice.window_cont</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.butter.slice.window_cont</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;Contains functions applying windowed functions to data.</span>
+
+<span class="sd">Before creating new functions, consider exploring the `bottleneck library &lt;https://bottleneck.readthedocs.io/en/latest/index.html&gt;`_</span>
+<span class="sd">for highly optimized implementations of windowed functions.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">toast.butter.filter</span> <span class="kn">import</span> <span class="n">butterworth</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">import</span> <span class="nn">bottleneck</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="moving_avg"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_avg">[docs]</a><span class="k">def</span> <span class="nf">moving_avg</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates a moving window average output. Window is cotinuously slid along the data,</span>
+<span class="sd">    and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the averages along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">bn</span><span class="o">.</span><span class="n">move_mean</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_std"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_std">[docs]</a><span class="k">def</span> <span class="nf">moving_std</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the standard deviation from a window sliding along the requested axis.</span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the standard deviation along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">bn</span><span class="o">.</span><span class="n">move_std</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_var"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_var">[docs]</a><span class="k">def</span> <span class="nf">moving_var</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the variance values from a window sliding along the requested axis.</span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the variances from along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">bn</span><span class="o">.</span><span class="n">move_var</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_med"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_med">[docs]</a><span class="k">def</span> <span class="nf">moving_med</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the median from a window sliding along the requested axis.</span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the median from along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">bn</span><span class="o">.</span><span class="n">move_median</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_max"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_max">[docs]</a><span class="k">def</span> <span class="nf">moving_max</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the maximum values from a window sliding along the requested axis.</span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the maximum values along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">bn</span><span class="o">.</span><span class="n">move_max</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_min"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_min">[docs]</a><span class="k">def</span> <span class="nf">moving_min</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the minimum values from a window sliding along the requested axis.</span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the minimum values along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">bn</span><span class="o">.</span><span class="n">move_min</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_sum"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_sum">[docs]</a><span class="k">def</span> <span class="nf">moving_sum</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the summed values from a window sliding along the requested axis.</span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the summed values along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">bn</span><span class="o">.</span><span class="n">move_sum</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_rms"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_rms">[docs]</a><span class="k">def</span> <span class="nf">moving_rms</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">fast_approx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the Root Mean Square values from a window sliding along the requested axis.</span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">        fast_approx (bool, optional):  Whether to approximate the rms value faster, by skipping the division and square root calculations.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the Root Mean Square values along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">calculated</span> <span class="o">=</span> <span class="n">moving_sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fast_approx</span><span class="p">:</span>
+        <span class="n">calculated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span> <span class="n">calculated</span><span class="p">,</span> <span class="n">window</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">calculated</span></div>
+
+
+<div class="viewcode-block" id="pad_to_length"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.pad_to_length">[docs]</a><span class="k">def</span> <span class="nf">pad_to_length</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">desired_length</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Helper function to pad data on both ends to match a desired length.</span>
+
+<span class="sd">    The first and last values are used to add values before and after (respectively) the original data to meet the desired length.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array):   The data to be padded</span>
+<span class="sd">        desired_length (int): The length of the output data.</span>
+<span class="sd">        axis (int, optional): Axis where padding should be added.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array padded to match the desired length.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">pad_axes</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))]</span>
+
+    <span class="n">length_pad</span> <span class="o">=</span> <span class="n">desired_length</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">length_pad</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pad_axes</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">length_pad</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">length_pad</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">pad_axes</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pad_axes</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">length_pad</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">length_pad</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">pad_axes</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_avg_cutoffHz"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_avg_cutoffHz">[docs]</a><span class="k">def</span> <span class="nf">moving_avg_cutoffHz</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates a moving window average filter. Window is cotinuously slid along the data,</span>
+<span class="sd">    and is padded to match the shape of the input.</span>
+
+<span class="sd">    The window sizes is estimated based on a requested frequency cutoff.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        fs (int):                      Sample Frequency of the data.</span>
+<span class="sd">        cutoff (int):                  Desired frequency cutoff (Hz)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        See :py:func:`~moving_avg`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">moving_avg</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="nb">int</span><span class="p">(((</span><span class="mi">1</span><span class="o">/</span><span class="n">cutoff</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">fs</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_avg_std_cutoffHz"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_avg_std_cutoffHz">[docs]</a><span class="k">def</span> <span class="nf">moving_avg_std_cutoffHz</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates a moving window average filter, and the corresponding calculted standard deviation. </span>
+<span class="sd">    Window is cotinuously slid along the data, and is padded to match the shape of the input.</span>
+
+<span class="sd">    The window sizes is estimated based on a requested frequency cutoff.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        fs (int):                      Sample Frequency of the data.</span>
+<span class="sd">        cutoff (int):                  Desired frequency cutoff (Hz)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        See :py:func:`~moving_avg`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(((</span><span class="mi">1</span><span class="o">/</span><span class="n">cutoff</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">fs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">moving_avg</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">),</span> <span class="n">moving_std</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_1d_crossings"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_1d_crossings">[docs]</a><span class="k">def</span> <span class="nf">moving_1d_crossings</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the number of first derivative zero crossings within a requested window length.</span>
+<span class="sd">    The requested window is slid accross the data, and the zero crossings counted.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the number of first derivative zero crossings along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># count zero crosssings along a moving window accross first derivative</span>
+    <span class="n">first_derivative_sign_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">signbit</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span> <span class="n">data</span><span class="p">)))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+
+    <span class="n">pad_axes</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))]</span>
+    <span class="n">pad_axes</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+    <span class="k">return</span> <span class="n">moving_sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">first_derivative_sign_change</span><span class="p">,</span> <span class="n">pad_axes</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="moving_2d_crossings"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.moving_2d_crossings">[docs]</a><span class="k">def</span> <span class="nf">moving_2d_crossings</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the number of second derivative zero crossings within a requested window length.</span>
+<span class="sd">    The requested window is slid accross the data, and the zero crossings counted.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        window (int):                  Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the number of second derivative zero crossings along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># count zero crosssings along a moving widow accross second derivative</span>
+    <span class="n">second_derivative_sign_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">signbit</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span> <span class="n">data</span><span class="p">))))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+
+    <span class="n">pad_axes</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))]</span>
+    <span class="n">pad_axes</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">moving_sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">second_derivative_sign_change</span><span class="p">,</span> <span class="n">pad_axes</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="track_derivatives"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.track_derivatives">[docs]</a><span class="k">def</span> <span class="nf">track_derivatives</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">lpf_cutoff</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the number of first and second derivative zero crossings within a requested window length.</span>
+<span class="sd">    The requested window is slid accross the data, and the zero crossings counted.</span>
+
+<span class="sd">    Data is filtered before derivatives are calculated. A butterworth low pass filter with the requested cutoff is applied.</span>
+<span class="sd">    For more detail, see :py:func:`~toast.butter.filter.butterworth`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        fs (int):                      Sample Frequency of the data.</span>
+<span class="sd">        lpf_cutoff (int):              Desired low pass filter frequency cutoff (Hz)</span>
+<span class="sd">        window (int)                   Length of the window (number of points)</span>
+<span class="sd">        axis (int, optional):          Array axis to slide the window accross.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Two numpy arrays matching the shape of the input array, containing the number of first and second derivative zero crossings along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">lpf_cutoff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">data_filtered</span> <span class="o">=</span> <span class="n">butterworth</span><span class="o">.</span><span class="n">lowpass_filter</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">lpf_cutoff</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data_filtered</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">first_derivative</span>  <span class="o">=</span> <span class="n">moving_1d_crossings</span><span class="p">(</span> <span class="n">data_filtered</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">second_derivative</span> <span class="o">=</span> <span class="n">moving_2d_crossings</span><span class="p">(</span> <span class="n">data_filtered</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">first_derivative</span><span class="p">,</span> <span class="n">second_derivative</span></div>
+
+
+<div class="viewcode-block" id="track_number_exterma"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont.track_number_exterma">[docs]</a><span class="k">def</span> <span class="nf">track_number_exterma</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">max_index</span><span class="p">,</span> <span class="n">min_index</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the number of extrema (local max and local min) within a requested window length.</span>
+<span class="sd">    The requested window is slid accross the data, and the zero crossings counted.</span>
+
+<span class="sd">    Important:</span>
+<span class="sd">        Function only works along a single axis</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (numpy array or ndarray): Data to process.</span>
+<span class="sd">        max_index (iterable):          Indicies of identified local maximums.</span>
+<span class="sd">        min_index (iterable):          Indicies of identified local minimums.</span>
+<span class="sd">        window (int)                   Length of the window (number of points)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array matching the shape of the input array, containing the number of extrema along the requested axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">peak_indicies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span> <span class="p">(</span><span class="n">max_index</span><span class="p">,</span> <span class="n">min_index</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">peak_values</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="n">max_index</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="n">min_index</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)))</span>
+
+    <span class="n">peak_hold</span>      <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span><span class="n">peak_indicies</span><span class="p">],</span> <span class="n">peak_values</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;previous&#39;</span><span class="p">,</span> <span class="n">assume_sorted</span><span class="o">=</span><span class="kc">False</span><span class="p">)(</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">zero_crossings</span> <span class="o">=</span> <span class="n">moving_sum</span><span class="p">(</span>  <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span> <span class="n">peak_hold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span> <span class="n">window</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pad_to_length</span><span class="p">(</span> <span class="n">zero_crossings</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="_move_bottleneck_fcn"><a class="viewcode-back" href="../../../../toast.butter.slice.window_cont.html#toast.butter.slice.window_cont._move_bottleneck_fcn">[docs]</a><span class="k">def</span> <span class="nf">_move_bottleneck_fcn</span><span class="p">(</span> <span class="n">fcn_pointer</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Helper funciton, mapping toast functions to functions from the `bottleneck &lt;https://bottleneck.readthedocs.io/en/latest/index.html&gt;`_ library</span>
+
+<span class="sd">    Automatically padds output to be the same shape as the input.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">filtered_data</span> <span class="o">=</span> <span class="n">fcn_pointer</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pad_to_length</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="n">filtered_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">window</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.heat.timescaleL &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="toast.heat.timescaleN" href="toast.heat.timescaleN.html" />
+    <link rel="prev" title="toast.heat.timescaleF" href="toast.heat.timescaleF.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="toast.heat.html">toast.heat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="toast.heat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.convolutionalN.html">toast.heat.convolutionalN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.dataset_bread.html">toast.heat.dataset_bread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.encoderDecisionN.html">toast.heat.encoderDecisionN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.multiModelN.html">toast.heat.multiModelN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.network.html">toast.heat.network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.perceptronN.html">toast.heat.perceptronN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleF.html">toast.heat.timescaleF</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">toast.heat.timescaleL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.timescaleN.html">toast.heat.timescaleN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_parallel_core%28sample%29.html">toast.heat.train_parallel_core(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.train_params%28sample%29.html">toast.heat.train_params(sample)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toast.heat.training.html">toast.heat.training</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="toast.heat.html">toast.heat</a> &raquo;</li>
+      <li>toast.heat.timescaleL</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/toast.heat.timescaleL.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-toast.heat.timescaleL">
+<span id="toast-heat-timescalel"></span><h1>toast.heat.timescaleL<a class="headerlink" href="#module-toast.heat.timescaleL" title="Permalink to this headline">¶</a></h1>
+<p>A Class that contains all the functionality and tracking necessary to train and debug Deep Neural Networks.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleL.</span></span><span class="sig-name descname"><span class="pre">TSC_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Represents a time scale convolution input layer.</p>
+<p>Typically only one of these layers is present at the input.  It is designed to transofrm a 1D input into a 2D Scaled output.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization to create a Time Scale Convolutional Layer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min_window</strong> (<em>int</em>) – The minimum window size to consider. Value represents the min window size in number of samples.</p></li>
+<li><p><strong>max_window</strong> (<em>int</em>) – The maximum window size to consider. Value represents the max window size in number of samples.</p></li>
+<li><p><strong>scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – The exponential base designating how fast the window size increases.</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add a bias node to each scale.</p></li>
+<li><p><strong>initialization</strong> (<em>int/str</em><em>, </em><em>optional</em>) – How to initializae tisc parameters. Can be a beta value for noise, or a string requesting a noise color. See <a class="reference internal" href="toast.butter.noise.colors.html#toast.butter.noise.colors.get_noise" title="toast.butter.noise.colors.get_noise"><code class="xref py py-func docutils literal notranslate"><span class="pre">toast.butter.noise.colors.get_noise()</span></code></a> or <a class="reference internal" href="toast.butter.noise.colors.html#toast.butter.noise.colors.get_color" title="toast.butter.noise.colors.get_color"><code class="xref py py-func docutils literal notranslate"><span class="pre">toast.butter.noise.colors.get_color()</span></code></a> for more info.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the TSC_input class representing a Time Scale Convolution Layer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.reset_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the parameters to a default distribution that was passed in __init__.</p>
+<p>Weights are normally distributed, unless a noise pattern/color is selected during intialization.
+Bias is uniformly distributed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Weight/Bias values will be reset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the forward method of the Network class to process data based on our network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>tensor</em>) – Data to be processed by the network.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The output when passing the input data through the network</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.convert_to_decision">
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method overwrites the forward method of the Network class, in case special behavior is desired
+Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> – Value output by network</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float Tensor representing the final decision of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.extra_repr">
+<span class="sig-name descname"><span class="pre">extra_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.extra_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the extra information about this module.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.freeze_shape">
+<span class="sig-name descname"><span class="pre">freeze_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freeze</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.freeze_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.freeze_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note this function does NOT freeze the bias, only the weights</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.get_gradCAM">
+<span class="sig-name descname"><span class="pre">get_gradCAM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activations_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.get_gradCAM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.get_gradCAM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate gradCAM activation mapping for this layer, rescaled and stretched to match the input dimensions.</p>
+<p>Currently, the activations and activation gradients must be extracted from the larger network object outside of this function. An example imlementation is below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">activations</span>      <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activations</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+<span class="n">activations_grad</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activationsGrad</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+<span class="n">gradCAM_out</span><span class="p">,</span> <span class="n">gradCAM_expanded</span><span class="p">,</span> <span class="n">gradCAM_alpha</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">get_gradCAM</span><span class="p">(</span><span class="n">activations</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">activations_grad</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">input_dimensions</span><span class="o">=</span><span class="n">sample_shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>activations</strong> (<em>Tensor</em>) – Activation values of layer after forward pass is performed. To track these, use <code class="xref py py-func docutils literal notranslate"><span class="pre">toast.heat.network.add_hook_activation()</span></code></p></li>
+<li><p><strong>activations_grad</strong> (<em>Tensor</em>) – Gradient of the activation values after a backwards pass is performed. To track these, use <code class="xref py py-func docutils literal notranslate"><span class="pre">toast.heat.network.add_hook_activationGrad()</span></code></p></li>
+<li><p><strong>input_dimensions</strong> (<em>iterable</em><em>, </em><em>optional</em>) – Shape of the input dimensions to match. If no input dimensions are passed, the largest window of this layer is assumed to be the length of the input.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>gradCAM_output</em> - gradCAM results which match shape of input sample; <em>gradCAM_expanded</em> - gradCAM results which are expanded to allow visualizaiton of activations of each independent scale; <em>scale_alpha</em> - Alpha values for each scale, signifying importance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.get_gradCAM_single">
+<span class="sig-name descname"><span class="pre">get_gradCAM_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activations_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_input.get_gradCAM_single"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.get_gradCAM_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate gradCAM activation mapping for this layer, rescaled and stretched to match the input dimensions. It is recommended to use <a class="reference internal" href="#toast.heat.timescaleL.TSC_input.get_gradCAM" title="toast.heat.timescaleL.TSC_input.get_gradCAM"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_gradCAM()</span></code></a> instead of this function. This is maintained for backwards compatibility.</p>
+<p>Currently, the activations and activation gradients must be extracted from the larger network object outside of this function. An example imlementation is below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">activations</span>      <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activations</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+<span class="n">activations_grad</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">layer_activationsGrad</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+<span class="n">gradCAM_out</span><span class="p">,</span> <span class="n">gradCAM_expanded</span><span class="p">,</span> <span class="n">gradCAM_alpha</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">get_gradCAM</span><span class="p">(</span><span class="n">activations</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">activations_grad</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">input_dimensions</span><span class="o">=</span><span class="n">sample_shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>activations</strong> (<em>Tensor</em>) – Activation values of layer after forward pass is performed. To track these, use <code class="xref py py-func docutils literal notranslate"><span class="pre">toast.heat.network.add_hook_activation()</span></code></p></li>
+<li><p><strong>activations_grad</strong> (<em>Tensor</em>) – Gradient of the activation values after a backwards pass is performed. To track these, use <code class="xref py py-func docutils literal notranslate"><span class="pre">toast.heat.network.add_hook_activationGrad()</span></code></p></li>
+<li><p><strong>input_dimensions</strong> (<em>iterable</em><em>, </em><em>optional</em>) – Shape of the input dimensions to match. If no input dimensions are passed, the largest window of this layer is assumed to be the length of the input.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>gradCAM_output</em> - gradCAM results which match shape of input sample; <em>gradCAM_expanded</em> - gradCAM results which are expanded to allow visualizaiton of activations of each independent scale; <em>scale_alpha</em> - Alpha values for each scale, signifying importance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_input.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.timescaleL.TSC_input.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSCTranspose_input">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleL.</span></span><span class="sig-name descname"><span class="pre">TSCTranspose_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSCTranspose_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSCTranspose_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Represents a transposed time scale convolution input layer.
+Typically used to build a mirrored Decoder structure in an time scale encoder/decoder network.</p>
+<p>returns an encoded vector back to input dimensions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSCTranspose_input.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSCTranspose_input.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSCTranspose_input.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization to create a Transposed Time Scale Convolutional Layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min_window</strong> (<em>int</em>) – The minimum window size to consider. Value represents the min window size in number of samples.</p></li>
+<li><p><strong>max_window</strong> (<em>int</em>) – The maximum window size to consider. Value represents the max window size in number of samples.</p></li>
+<li><p><strong>scale_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – The exponential base designating how fast the window size increases.</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add a bias node to each scale.</p></li>
+<li><p><strong>initialization</strong> (<em>int/str</em><em>, </em><em>optional</em>) – How to initializae tisc parameters. Can be a beta value for noise, or a string requesting a noise color. See <a class="reference internal" href="toast.butter.noise.colors.html#toast.butter.noise.colors.get_noise" title="toast.butter.noise.colors.get_noise"><code class="xref py py-func docutils literal notranslate"><span class="pre">toast.butter.noise.colors.get_noise()</span></code></a> or <a class="reference internal" href="toast.butter.noise.colors.html#toast.butter.noise.colors.get_color" title="toast.butter.noise.colors.get_color"><code class="xref py py-func docutils literal notranslate"><span class="pre">toast.butter.noise.colors.get_color()</span></code></a> for more info.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the TSC_input class representing a Time Scale Convolution Layer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSCTranspose_input.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSCTranspose_input.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSCTranspose_input.reset_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the parameters to a default distribution that was passed in __init__.</p>
+<p>Weights are normally distributed, unless a noise pattern/color is selected during intialization.
+Bias is uniformly distributed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>No return value. Weight/Bias values will be reset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSCTranspose_input.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSCTranspose_input.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSCTranspose_input.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the forward method of the Network class to process data based on our network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>tensor</em>) – Data to be processed by the network.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The output when passing the input data through the network</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSCTranspose_input.convert_to_decision">
+<span class="sig-name descname"><span class="pre">convert_to_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSCTranspose_input.convert_to_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSCTranspose_input.convert_to_decision" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method overwrites the forward method of the Network class, in case special behavior is desired
+Convertrs a network output to a definite decision based on thresholds highest likelihood values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> – Value output by network</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float Tensor representing the final decision of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSCTranspose_input.extra_repr">
+<span class="sig-name descname"><span class="pre">extra_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSCTranspose_input.extra_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSCTranspose_input.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the extra information about this module.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSCTranspose_input.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.timescaleL.TSCTranspose_input.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_batchnorm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">toast.heat.timescaleL.</span></span><span class="sig-name descname"><span class="pre">TSC_batchnorm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_batchnorm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_batchnorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_batchnorm.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_multiplier</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_batchnorm.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_batchnorm.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper of the pytorch BatchNorm Normalization layer for Time Scale layers.
+Applies normalization to each scale independently rather than to the layer data collectively.
+:param length_input: The length of the data input into the network, which is necessary to calculte data dimensions.
+:type length_input: int
+:param min_scale: Smallest scale index to apply normalization to.
+:type min_scale: int
+:param max_scale: Largest scale index to apply normalization to.
+:type max_scale: int
+:param scale_multiplier: Exponential base designating how fast the window size increases.
+:type scale_multiplier: int
+:param **kwargs: Othe arguments to pass to batchnorm layer
+:type **kwargs: misc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An instance of the TiscBatchNorm class representing a TimeScale Batch Normalization Layer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_batchnorm.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#toast.heat.timescaleL.TSC_batchnorm.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_batchnorm.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_batchnorm.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_batchnorm.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the forward method of the Network class to process data based on our network structure.
+:param data: Data to be processed by the network.
+:type data: tensor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The output when passing the input data through the network</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="toast.heat.timescaleL.TSC_batchnorm.extra_repr">
+<span class="sig-name descname"><span class="pre">extra_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toast/heat/timescaleL.html#TSC_batchnorm.extra_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#toast.heat.timescaleL.TSC_batchnorm.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the extra information about this module.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="toast.heat.timescaleF.html" class="btn btn-neutral float-left" title="toast.heat.timescaleF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toast.heat.timescaleN.html" class="btn btn-neutral float-right" title="toast.heat.timescaleN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

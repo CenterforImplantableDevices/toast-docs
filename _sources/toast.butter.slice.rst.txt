@@ -1,0 +1,17 @@
+toast.butter.slice
+==================
+
+.. automodule:: toast.butter.slice
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.butter.slice.exclude
+   toast.butter.slice.segmentaxis
+   toast.butter.slice.window_cont

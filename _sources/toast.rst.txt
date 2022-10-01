@@ -1,0 +1,20 @@
+toast
+=====
+
+.. automodule:: toast
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.bread
+   toast.butter
+   toast.heat
+   toast.kitchen
+   toast.misc
+   toast.plate

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.bread.format.saveData &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>toast.bread.format.saveData</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.bread.format.saveData</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Functions that standardize the saving of raw data files in a format</span>
+<span class="sd">that is optimized for ML applications.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">toast.misc</span> <span class="kn">import</span> <span class="n">tlog</span>
+
+
+
+<div class="viewcode-block" id="save_to_some_file"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_some_file">[docs]</a><span class="k">def</span> <span class="nf">save_to_some_file</span><span class="p">(</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;wav&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;synology&#39;</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Wrapper function to allow one common-use function for multiple file types</span>
+
+<span class="sd">    Much of the functionality of this function is determined by the funcitons below. Reference those relevant functions for execution details.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_data (dict):        Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):      Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list):  Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        folder_path (str):      File path where the raw data files are saved.</span>
+<span class="sd">        filename (str):         Filename of the raw data file (used as filename prefix for newly formatted data)</span>
+<span class="sd">        save_path (str):        File path where the output files should be saved.</span>
+<span class="sd">        sample_frequency (int): frequency that the data is sampled at.</span>
+<span class="sd">        out (str, optional):    Which file format to save with. `.wav` is the standard for CID applications.</span>
+<span class="sd">        source (str, optional): Where the source of the data is. This mechanism helps account for varrying file/folder structures in different data sources.</span>
+<span class="sd">        dataset_suffix (str, optional):  Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):        Path to the file for outputing logs during execution.</span>
+<span class="sd">            </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path location.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">out</span> <span class="o">==</span> <span class="s1">&#39;wav&#39;</span><span class="p">:</span>
+        <span class="n">save_to_wav</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">out</span> <span class="o">==</span> <span class="s1">&#39;hdf5&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;synology&#39;</span><span class="p">:</span>
+            <span class="n">file_path_bin</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="s1">&#39;Original Bin Files&#39;</span><span class="p">,</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.bin&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span>
+            <span class="n">file_path_bin</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.bin&quot;</span><span class="p">)</span>
+        <span class="n">save_to_hdf5</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">file_path_bin</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">out</span> <span class="o">==</span> <span class="s1">&#39;hdf5c&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;synology&#39;</span><span class="p">:</span>
+            <span class="n">file_path_bin</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.bin&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span>
+            <span class="n">file_path_bin</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.bin&quot;</span><span class="p">)</span>
+        <span class="n">save_to_hdf5c</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">file_path_bin</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">out</span> <span class="o">==</span> <span class="s1">&#39;hdf5_pandas&#39;</span><span class="p">:</span>
+        <span class="n">save_to_hdf5_pandas</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">out</span> <span class="o">==</span> <span class="s1">&#39;pkl&#39;</span><span class="p">:</span>
+        <span class="n">save_to_pkl</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">out</span> <span class="o">==</span> <span class="s1">&#39;edf&#39;</span><span class="p">:</span>
+        <span class="n">save_to_edf</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">out</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
+        <span class="n">save_to_csv</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="n">path_log</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;INVALID OUTPUT TYPE SPECIFIED. OUTPUT FILE WILL NOT BE SAVED&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_dataframe"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.create_dataframe">[docs]</a><span class="k">def</span> <span class="nf">create_dataframe</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Convert a list of dictionaries to a dataframe for better structure for saving.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict):              Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):       Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):        Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list):    Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        path_log (str, optional): Path to the file for outputing logs during execution.</span>
+<span class="sd">                        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        df_label, df_data, df_metadata: Three dataframes representing the label_group, data_group, and metadata_group data (respectively)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span><span class="s1">&#39;Converting Data to DataFrame&#39;</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+
+    <span class="n">df_label</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">data_name</span> <span class="ow">in</span> <span class="n">label_group</span><span class="p">:</span>
+        <span class="n">df_label</span><span class="p">[</span><span class="n">data_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data_name</span><span class="p">]</span>
+
+    <span class="n">df_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">data_name</span> <span class="ow">in</span> <span class="n">data_group</span><span class="p">:</span>
+        <span class="n">df_data</span><span class="p">[</span><span class="n">data_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data_name</span><span class="p">]</span>
+
+    <span class="n">df_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">data_name</span> <span class="ow">in</span> <span class="n">metadata_group</span><span class="p">:</span>
+        <span class="n">df_metadata</span><span class="p">[</span><span class="n">data_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data_name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">df_label</span><span class="p">,</span> <span class="n">df_data</span><span class="p">,</span> <span class="n">df_metadata</span></div>
+
+
+
+<div class="viewcode-block" id="save_to_wav"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_wav">[docs]</a><span class="k">def</span> <span class="nf">save_to_wav</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Saves raw-data, label-data, and meta-data to separate `.wav` files.</span>
+
+<span class="sd">    These files are saved in a standardized way to assure compatibility with other toast packages/modules.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        save_path (str):        Path where the data should be saved</span>
+<span class="sd">        filename (str):         Filename prefix to use when generating the data files.</span>
+<span class="sd">        data_dict (dict):       Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):      Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list):  Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        sample_frequency (int): Frequency that the data is sampled at.</span>
+<span class="sd">        dataset_suffix (str, optional):  Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):        Path to the file for outputing logs during execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path locaiton.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">wave</span>
+
+    <span class="k">if</span> <span class="n">dataset_suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">dataset_suffix</span>
+
+    <span class="n">filename_label</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_label&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.wav&#39;</span><span class="p">)</span>
+    <span class="n">filename_data</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_data&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.wav&#39;</span><span class="p">)</span>
+    <span class="n">filename_meta</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_metadata&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.wav&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_label</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span> <span class="n">filename_label</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">setparams</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">label_group</span><span class="p">),</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">label_group</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">itemsize</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NONE&#39;</span><span class="p">,</span><span class="s1">&#39;not compressed&#39;</span><span class="p">))</span>
+            <span class="n">array_to_write</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">label_group</span><span class="p">:</span>
+                <span class="n">array_to_write</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">])</span>
+            
+            <span class="n">np_array_to_write</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">array_to_write</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">frame</span><span class="p">])</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writeframes</span><span class="p">(</span> <span class="n">np_array_to_write</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_data</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span> <span class="n">filename_data</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">setparams</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data_group</span><span class="p">),</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">data_group</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">itemsize</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NONE&#39;</span><span class="p">,</span><span class="s1">&#39;not compressed&#39;</span><span class="p">))</span>
+            <span class="n">array_to_write</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">data_group</span><span class="p">:</span>
+                <span class="n">array_to_write</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">[</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]])</span>
+            
+            <span class="n">np_array_to_write</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">array_to_write</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writeframes</span><span class="p">(</span> <span class="n">np_array_to_write</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_meta</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span> <span class="n">filename_meta</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">setparams</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">metadata_group</span><span class="p">),</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">metadata_group</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">itemsize</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NONE&#39;</span><span class="p">,</span><span class="s1">&#39;not compressed&#39;</span><span class="p">))</span>
+            <span class="n">array_to_write</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">metadata_group</span><span class="p">:</span>
+                <span class="n">array_to_write</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">])</span>
+            
+            <span class="n">np_array_to_write</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">array_to_write</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">frame</span><span class="p">])</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writeframes</span><span class="p">(</span> <span class="n">np_array_to_write</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_to_hdf5"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_hdf5">[docs]</a><span class="k">def</span> <span class="nf">save_to_hdf5</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">file_path_bin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Saves raw-data, label-data, and meta-data to separate `.hdf5` files.</span>
+
+<span class="sd">    These files are saved in a standardized way to assure compatibility with other toast packages/modules.</span>
+
+<span class="sd">    Uses the h5py library.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        save_path (str):       Path where the data should be saved</span>
+<span class="sd">        filename (str):        Filename prefix to use when generating the data files.</span>
+<span class="sd">        data_dict (dict):      Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):    Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list): Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        file_path_bin (str, optional):   Path to the original .bin file. Used to read the header line and transfer to hdf5 file.</span>
+<span class="sd">        dataset_suffix (str, optional):  Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):        Path to the file for outputing logs during execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path locaiton.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">h5py</span>
+
+    <span class="k">if</span> <span class="n">dataset_suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">dataset_suffix</span>
+
+    <span class="n">filename_out</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.hdf5&#39;</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_out</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span> <span class="n">filename_out</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">userblock_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">libver</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_hdf5</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hdf5_labels</span> <span class="o">=</span> <span class="n">file_hdf5</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">label_group</span><span class="p">:</span>
+                <span class="n">hdf5_labels</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span> <span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hdf5_data</span> <span class="o">=</span> <span class="n">file_hdf5</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">data_group</span><span class="p">:</span>
+                <span class="n">hdf5_data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span> <span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hdf5_metadata</span> <span class="o">=</span> <span class="n">file_hdf5</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">metadata_group</span><span class="p">:</span>
+                <span class="n">hdf5_metadata</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span> <span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">file_path_bin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path_bin</span><span class="p">)):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path_bin</span><span class="p">,</span> <span class="s1">&#39;rb+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_hdf5</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path_bin</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">header_line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+            <span class="n">file_hdf5</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header_line</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_to_hdf5c"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_hdf5c">[docs]</a><span class="k">def</span> <span class="nf">save_to_hdf5c</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">file_path_bin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Saves raw-data, label-data, and meta-data to separate `.hdf5` files, with compression</span>
+
+<span class="sd">    These files are saved in a standardized way to assure compatibility with other toast packages/modules.</span>
+
+<span class="sd">    Uses the h5py library.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        save_path (str):       Path where the data should be saved</span>
+<span class="sd">        filename (str):        Filename prefix to use when generating the data files.</span>
+<span class="sd">        data_dict (dict):      Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):    Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list): Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        file_path_bin (str, optional):     Path to the original .bin file. Used to read the header line and transfer to hdf5 file.</span>
+<span class="sd">        compression_level (int, optional): Level of compression. Ranges from 0 to 9.</span>
+<span class="sd">        dataset_suffix (str, optional):    Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):          Path to the file for outputing logs during execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path locaiton.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">h5py</span>
+
+    <span class="k">if</span> <span class="n">dataset_suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">dataset_suffix</span>
+    
+    <span class="n">filename_out</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.hdf5c&#39;</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_out</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span> <span class="n">filename_out</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">userblock_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">libver</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_hdf5</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hdf5_labels</span> <span class="o">=</span> <span class="n">file_hdf5</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">label_group</span><span class="p">:</span>
+                <span class="n">hdf5_labels</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">],</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">,</span> <span class="n">compression_opts</span><span class="o">=</span><span class="n">compression_level</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hdf5_data</span> <span class="o">=</span> <span class="n">file_hdf5</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">data_group</span><span class="p">:</span>
+                <span class="n">hdf5_data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">],</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">,</span> <span class="n">compression_opts</span><span class="o">=</span><span class="n">compression_level</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hdf5_metadata</span> <span class="o">=</span> <span class="n">file_hdf5</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">metadata_group</span><span class="p">:</span>
+                <span class="n">hdf5_metadata</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">],</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">,</span> <span class="n">compression_opts</span><span class="o">=</span><span class="n">compression_level</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">file_path_bin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path_bin</span><span class="p">)):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path_bin</span><span class="p">,</span> <span class="s1">&#39;rb+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_hdf5</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path_bin</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">header_line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+            <span class="n">file_hdf5</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header_line</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_to_hdf5_pandas"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_hdf5_pandas">[docs]</a><span class="k">def</span> <span class="nf">save_to_hdf5_pandas</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Saves raw-data, label-data, and meta-data to separate `.hdf5` files.</span>
+
+<span class="sd">    These files are saved in a standardized way to assure compatibility with other toast packages/modules.</span>
+
+<span class="sd">    Uses the pandas library to make a dataframe, the the `.to_hdf()` function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        save_path (str):       Path where the data should be saved</span>
+<span class="sd">        filename (str):        Filename prefix to use when generating the data files.</span>
+<span class="sd">        data_dict (dict):      Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):    Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list): Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        dataset_suffix (str, optional): Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):       Path to the file for outputing logs during execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path locaiton.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">dataset_suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">dataset_suffix</span>
+    
+    <span class="n">df_label</span><span class="p">,</span> <span class="n">df_data</span><span class="p">,</span> <span class="n">df_metadata</span> <span class="o">=</span> <span class="n">create_dataframe</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">)</span>
+
+    <span class="n">filename_out</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">+</span><span class="s1">&#39;.hdf5&#39;</span><span class="p">)</span>
+    <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_out</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">df_label</span><span class="o">.</span><span class="n">to_hdf</span><span class="p">(</span>    <span class="n">filename_out</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span>   <span class="s1">&#39;label&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;table&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">df_data</span><span class="o">.</span><span class="n">to_hdf</span><span class="p">(</span>     <span class="n">filename_out</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span>    <span class="s1">&#39;data&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;table&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_metadata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">df_metadata</span><span class="o">.</span><span class="n">to_hdf</span><span class="p">(</span> <span class="n">filename_out</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;metadata&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;table&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_to_pkl"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_pkl">[docs]</a><span class="k">def</span> <span class="nf">save_to_pkl</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Saves raw-data, label-data, and meta-data to separate `.pkl` files.</span>
+
+<span class="sd">    These files are saved in a standardized way to assure compatibility with other toast packages/modules.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        save_path (str):       Path where the data should be saved</span>
+<span class="sd">        filename (str):        Filename prefix to use when generating the data files.</span>
+<span class="sd">        data_dict (dict):      Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):    Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list): Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        dataset_suffix (str, optional): Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):       Path to the file for outputing logs during execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path locaiton.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">pickle</span>
+
+    <span class="k">if</span> <span class="n">dataset_suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">dataset_suffix</span>
+    
+    <span class="n">df_label</span><span class="p">,</span> <span class="n">df_data</span><span class="p">,</span> <span class="n">df_metadata</span> <span class="o">=</span> <span class="n">create_dataframe</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">)</span>
+
+    <span class="n">filename_label</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_label&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+    <span class="n">filename_data</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_data&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+    <span class="n">filename_meta</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_metadata&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_label</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_label</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">df_label</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_data</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_data</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">df_data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_metadata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_meta</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_meta</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">df_metadata</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="save_to_edf"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_edf">[docs]</a><span class="k">def</span> <span class="nf">save_to_edf</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="o">=</span><span class="mi">1250</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Saves raw-data, label-data, and meta-data to separate `.edf` files.</span>
+
+<span class="sd">    These files are saved in a standardized way to assure compatibility with other toast packages/modules.</span>
+
+<span class="sd">    Important:</span>
+
+<span class="sd">        EDF files can only handle up to 16 bit data (-32768 to 32767)</span>
+
+<span class="sd">        This can inhibit storing datetime values or timestampes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        save_path (str):        Path where the data should be saved</span>
+<span class="sd">        filename (str):         Filename prefix to use when generating the data files.</span>
+<span class="sd">        data_dict (dict):       Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):      Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list):  Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        sample_frequency (int, optional): Frequency that the data is sampled at.</span>
+<span class="sd">        dataset_suffix (str, optional):   Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):         Path to the file for outputing logs during execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path locaiton.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">pyedflib</span>
+
+    <span class="k">if</span> <span class="n">dataset_suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">dataset_suffix</span>
+
+    <span class="n">filename_label</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_label&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.edf&#39;</span><span class="p">)</span>
+    <span class="n">filename_data</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_data&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.edf&#39;</span><span class="p">)</span>
+    <span class="n">filename_meta</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_metadata&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.edf&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_label</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">pyedflib</span><span class="o">.</span><span class="n">EdfWriter</span><span class="p">(</span> <span class="n">filename_label</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_group</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">sample_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ch_num</span><span class="p">,</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">label_group</span><span class="p">):</span>
+                <span class="n">sample_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span> <span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="n">ch_num</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setPhysicalDimension</span><span class="p">(</span><span class="n">ch_num</span><span class="p">,</span> <span class="s1">&#39;boolean&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setSamplefrequency</span><span class="p">(</span> <span class="n">ch_num</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">)</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">writeSamples</span><span class="p">(</span> <span class="n">sample_list</span><span class="p">,</span> <span class="n">digital</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_data</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">pyedflib</span><span class="o">.</span><span class="n">EdfWriter</span><span class="p">(</span> <span class="n">filename_data</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_group</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">sample_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ch_num</span><span class="p">,</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_group</span><span class="p">):</span>
+                <span class="n">sample_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span> <span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="n">ch_num</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setPhysicalDimension</span><span class="p">(</span><span class="n">ch_num</span><span class="p">,</span> <span class="s1">&#39;mV&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setSamplefrequency</span><span class="p">(</span> <span class="n">ch_num</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">)</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">writeSamples</span><span class="p">(</span> <span class="n">sample_list</span><span class="p">,</span> <span class="n">digital</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata_group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_meta</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">pyedflib</span><span class="o">.</span><span class="n">EdfWriter</span><span class="p">(</span> <span class="n">filename_meta</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata_group</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">sample_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ch_num</span><span class="p">,</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metadata_group</span><span class="p">):</span>
+                <span class="n">sample_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span> <span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="n">ch_num</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setPhysicalDimension</span><span class="p">(</span><span class="n">ch_num</span><span class="p">,</span> <span class="s1">&#39;misc&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setSamplefrequency</span><span class="p">(</span> <span class="n">ch_num</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">)</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">writeSamples</span><span class="p">(</span><span class="n">sample_list</span><span class="p">,</span> <span class="n">digital</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_to_csv"><a class="viewcode-back" href="../../../../toast.bread.format.saveData.html#toast.bread.format.saveData.save_to_csv">[docs]</a><span class="k">def</span> <span class="nf">save_to_csv</span><span class="p">(</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">,</span> <span class="n">dataset_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_log</span><span class="o">=</span><span class="s1">&#39;./log.txt&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Saves raw-data, label-data, and meta-data to separate `.csv` files.</span>
+
+<span class="sd">    These files are saved in a standardized way to assure compatibility with other toast packages/modules.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        save_path (str):       Path where the data should be saved</span>
+<span class="sd">        filename (str):        Filename prefix to use when generating the data files.</span>
+<span class="sd">        data_dict (dict):      Dictionary of numpy arrays </span>
+<span class="sd">        label_group (list):    Python list of strings (keys in raw_data) identifying the groups for the &quot;_label&quot; file</span>
+<span class="sd">        data_group (list):     Python list of strings (keys in raw_data) identifying the groups for the &quot;_data&quot; file</span>
+<span class="sd">        metadata_group (list): Python list of strings (keys in raw_data) identifying the groups for the &quot;_metadata&quot; file</span>
+<span class="sd">        dataset_suffix (str, optional): Suffix of filename designating which dataset organization to use. Necessary when following CID convention.</span>
+<span class="sd">        path_log (str, optional):       Path to the file for outputing logs during execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        No return value. Generates the &quot;_label&quot; &quot;_data&quot; and &quot;_metadata&quot; files in the save_path locaiton.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">dataset_suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_suffix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">dataset_suffix</span>
+
+    <span class="n">df_label</span><span class="p">,</span> <span class="n">df_data</span><span class="p">,</span> <span class="n">df_metadata</span> <span class="o">=</span> <span class="n">create_dataframe</span><span class="p">(</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">label_group</span><span class="p">,</span> <span class="n">data_group</span><span class="p">,</span> <span class="n">metadata_group</span><span class="p">)</span>
+
+    <span class="n">filename_label</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_label&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+    <span class="n">filename_data</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_data&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+    <span class="n">filename_meta</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">+</span><span class="s1">&#39;_metadata&#39;</span><span class="o">+</span><span class="n">dataset_suffix</span><span class="o">+</span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_label</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="n">df_label</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename_label</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_data</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="n">df_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename_data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_metadata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tlog</span><span class="o">.</span><span class="n">output_log</span><span class="p">(</span> <span class="s1">&#39;Saving File: &#39;</span><span class="o">+</span><span class="n">filename_meta</span><span class="p">,</span> <span class="n">path_log</span><span class="p">)</span>
+        <span class="n">df_metadata</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename_meta</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

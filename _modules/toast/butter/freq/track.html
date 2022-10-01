@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>toast.butter.freq.track &mdash; toast 1.3.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../toast.html" class="icon icon-home"> toast
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.bread.html">toast.bread</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.butter.html">toast.butter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.heat.html">toast.heat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.kitchen.html">toast.kitchen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.misc.html">toast.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../toast.plate.html">toast.plate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../toast.html">toast</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../toast.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>toast.butter.freq.track</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for toast.butter.freq.track</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">interpolate</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+
+<div class="viewcode-block" id="track_peak_frequency"><a class="viewcode-back" href="../../../../toast.butter.freq.track.html#toast.butter.freq.track.track_peak_frequency">[docs]</a><span class="k">def</span> <span class="nf">track_peak_frequency</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">min_freq</span><span class="p">,</span> <span class="n">max_freq</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zero_extend</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">interpolate_fcn</span><span class="o">=</span><span class="n">scipy</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">CubicSpline</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Tracks the peak frequency within a certain frequency range.</span>
+<span class="sd">    ex. Track heart rate, which exists within 0.66 Hz - 4 Hz in humans (40 BMP - 240 BPM)</span>
+<span class="sd">    </span>
+<span class="sd">    Function can only handle one channel at a time.</span>
+<span class="sd">    </span>
+<span class="sd">    Note: The interpolation fuction used can be easily changed. Currently a cubic spline interpolation function is used.</span>
+<span class="sd">        </span>
+<span class="sd">    Note: An stft reduces the size of the data slightly.  To account for this the first and last</span>
+<span class="sd">    few data points are extended from the first and last calculated values so that the</span>
+<span class="sd">    size of the data matches the input size.</span>
+
+<span class="sd">    Args:  </span>
+<span class="sd">        data (numpy array):              Numpy array or ndarray (single row) representing the data to be filtered.</span>
+<span class="sd">        fs (int):                        Sample rate of the data.</span>
+<span class="sd">        min_freq (int or float):         The minimum expected frequency of the tracked frequency.</span>
+<span class="sd">        max_freq (int or float):         The maximum expected frequency of the tracked frequency.</span>
+<span class="sd">        window (int, optional):          Size of the window used when computing the fft for the stft used to track freq.</span>
+<span class="sd">        step (int, optional):            Step size to use when sliding widow across data.</span>
+<span class="sd">        zero_extend (int, optional):     Multiple of len(data) to zero extend by.  i.e. passing 2 would add 2*len(data) zeros to the end of each window of data.</span>
+<span class="sd">        interpolate_fcn (fcn, optional): Function pointer to be used when inerpolating output data. Do not include parenthesis when passing function pointers.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array or ndarray (single row) (matching the format passed) of peak frequency for the entire duration of data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Windows and fft calculations are implimented using an stft with a square window (all ones) of length `window`</span>
+    <span class="c1">#   Note this implimentation is kept separate from toast.butter.freq.fourier.stft implementation so that potential</span>
+    <span class="c1">#   future changes in the windowing function used by stft() does not affect the accuracy of this function.</span>
+    <span class="n">window</span> <span class="o">*=</span> <span class="n">fs</span>
+    <span class="n">step</span>   <span class="o">*=</span> <span class="n">fs</span>
+    <span class="n">window_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">overlap</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="n">window</span> <span class="o">-</span> <span class="n">step</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">zero_extend</span> <span class="o">=</span> <span class="n">window</span> <span class="o">*</span> <span class="n">zero_extend</span>
+
+    <span class="c1"># Padding no longer performed due to weird edge effects.</span>
+    <span class="c1"># data = np.pad( data, int(window/2), mode=&#39;symmetric&#39;)</span>
+
+    <span class="n">freq_values</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fft_values</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window_arr</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="n">overlap</span><span class="p">,</span> <span class="n">boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">padded</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># nfft=zero_extend,</span>
+    <span class="n">fft_values</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">fft_values</span><span class="p">))</span>
+    <span class="n">min_index</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="n">min_freq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">max_index</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">freq_values</span> <span class="o">&lt;</span> <span class="n">max_freq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">freq_index</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fft_window</span> <span class="ow">in</span> <span class="n">fft_values</span><span class="o">.</span><span class="n">transpose</span><span class="p">():</span>
+        <span class="n">peak_index</span><span class="p">,</span> <span class="n">peak_dict</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span> <span class="n">fft_window</span><span class="p">[</span> <span class="n">min_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="c1"># Pass (None, None) to get it to calculate and return values</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">freq_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">peak_index</span><span class="p">[</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span> <span class="n">peak_dict</span><span class="p">[</span><span class="s1">&#39;peak_heights&#39;</span><span class="p">])]</span> <span class="o">+</span> <span class="n">min_index</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">freq_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">freq_index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="n">peak_freq</span> <span class="o">=</span> <span class="n">freq_values</span><span class="p">[</span> <span class="n">freq_index</span><span class="p">]</span>
+
+    <span class="n">new_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">peak_freq</span><span class="p">)</span><span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">)</span>
+    <span class="c1"># Use any funciton from the scipy.interpolate Univarite Interpolation functions: https://docs.scipy.org/doc/scipy/reference/interpolate.html</span>
+    <span class="c1"># peak_freq = interpolate.interp1d(list(range(len(peak_freq))), peak_freq, kind=&#39;slinear&#39;)(new_x)</span>
+    <span class="c1"># peak_freq = interpolate.CubicSpline(list(range(len(peak_freq))), peak_freq)(new_x)</span>
+    <span class="n">peak_freq</span> <span class="o">=</span> <span class="n">interpolate_fcn</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">peak_freq</span><span class="p">))),</span> <span class="n">peak_freq</span><span class="p">)(</span><span class="n">new_x</span><span class="p">)</span>
+
+    <span class="c1"># Extend dataframe to original length</span>
+    <span class="n">peak_freq_before</span> <span class="o">=</span> <span class="n">peak_freq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">peak_freq_after</span>  <span class="o">=</span> <span class="n">peak_freq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">peak_freq_before</span><span class="p">,</span> <span class="n">peak_freq</span><span class="p">,</span> <span class="n">peak_freq_after</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="track_mean_frequency"><a class="viewcode-back" href="../../../../toast.butter.freq.track.html#toast.butter.freq.track.track_mean_frequency">[docs]</a><span class="k">def</span> <span class="nf">track_mean_frequency</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">min_freq</span><span class="p">,</span> <span class="n">max_freq</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zero_extend</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">interpolate_fcn</span><span class="o">=</span><span class="n">scipy</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">CubicSpline</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Tracks the centroid frequency within a certain frequency range.</span>
+
+<span class="sd">    For example, can be used to track EEG frequency power. The mean frequency should rise as seizure activity begins.</span>
+
+<span class="sd">    Note: The stft call in this function reduces the size of the data slightly.</span>
+<span class="sd">          To account for this the first and last few data points are extended from the </span>
+<span class="sd">          first and last calculated values so that the size of the data matches the input size.</span>
+
+<span class="sd">    Args:  </span>
+<span class="sd">        data (numpy array or ndarray): Data to be filtered. **Function can only handle one channel at a time.**</span>
+<span class="sd">        fs (int):                      Sample rate of the data.</span>
+<span class="sd">        min_freq (float):              Minimum expected frequency of the tracked frequency.</span>
+<span class="sd">        max_freq (float):              Maximum expected frequency of the tracked frequency.</span>
+<span class="sd">        window (int, optional):        Size of the window used when computing the fft for the stft used to track freq.</span>
+<span class="sd">        step (int, optional):          Step size to use when sliding widow across data.</span>
+<span class="sd">        zero_extend (int, optional):   Multiple of len(data) to zero extend by.  i.e. passing 2 would add 2*len(data) zeros to the end of each window of data.</span>
+<span class="sd">        interpolate_fcn (fcn, optional): Function pointer to be used when inerpolating output data. Do not include parenthesis when passing function pointers.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array or ndarray (single row) (matching the format passed) of peak frequency for the entire duration of data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Windows and fft calculations are implimented using an stft with a square window (all ones) of length `window`</span>
+    <span class="c1">#   Note this implimentation is kept separate from toast.butter.freq.fourier.stft implementation so that potential</span>
+    <span class="c1">#   future changes in the windowing function used by stft() does not affect the accuracy of this function.</span>
+    <span class="n">window</span> <span class="o">*=</span> <span class="n">fs</span>
+    <span class="n">step</span>   <span class="o">*=</span> <span class="n">fs</span>
+    <span class="n">window_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">overlap</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="n">window</span> <span class="o">-</span> <span class="n">step</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">zero_extend</span> <span class="o">=</span> <span class="n">window</span> <span class="o">*</span> <span class="n">zero_extend</span>
+
+    <span class="c1"># Padding no longer performed due to weird edge effects.</span>
+    <span class="c1"># data = np.pad( data, int(window/2), mode=&#39;symmetric&#39;)</span>
+
+    <span class="n">freq_values</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fft_values</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window_arr</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="n">overlap</span><span class="p">,</span> <span class="n">boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">padded</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># nfft=zero_extend,</span>
+    <span class="n">fft_values</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">fft_values</span><span class="p">))</span>
+    <span class="n">min_index</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="n">min_freq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">max_index</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">freq_values</span> <span class="o">&lt;</span> <span class="n">max_freq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">avg_freq</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fft_window</span> <span class="ow">in</span> <span class="n">fft_values</span><span class="o">.</span><span class="n">transpose</span><span class="p">():</span>
+        <span class="n">total_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="n">fft_window</span><span class="p">[</span> <span class="n">min_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">])</span>
+        <span class="n">freq_contributions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span> <span class="n">freq_values</span><span class="p">[</span><span class="n">min_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">],</span> <span class="n">fft_window</span><span class="p">[</span><span class="n">min_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">])</span>
+        <span class="n">centroid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span> <span class="n">freq_contributions</span><span class="p">,</span> <span class="n">total_power</span><span class="p">))</span>
+        <span class="n">avg_freq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">centroid</span><span class="p">)</span>
+
+    <span class="n">new_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">avg_freq</span><span class="p">)</span><span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">)</span>
+    <span class="c1"># Use any funciton from the scipy.interpolate Univarite Interpolation functions: https://docs.scipy.org/doc/scipy/reference/interpolate.html</span>
+    <span class="c1"># avg_freq = interpolate.interp1d(list(range(len(avg_freq))), avg_freq, kind=&#39;slinear&#39;)(new_x)</span>
+    <span class="c1"># avg_freq = interpolate.CubicSpline(list(range(len(avg_freq))), avg_freq)(new_x)</span>
+    <span class="n">avg_freq</span> <span class="o">=</span> <span class="n">interpolate_fcn</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">avg_freq</span><span class="p">))),</span> <span class="n">avg_freq</span><span class="p">)(</span><span class="n">new_x</span><span class="p">)</span>
+
+    <span class="c1"># Extend dataframe to original length</span>
+    <span class="n">avg_freq_before</span> <span class="o">=</span> <span class="n">avg_freq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">avg_freq_after</span>  <span class="o">=</span> <span class="n">avg_freq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">avg_freq_before</span><span class="p">,</span> <span class="n">avg_freq</span><span class="p">,</span> <span class="n">avg_freq_after</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="track_perc_frequency"><a class="viewcode-back" href="../../../../toast.butter.freq.track.html#toast.butter.freq.track.track_perc_frequency">[docs]</a><span class="k">def</span> <span class="nf">track_perc_frequency</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">min_freq</span><span class="p">,</span> <span class="n">max_freq</span><span class="p">,</span> <span class="n">percentile</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zero_extend</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">interpolate_fcn</span><span class="o">=</span><span class="n">scipy</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">CubicSpline</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Tracks the Upper Percentile frequency within a certain frequency range.</span>
+<span class="sd">        </span>
+<span class="sd">    For example, can be used to track EEG frequency power. The mean frequency should rise as seizure activity begins.</span>
+
+<span class="sd">    Note: The stft call in this function reduces the size of the data slightly.</span>
+<span class="sd">          To account for this the first and last few data points are extended from the </span>
+<span class="sd">          first and last calculated values so that the size of the data matches the input size.</span>
+
+<span class="sd">    Args:  </span>
+<span class="sd">        data (numpy array or ndarray):   Data to be filtered. **Function can only handle one channel at a time.**</span>
+<span class="sd">        fs (int):                        Sample rate of the data.</span>
+<span class="sd">        min_freq (float):                Minimum expected frequency of the tracked frequency.</span>
+<span class="sd">        max_freq (float):                Maximum expected frequency of the tracked frequency.</span>
+<span class="sd">        percentile (float, optional):    The frequency percentile to track.</span>
+<span class="sd">        window (int, optional):          Size of the window used when computing the fft for the stft used to track freq.</span>
+<span class="sd">        step (int, optional):            Step size to use when sliding widow across data.</span>
+<span class="sd">        zero_extend (int, optional):     Multiple of len(data) to zero extend by.  i.e. passing 2 would add 2*len(data) zeros to the end of each window of data.</span>
+<span class="sd">        interpolate_fcn (fcn, optional): Function pointer to be used when inerpolating output data. Do not include parenthesis when passing function pointers.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array or ndarray (single row) (matching the format passed) of desired frequency percentile for the entire duration of data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Windows and fft calculations are implimented using an stft with a square window (all ones) of length `window`</span>
+    <span class="c1">#   Note this implimentation is kept separate from toast.butter.freq.fourier.stft implementation so that potential</span>
+    <span class="c1">#   future changes in the windowing function used by stft() does not affect the accuracy of this function.</span>
+    <span class="n">window</span> <span class="o">*=</span> <span class="n">fs</span>
+    <span class="n">step</span>   <span class="o">*=</span> <span class="n">fs</span>
+    <span class="n">window_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">overlap</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="n">window</span> <span class="o">-</span> <span class="n">step</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">zero_extend</span> <span class="o">=</span> <span class="n">window</span> <span class="o">*</span> <span class="n">zero_extend</span>
+
+    <span class="c1"># Padding no longer performed due to weird edge effects.</span>
+    <span class="c1"># data = np.pad( data, int(window/2), mode=&#39;symmetric&#39;)</span>
+
+    <span class="n">freq_values</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fft_values</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window_arr</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="n">overlap</span><span class="p">,</span> <span class="n">boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">padded</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># nfft=zero_extend,</span>
+    <span class="n">fft_values</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">fft_values</span><span class="p">))</span>
+    <span class="n">min_index</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="n">min_freq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">max_index</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">freq_values</span> <span class="o">&lt;</span> <span class="n">max_freq</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">freq_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">avg_freq</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fft_window</span> <span class="ow">in</span> <span class="n">fft_values</span><span class="o">.</span><span class="n">transpose</span><span class="p">():</span>
+        <span class="n">avg_freq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">freq_values</span><span class="p">[</span> <span class="n">min_index</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span> <span class="n">fft_window</span><span class="p">[</span><span class="n">min_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span> <span class="n">fft_window</span><span class="p">[</span><span class="n">min_index</span><span class="p">:</span><span class="n">max_index</span><span class="p">],</span> <span class="n">percentile</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">))][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">new_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">avg_freq</span><span class="p">)</span><span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">)</span>
+    <span class="c1"># Use any funciton from the scipy.interpolate Univarite Interpolation functions: https://docs.scipy.org/doc/scipy/reference/interpolate.html</span>
+    <span class="c1"># avg_freq = interpolate.interp1d(list(range(len(avg_freq))), avg_freq, kind=&#39;slinear&#39;)(new_x)</span>
+    <span class="c1"># avg_freq = interpolate.CubicSpline(list(range(len(avg_freq))), avg_freq)(new_x)</span>
+    <span class="n">avg_freq</span> <span class="o">=</span> <span class="n">interpolate_fcn</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">avg_freq</span><span class="p">))),</span> <span class="n">avg_freq</span><span class="p">)(</span><span class="n">new_x</span><span class="p">)</span>
+
+    <span class="c1"># Extend dataframe to original length</span>
+    <span class="n">avg_freq_before</span> <span class="o">=</span> <span class="n">avg_freq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">avg_freq_after</span>  <span class="o">=</span> <span class="n">avg_freq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">avg_freq_before</span><span class="p">,</span> <span class="n">avg_freq</span><span class="p">,</span> <span class="n">avg_freq_after</span><span class="p">))</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Code to test the output of track_frequency.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">f_1</span> <span class="o">=</span> <span class="mi">10</span><span class="o">/</span><span class="mi">60</span>  <span class="c1"># Frequency, in cycles per second, or Hertz</span>
+    <span class="n">f_2</span> <span class="o">=</span> <span class="mi">100</span><span class="o">/</span><span class="mi">60</span>
+    <span class="n">f_3</span> <span class="o">=</span> <span class="mi">250</span><span class="o">/</span><span class="mi">60</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="mi">1250</span>  <span class="c1"># Sampling rate, or number of measurements per second</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">sig1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_3</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="n">f_1</span> <span class="o">=</span> <span class="mi">15</span><span class="o">/</span><span class="mi">60</span>  <span class="c1"># Frequency, in cycles per second, or Hertz</span>
+    <span class="n">f_2</span> <span class="o">=</span> <span class="mi">140</span><span class="o">/</span><span class="mi">60</span>
+    <span class="n">f_3</span> <span class="o">=</span> <span class="mi">300</span><span class="o">/</span><span class="mi">60</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="mi">1250</span>  <span class="c1"># Sampling rate, or number of measurements per second</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">sig2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_3</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">sig1</span><span class="p">,</span> <span class="n">sig2</span><span class="p">))</span>
+    <span class="n">HR_peak</span> <span class="o">=</span> <span class="n">track_peak_frequency</span><span class="p">(</span> <span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="mi">40</span><span class="o">/</span><span class="mi">60</span><span class="p">,</span> <span class="mi">220</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span> <span class="o">*</span> <span class="mi">60</span>
+    <span class="n">HR_mean</span> <span class="o">=</span> <span class="n">track_mean_frequency</span><span class="p">(</span> <span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="mi">40</span><span class="o">/</span><span class="mi">60</span><span class="p">,</span> <span class="mi">220</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span> <span class="o">*</span> <span class="mi">60</span>
+
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">HR_peak</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">HR_mean</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Cybernetic Implantable Devices.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

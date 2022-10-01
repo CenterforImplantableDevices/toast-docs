@@ -1,0 +1,18 @@
+toast.butter
+============
+
+.. automodule:: toast.butter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   toast.butter.filter
+   toast.butter.freq
+   toast.butter.noise
+   toast.butter.slice
